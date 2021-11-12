@@ -170,7 +170,6 @@ public class CreaCorsoFrame extends JFrame{
 		panel.add(buttonCleanArea);
 		
 		JButton buttonSaveTheme = new JButton("Save Theme");
-		buttonSaveTheme.setEnabled(false);
 		buttonSaveTheme.setForeground(Color.RED);
 		buttonSaveTheme.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		buttonSaveTheme.setBorder(new RoundBorderBotton(10));
@@ -180,9 +179,7 @@ public class CreaCorsoFrame extends JFrame{
 		
 		buttonCleanArea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				textAreaSelectedTheme.setText("");
-				
 			}
 		});
 		
@@ -191,7 +188,7 @@ public class CreaCorsoFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-			counter = controller.textEnableDisable(buttonSaveTheme ,fram, counter, textFieldTheme, panelTema);
+			counter = controller.textEnableDisable(fram, counter, textFieldTheme, panelTema);
 		
 			}
 			
@@ -199,17 +196,14 @@ public class CreaCorsoFrame extends JFrame{
 		
 		buttonCleanAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				textAreaDescrizione.setText("");
 				textFieldMin.setText("");
 				textFieldMax.setText("");
 				textFieldName.setText("");
 				textFieldTheme.setText("");
 				textAreaSelectedTheme.setText("");
-				
 			}
 		});
-		
 		
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
@@ -217,16 +211,23 @@ public class CreaCorsoFrame extends JFrame{
 				// TODO Auto-generated method stub
 				//BOOLEAN DI CONTROLLO
 				controller.insertCorsoDb(fram, textFieldName, textFieldMax, textFieldMin, textAreaDescrizione, textAreaSelectedTheme);
-				
 			}
 			
 		});
 		
 		buttonSaveTheme.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				controller.insertNewThemeFromField(fram, textFieldTheme, textAreaSelectedTheme);
-				
+				String theme = textFieldTheme.getText();
+				int insert = 0;
+				boolean control;
+				//controllo field theme
+				control = theme.isEmpty();
+				if(control == true) {
+					JOptionPane.showMessageDialog(fram, "Empty Description.", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					textAreaSelectedTheme.setText(theme);
+					textFieldTheme.setEnabled(false);
+				}
 			}			
 		});
 		

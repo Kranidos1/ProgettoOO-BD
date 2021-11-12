@@ -128,13 +128,12 @@ public class Controller implements ControlloStringhe {
 	}
 	
 	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel) {
-
+		button.setEnabled(true);
 		if(field.isEnabled()) {
 			
 			count = count + 1;
 			field.setEnabled(false);
 			pabel.setEnabled(false);
-			button.setEnabled(false);
 			
 			return count;
 		}
@@ -143,7 +142,6 @@ public class Controller implements ControlloStringhe {
 				count += 1;
 				field.setEnabled(true);
 				pabel.setEnabled(true);
-				button.setEnabled(true);
 				
 				return count;
 				

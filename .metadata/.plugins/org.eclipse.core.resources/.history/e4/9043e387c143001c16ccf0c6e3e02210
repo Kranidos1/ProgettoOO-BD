@@ -170,7 +170,6 @@ public class CreaCorsoFrame extends JFrame{
 		panel.add(buttonCleanArea);
 		
 		JButton buttonSaveTheme = new JButton("Save Theme");
-		buttonSaveTheme.setEnabled(false);
 		buttonSaveTheme.setForeground(Color.RED);
 		buttonSaveTheme.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		buttonSaveTheme.setBorder(new RoundBorderBotton(10));
@@ -191,7 +190,7 @@ public class CreaCorsoFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-			counter = controller.textEnableDisable(buttonSaveTheme ,fram, counter, textFieldTheme, panelTema);
+			counter = controller.textEnableDisable(fram, counter, textFieldTheme, panelTema);
 		
 			}
 			
@@ -210,7 +209,6 @@ public class CreaCorsoFrame extends JFrame{
 			}
 		});
 		
-		
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -225,8 +223,34 @@ public class CreaCorsoFrame extends JFrame{
 		buttonSaveTheme.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.insertNewThemeFromField(fram, textFieldTheme, textAreaSelectedTheme);
+				String theme = textFieldTheme.getText();
+				int insert = 0;
+				boolean control , onlychar;
+				//controllo field theme vuoto e anche numerico
+				control = theme.isEmpty();
 				
+				if(control == true) {
+					
+					JOptionPane.showMessageDialog(fram, "Empty Description,write something.", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
+					
+				}else {
+					
+					onlychar = controller.isWhatYouWant(theme, 0);
+					
+					if(onlychar == true) {
+						
+						textAreaSelectedTheme.setText(theme);
+						textFieldTheme.setEnabled(false);	
+						
+					}else {
+						
+						JOptionPane.showMessageDialog(fram, "Invalid input,only char admitted.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+						
+					}
+					
+					
+					
+				}
 			}			
 		});
 		

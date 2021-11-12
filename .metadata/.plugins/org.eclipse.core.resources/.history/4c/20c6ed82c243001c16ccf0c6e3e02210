@@ -127,15 +127,12 @@ public class Controller implements ControlloStringhe {
 		}
 	}
 	
-	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel) {
-
+	public int textEnableDisable(JFrame fram ,int count ,JTextField field ,JPanel pabel) {
 		if(field.isEnabled()) {
 			
 			count = count + 1;
 			field.setEnabled(false);
 			pabel.setEnabled(false);
-			button.setEnabled(false);
-			
 			return count;
 		}
 			if(count <2) {
@@ -143,16 +140,11 @@ public class Controller implements ControlloStringhe {
 				count += 1;
 				field.setEnabled(true);
 				pabel.setEnabled(true);
-				button.setEnabled(true);
-				
 				return count;
 				
 			}else {
-				
 			field.setEnabled(false);
 			pabel.setEnabled(false);
-			button.setEnabled(false);
-			
 			JOptionPane.showMessageDialog(fram,"You can't use this field twice.", "New Theme error.", JOptionPane.ERROR_MESSAGE);
 			return 3;
 			
@@ -194,35 +186,6 @@ public class Controller implements ControlloStringhe {
 		}else
 			jpanelManagementCreaCorsoFrame(fram,null ,nome ,0);
 		
-	}
-	
-	public void insertNewThemeFromField(JFrame fram ,JTextField field ,JTextArea area) {
-		
-		String theme = field.getText();
-		boolean control , onlychar;
-		//controllo field theme vuoto e anche numerico
-		control = theme.isEmpty();
-		
-		if(control == true) {
-			
-			JOptionPane.showMessageDialog(fram, "Empty Description,write something.", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
-			
-		}else {
-			
-			onlychar = isWhatYouWant(theme, 0);
-			
-			if(onlychar == true) {
-				
-				area.setText(theme);
-				field.setEnabled(false);	
-				
-			}else {
-				
-				JOptionPane.showMessageDialog(fram, "Invalid input,only char admitted.", "Invalid input", JOptionPane.ERROR_MESSAGE);
-				field.setText("");
-				
-			}		
-		}
 	}
 }
 

@@ -128,7 +128,6 @@ public class Controller implements ControlloStringhe {
 	}
 	
 	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel) {
-
 		if(field.isEnabled()) {
 			
 			count = count + 1;

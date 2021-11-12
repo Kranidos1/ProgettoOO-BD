@@ -128,7 +128,6 @@ public class Controller implements ControlloStringhe {
 	}
 	
 	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel) {
-
 		if(field.isEnabled()) {
 			
 			count = count + 1;
@@ -148,11 +147,8 @@ public class Controller implements ControlloStringhe {
 				return count;
 				
 			}else {
-				
 			field.setEnabled(false);
 			pabel.setEnabled(false);
-			button.setEnabled(false);
-			
 			JOptionPane.showMessageDialog(fram,"You can't use this field twice.", "New Theme error.", JOptionPane.ERROR_MESSAGE);
 			return 3;
 			
