@@ -1,0 +1,86 @@
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+
+public class GeneralPanel extends JPanel {
+;
+		
+	public GeneralPanel() 
+	{
+		
+
+		
+		
+	
+		setBackground(Color.white);
+		setLayout(null);
+		setSize(500,500);
+		
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 500, 22);
+		add(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic('F');
+		menuBar.add(fileMenu);
+		
+		JMenuItem exitMenu = new JMenuItem("Exit");
+		fileMenu.add(exitMenu);
+//		TODO  INSERISCI SULL EXIT USCITA
+		
+		JMenu navigaMenu = new JMenu("Naviga");
+		navigaMenu.setMnemonic('N');
+		menuBar.add(navigaMenu);
+		
+		JMenu creaMenu = new JMenu("Crea");
+		navigaMenu.add(creaMenu);
+		
+		JMenuItem corsoMenuItem = new JMenuItem("Corso");
+		creaMenu.add(corsoMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA CORSO
+		
+		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
+		creaMenu.add(areaTematicaMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA AREA
+		
+		JMenu gestisciStudentiMenu = new JMenu("Gestisci Studenti");
+		navigaMenu.add(gestisciStudentiMenu);
+		
+		JMenuItem iscriviMenuItem = new JMenuItem("Iscrivi");
+		gestisciStudentiMenu.add(iscriviMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME INSERISCI STUDENTI IN CORSO
+		
+		JMenuItem ricercaMenuItem = new JMenuItem("Ricerca");
+		gestisciStudentiMenu.add(ricercaMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA RICERCA STUDENTI
+		
+		JLabel labelTitle = new JLabel("GRU-Solution");
+		labelTitle.setFont(new Font("Barlow Condensed ExtraBold", Font.PLAIN, 35));
+		labelTitle.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelTitle.setBounds(81, 47, 226, 53);
+		add(labelTitle);
+		
+		JLabel labelProgramImage = new JLabel("");
+		labelProgramImage.setBounds(317, 23, 109, 114);
+		
+		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\programimage.png");
+		labelProgramImage.setIcon(image);
+		add(labelProgramImage);
+				
+	}
+	
+
+}

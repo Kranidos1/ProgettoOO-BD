@@ -1,0 +1,198 @@
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.Timer;
+import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import java.awt.Frame;
+import java.awt.Insets;
+
+public class GeneralPanel extends JPanel implements ControlloStringhe{
+;
+	private Timer timer;
+	private Date data;
+	private String stringDate;
+	private JLabel labelHourDate;
+	private creaCorsoFrame frame;
+	private	JMenuItem corsoMenuItem;
+	private boolean control;
+	
+	public GeneralPanel() 
+	{
+
+		setBackground(Color.white);
+		setLayout(null);
+		setSize(501, 516);
+		
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setMargin(new Insets(0, 0, 0, 1));
+		menuBar.setBounds(0, 0, 501, 22);
+		menuBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+		add(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic('F');
+		fileMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
+		menuBar.add(fileMenu);
+		
+		JMenuItem exitMenu = new JMenuItem("Exit");
+		fileMenu.add(exitMenu);
+		exitMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.exit(0);
+			}
+			
+		});
+		
+		JMenu navigaMenu = new JMenu("Naviga");
+		navigaMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
+		menuBar.add(navigaMenu);
+		
+		JMenu creaMenu = new JMenu("Crea");
+		navigaMenu.add(creaMenu);
+		
+		corsoMenuItem = new JMenuItem("Corso");
+		creaMenu.add(corsoMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA CORSO
+		corsoMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//PRENDE IL FRAME PADRE
+				JFrame fram = (JFrame) SwingUtilities.getRoot(menuBar);
+				fram.setVisible(false);
+				
+				frame = new creaCorsoFrame();
+				frame.setVisible(true);
+			}
+			
+		});
+		
+		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
+		creaMenu.add(areaTematicaMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA AREA
+		areaTematicaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String theme = JOptionPane.showInputDialog("New Theme");
+				//TODO Funzione add theme nel db
+				//CONTROLLO SE LA PAGINA E' CHIUSA O SE VIENE DATO UN INPUT VUOTO
+				if(theme.length() != 0) {
+					control = isAlpha(theme);
+					JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(menuBar);
+					
+					while(control == false || theme.length() == 0) {
+						
+						if(theme.length() != 0 ) {
+							control = isAlpha(theme);
+						}
+						
+						JOptionPane.showMessageDialog(tmpFrame ,"Only character admitted." ,"Input Error" ,JOptionPane.ERROR_MESSAGE);
+						theme = JOptionPane.showInputDialog("New Theme");
+						
+					}
+					//Inserimento nel db
+					System.out.println(theme);
+				}
+			}
+			
+		});
+		
+		JMenu gestisciStudentiMenu = new JMenu("Gestisci Studenti");
+		navigaMenu.add(gestisciStudentiMenu);
+		
+		JMenuItem iscriviMenuItem = new JMenuItem("Iscrivi");
+		gestisciStudentiMenu.add(iscriviMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME INSERISCI STUDENTI IN CORSO
+		
+		JMenuItem ricercaMenuItem = new JMenuItem("Ricerca");
+		gestisciStudentiMenu.add(ricercaMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA RICERCA STUDENTI
+		
+		JLabel labelTitle = new JLabel("GRU-Solution");
+		labelTitle.setForeground(Color.BLACK);
+		labelTitle.setFont(new Font("Kimberley Bl", Font.PLAIN, 35));
+		labelTitle.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelTitle.setBounds(80, 57, 227, 53);
+		add(labelTitle);
+		
+		JLabel labelProgramImage = new JLabel("");
+		labelProgramImage.setBounds(317, 33, 109, 114);
+		
+		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\programImage.gif"
+				+ "");
+		labelProgramImage.setIcon(image);
+		add(labelProgramImage);
+		
+		labelHourDate = new JLabel("");
+		labelHourDate.setHorizontalAlignment(SwingConstants.CENTER);
+		labelHourDate.setFont(new Font("Arial Black", Font.PLAIN, 17));
+		labelHourDate.setBounds(236, 463, 265, 53);
+		labelHourDate.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 0, Color.black));
+		add(labelHourDate);
+		//Raggira lo start del timer dopo un secondo
+		data = new Date();
+		stringDate = data.toLocaleString();
+		labelHourDate.setText(stringDate);
+		
+		setTimer();
+		
+	}
+	
+	public void setTimer() {
+		timer = new Timer(1000,new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				data = new Date();
+				stringDate = data.toLocaleString();
+				labelHourDate.setText(stringDate);
+			}		
+		});	
+		timer.setRepeats(true);
+		timer.start();
+	}
+
+	@Override
+	public boolean isAlpha(String input) {
+		// TODO Auto-generated method stub
+	    char[] tmpChar = input.toCharArray();
+
+	    for (char c : tmpChar) {
+	    	
+	        if(!Character.isLetter(c)) {
+	        	
+	            return false;
+	            
+	        }
+	    }
+	    
+	    return true;
+	    
+	}
+}

@@ -1,0 +1,104 @@
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+public class Controller implements ControlloStringhe {
+
+	@Override
+	public boolean isWhatYouWant(String input, int flag) {
+		// TODO Auto-generated method stub
+		// FLAG 0 STRINGHE 1 INT
+		if(flag == 0) {
+		    char[] tmp = input.toCharArray();
+
+		    for (char c : tmp) {
+		        if(!Character.isLetter(c)) {
+		            return false;
+		        }
+		    }
+
+		    return true;
+			
+		}else 
+			
+			  for (int i = 0; i < input.length(); i++) {
+				   char ch = input.charAt(i);
+				   if (!Character.isDigit(ch)) {
+				    return false;
+				   }
+				  }
+
+				  return true;
+	}
+
+	@Override
+	public boolean isEmptyArea(JTextArea input) {
+		// TODO Auto-generated method stub
+		String tmp = input.getText();
+		if(tmp.isEmpty()) {
+			return true;
+		}else
+			return false;
+	}
+
+	@Override
+	public boolean isEmptyField(JTextField input) {
+		// TODO Auto-generated method stub
+		String tmp = input.getText();
+		if(tmp.isEmpty()) {
+			return true;
+		}else
+			return false;
+	}
+	
+	public void newTheme(JLabel label) {
+		String theme = JOptionPane.showInputDialog("New Theme");
+		//TODO Funzione add theme nel db
+		//CONTROLLO SE LA PAGINA E' CHIUSA O SE VIENE DATO UN INPUT VUOTO
+		boolean control;
+		int flag = 0;
+		JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(label);
+		if(theme != null) {
+			if(theme.length() != 0) {
+				
+				control = isWhatYouWant(theme,0);
+				
+				while(control == false || theme.length() == 0) {
+					
+					JOptionPane.showMessageDialog(tmpFrame ,"Only character admitted." ,"Input Error" ,JOptionPane.ERROR_MESSAGE);
+					theme = JOptionPane.showInputDialog("New Theme");
+					
+					if(theme != null) {
+						if(theme.length() != 0) {
+							control = isWhatYouWant(theme,0);
+						}
+					}else {
+						flag = 1;
+						break;
+					}
+					
+				}
+				//Inserimento nel db
+				if(flag == 0) {
+					//TODO INSERIMENTO EFFETTIVO NEL DB
+					System.out.println(theme);
+				}else {
+					//GESTISCE CHIUSURA NELL'ERRORE
+					JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+				}
+				
+			}else {
+				//GESTISCE INVIO VUOTO ALL'INIZIO
+				JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+			}
+		}else {
+			//GESTISCE CHIUSURA ALL'INIZIO
+			JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+		}
+	}
+}
+

@@ -1,0 +1,386 @@
+import java.awt.*;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.border.LineBorder;
+import javax.swing.text.AttributeSet.ColorAttribute;
+import javax.swing.JComponent;
+
+public class CreaCorsoFrame extends JFrame implements ControlloStringhe{
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private JTextField textFieldName;
+	private JTextField textFieldMax;
+	private JTextField textFieldMin;
+	private JTextField textFieldTheme;
+	private int counter = 0;
+	private JFrame fram;
+	
+	public CreaCorsoFrame() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		panel = new GeneralPanel();
+		getContentPane().add(panel);
+		
+		JLabel nomeCorsoLabel = new JLabel("Nome");
+		nomeCorsoLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		nomeCorsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		nomeCorsoLabel.setBounds(47, 112, 71, 29);
+		panel.add(nomeCorsoLabel);
+		
+		JLabel maxLabel = new JLabel("Max Partecipants");
+		maxLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		maxLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		maxLabel.setBounds(0, 152, 118, 29);
+		panel.add(maxLabel);
+		
+		JLabel minLabel = new JLabel("Min Partecipants");
+		minLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		minLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		minLabel.setBounds(10, 192, 108, 29);
+		panel.add(minLabel);
+		
+		textFieldName = new JTextField();
+		textFieldName.setBounds(130, 118, 172, 20);
+		panel.add(textFieldName);
+		textFieldName.setColumns(50);
+		
+		textFieldMax = new JTextField();
+		textFieldMax.setColumns(50);
+		textFieldMax.setBounds(130, 158, 172, 20);
+		panel.add(textFieldMax);
+		
+		textFieldMin = new JTextField();
+		textFieldMin.setColumns(50);
+		textFieldMin.setBounds(130, 201, 172, 20);
+		panel.add(textFieldMin);
+		
+		JTextArea textAreaDescrizione = new JTextArea();
+		textAreaDescrizione.setBounds(10, 293, 318, 148);
+		textAreaDescrizione.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black));
+		panel.add(textAreaDescrizione);
+		
+		JButton buttonSave = new JButton("Save");
+		buttonSave.setBounds(10, 465, 89, 23);
+		buttonSave.setBorder(new RoundBorderBotton(10));
+		buttonSave.setBackground(Color.white);
+		buttonSave.setForeground(Color.red);
+		panel.add(buttonSave);
+		
+		JCheckBox checkBox = new JCheckBox("");
+		checkBox.setToolTipText("Use this field only if you forgot to create ONE theme.You can't create here two themes or more.");
+		checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+		checkBox.setBounds(329, 140, 18, 20);
+		checkBox.setBackground(Color.white);
+		panel.add(checkBox);
+		
+		JPanel panelTema = new JPanel();
+		panelTema.setToolTipText("Use this field only if you forgot to create ONE theme.You can't create here two themes or more.");
+		panelTema.setBounds(353, 152, 121, 82);
+		panelTema.setBackground(Color.white);
+		panel.add(panelTema);
+		panelTema.setLayout(null);
+		panelTema.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		JLabel labelTemaPanel = new JLabel("New Theme");
+		labelTemaPanel.setEnabled(false);
+		labelTemaPanel.setToolTipText("Use this field only if you forgot to create ONE theme.You can't create here two themes or more.");
+		labelTemaPanel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		labelTemaPanel.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTemaPanel.setBounds(10, 0, 101, 32);
+		panelTema.add(labelTemaPanel);
+		
+		textFieldTheme = new JTextField();
+		textFieldTheme.setToolTipText("Use this field only if you forgot to create ONE theme.You can't create here two themes or more.");
+		textFieldTheme.setEnabled(false);
+		textFieldTheme.setBounds(10, 31, 101, 20);
+		panelTema.add(textFieldTheme);
+		textFieldTheme.setColumns(10);
+		
+		JLabel descriptionLabel = new JLabel("Description");
+		descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		descriptionLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		descriptionLabel.setBounds(10, 276, 71, 14);
+		panel.add(descriptionLabel);
+		
+		Choice choiceOption = new Choice();
+		choiceOption.setBounds(130, 244, 172, 20);
+		panel.add(choiceOption);
+		
+		JLabel themesLabel = new JLabel("Themes");
+		themesLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		themesLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		themesLabel.setBounds(10, 244, 108, 21);
+		panel.add(themesLabel);
+		
+		JButton buttonCleanAll = new JButton("Clean All");
+		buttonCleanAll.setForeground(Color.RED);
+		buttonCleanAll.setBorder(new RoundBorderBotton(10));
+		buttonCleanAll.setBackground(Color.WHITE);
+		buttonCleanAll.setBounds(130, 465, 89, 23);
+		panel.add(buttonCleanAll);
+		
+		JTextArea textAreaSelectedTheme = new JTextArea();
+		textAreaSelectedTheme.setEditable(false);
+		textAreaSelectedTheme.setBounds(338, 293, 153, 148);
+		textAreaSelectedTheme.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+		panel.add(textAreaSelectedTheme);
+		
+		JLabel lblSelectedTheme = new JLabel("Selected Theme");
+		lblSelectedTheme.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectedTheme.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		lblSelectedTheme.setBounds(339, 276, 135, 14);
+		panel.add(lblSelectedTheme);
+		
+		JButton buttonCleanArea = new JButton("Clean");
+		buttonCleanArea.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		buttonCleanArea.setForeground(Color.RED);
+		buttonCleanArea.setBorder(new RoundBorderBotton(10));
+		buttonCleanArea.setBackground(Color.WHITE);
+		buttonCleanArea.setBounds(444, 445, 47, 14);
+		panel.add(buttonCleanArea);
+		
+		JButton buttonSaveTheme = new JButton("Save Theme");
+		buttonSaveTheme.setForeground(Color.RED);
+		buttonSaveTheme.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		buttonSaveTheme.setBorder(new RoundBorderBotton(10));
+		buttonSaveTheme.setBackground(Color.WHITE);
+		buttonSaveTheme.setBounds(396, 245, 78, 14);
+		panel.add(buttonSaveTheme);
+		
+		buttonCleanArea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textAreaSelectedTheme.setText("");
+			}
+		});
+		
+		checkBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(textFieldTheme.isEnabled()) {
+					
+					counter += 1;
+					textFieldTheme.setEnabled(false);
+					labelTemaPanel.setEnabled(false);
+					
+				}else 
+					if(counter <2) {
+						
+						counter += 1;
+						textFieldTheme.setEnabled(true);
+						labelTemaPanel.setEnabled(true);
+						
+					}
+				
+				if(counter >= 2) {
+
+					JFrame fram = (JFrame) SwingUtilities.getRoot(descriptionLabel);
+					JOptionPane.showMessageDialog(fram,"You can't use this field twice.", "New Theme error.", JOptionPane.ERROR_MESSAGE);
+					
+				}
+				
+			}
+			
+		});
+		
+		buttonCleanAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textAreaDescrizione.setText("");
+				textFieldMin.setText("");
+				textFieldMax.setText("");
+				textFieldName.setText("");
+				textFieldTheme.setText("");
+				textAreaSelectedTheme.setText("");
+			}
+		});
+		
+		buttonSave.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(panel);
+				//BOOLEAN DI CONTROLLO
+				String name,max,min;
+				boolean a,b,c,d,f,g,z,v,u;
+				a = isEmptyField(textFieldName);
+				name = textFieldName.getText();
+				z = isWhatYouWant(name,0);
+				
+				b = isEmptyField(textFieldMax);
+				max = textFieldMax.getText();
+				v = isWhatYouWant(max,1);
+				
+				c = isEmptyField(textFieldMin);
+				min = textFieldMin.getText();
+				u = isWhatYouWant(min,1);
+				
+				d = isEmptyArea(textAreaDescrizione);
+				
+				if(a == false && z == true) {
+					if(b == false && v == true) {
+						if(c == false && u == true) {
+							if(d == false) {
+								//TODO SALVATAGGIO EFFETTIVO INSERIMENTO DB
+								
+								
+								
+							}else
+								jpanelManagement(textAreaDescrizione ,null ,3);
+						}else
+							jpanelManagement(null,textFieldMin,2);
+					}else
+						jpanelManagement(null,textFieldMax,1);
+						
+				}else
+					jpanelManagement(null ,textFieldName ,0);
+				
+			}
+			
+		});
+		
+		buttonSaveTheme.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String theme = textFieldTheme.getText();
+				int insert = 0;
+				boolean control;
+				JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(panel);
+				
+					if(theme.length() != 0) {
+						
+						control = isWhatYouWant(theme,0);
+						
+						if(control == false || theme.length() == 0) {
+							
+							JOptionPane.showMessageDialog(tmpFrame ,"Only character admitted." ,"Input Error" ,JOptionPane.ERROR_MESSAGE);
+							textFieldTheme.setText("");
+							
+							if(theme != null) {
+								if(theme.length() != 0) {
+									control = isWhatYouWant(theme,0);
+								}
+							}else {
+								insert = 1;
+							}
+							
+						}
+						//Inserimento nel db
+						if(insert == 0) {
+							//TODO INSERIMENTO EFFETTIVO NEL DB
+							System.out.println(theme);
+						}else {
+							//GESTISCE CHIUSURA NELL'ERRORE
+							JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+						}
+						
+					}else {
+						//GESTISCE INVIO VUOTO ALL'INIZIO
+						JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+					}
+				
+			}			
+		});
+		
+		setVisible(true);
+	}
+
+	@Override
+	public boolean isWhatYouWant(String input , int flag) {
+		// FLAG 0 STRINGHE 1 INT
+		if(flag == 0) {
+		    char[] tmp = input.toCharArray();
+
+		    for (char c : tmp) {
+		        if(!Character.isLetter(c)) {
+		            return false;
+		        }
+		    }
+
+		    return true;
+			
+		}else 
+			
+			  for (int i = 0; i < input.length(); i++) {
+				   char ch = input.charAt(i);
+				   if (!Character.isDigit(ch)) {
+				    return false;
+				   }
+				  }
+
+				  return true;
+				 
+	}
+
+	@Override
+	public boolean isEmptyArea(JTextArea input) {
+		// TODO Auto-generated method stub
+		String tmp = input.getText();
+		if(tmp.isEmpty()) {
+			return true;
+		}else
+			return false;
+	}
+
+	@Override
+	public boolean isEmptyField(JTextField input) {
+		// TODO Auto-generated method stub
+		String tmp = input.getText();
+		if(tmp.isEmpty()) {
+			return true;
+		}else
+			return false;
+	}
+	
+	public void jpanelManagement(JTextArea inputArea ,JTextField inputField ,int flag) {
+		
+		//SI RIFERISCE A FLAG 0 = a, 1 = b , 2 = c , 3 = d , 4 = f
+		switch(flag) {
+		case 0:
+			JOptionPane.showMessageDialog(fram, "Invalid Name", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 1:
+			
+			JOptionPane.showMessageDialog(fram, "Invalid NumberMax Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 2:
+			
+			JOptionPane.showMessageDialog(fram, "Invalid NumberMin Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 3:
+			
+			JOptionPane.showMessageDialog(fram, "Empty Description.Invalid Description Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			break;
+		}
+	}
+}

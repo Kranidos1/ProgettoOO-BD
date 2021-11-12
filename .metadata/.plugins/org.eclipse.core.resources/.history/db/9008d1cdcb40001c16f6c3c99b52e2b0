@@ -1,0 +1,12 @@
+import javax.swing.JPanel;
+
+public class pannelloFirstFrame extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public pannelloFirstFrame() {
+
+	}
+
+}

@@ -1,0 +1,22 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+
+public class FirstFrame extends JFrame {
+
+	private JPanel contentPane;
+
+	public FirstFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 754, 652);
+		getContentPane().setLayout(null);
+		GeneralPanel panel = new GeneralPanel();
+		getContentPane().add(panel);
+		setVisible(true);
+	}
+
+}

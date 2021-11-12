@@ -1,0 +1,11 @@
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Starter {
+
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		FirstFrame frame = new FirstFrame();
+	}
+
+}

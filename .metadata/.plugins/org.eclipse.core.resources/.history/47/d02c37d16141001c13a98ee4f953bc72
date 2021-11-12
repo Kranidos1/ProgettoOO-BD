@@ -1,0 +1,36 @@
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
+import java.awt.Color;
+import java.awt.Font;
+
+public class panelGenerale extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public panelGenerale() {
+		
+		
+		setBounds(0, 0, 684, 661);
+		setLayout(null);
+		setBackground(Color.white);
+		
+		JLabel labelTitle = new JLabel("GRU-Solution");
+		labelTitle.setFont(new Font("Arial Black", Font.PLAIN, 35));
+		labelTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTitle.setBounds(101, 0, 321, 90);
+		add(labelTitle);
+		
+		JLabel label = new JLabel("");
+		label.setBounds(395, 11, 114, 79);
+		
+		ImageIcon imagePrincipale = new ImageIcon("C:\\Users\\matti\\Desktop\\lastin.png");
+		label.setIcon(imagePrincipale);
+		
+		add(label);
+		
+	}
+}

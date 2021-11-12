@@ -1,0 +1,264 @@
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.regex.Pattern;
+
+import javax.swing.Timer;
+import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import java.awt.Frame;
+import java.awt.Insets;
+
+public class GeneralPanel extends JPanel implements ControlloStringhe{
+;
+	private Timer timer;
+	private Date data;
+	private String stringDate;
+	private JLabel labelHourDate;
+	private CreaCorsoFrame frame;
+	private	JMenuItem corsoMenuItem;
+	private boolean control;
+	private int flag = 0;
+	private JFrame fram;
+	private FrameDiScelta frameHome;
+	
+	public GeneralPanel() 
+	{
+
+		setBackground(Color.white);
+		setLayout(null);
+		setSize(501, 516);
+		
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setMargin(new Insets(0, 0, 0, 1));
+		menuBar.setBounds(0, 0, 501, 22);
+		menuBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+		add(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic('F');
+		fileMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
+		menuBar.add(fileMenu);
+		
+		JMenuItem exitMenu = new JMenuItem("Exit");
+		fileMenu.add(exitMenu);
+		exitMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.exit(0);
+			}
+			
+		});
+		
+		JMenu navigaMenu = new JMenu("Naviga");
+		navigaMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
+		menuBar.add(navigaMenu);
+		
+		JMenuItem homeMenuItem = new JMenuItem("Home");
+		homeMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(menuBar);
+				fram.setVisible(false);
+				frameHome = new FrameDiScelta();
+				
+			}
+			
+		});
+		navigaMenu.add(homeMenuItem);
+		
+		JMenu creaMenu = new JMenu("Crea");
+		creaMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
+		navigaMenu.add(creaMenu);
+		
+		corsoMenuItem = new JMenuItem("Corso");
+		creaMenu.add(corsoMenuItem);
+		corsoMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+//		TODO INSERISCI PASSAGGIO FRAME CREA CORSO
+		corsoMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//PRENDE IL FRAME PADRE
+				fram = (JFrame) SwingUtilities.getRoot(menuBar);
+				fram.setVisible(false);
+				
+				frame = new CreaCorsoFrame();
+				frame.setVisible(true);
+			}
+			
+		});
+		
+		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
+		creaMenu.add(areaTematicaMenuItem);
+//		PASSAGGIO A JPANEL CREA AREA
+		areaTematicaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String theme = JOptionPane.showInputDialog("New Theme");
+				//TODO Funzione add theme nel db
+				//CONTROLLO SE LA PAGINA E' CHIUSA O SE VIENE DATO UN INPUT VUOTO
+				JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(menuBar);
+				if(theme != null) {
+					if(theme.length() != 0) {
+						
+						control = isWhatYouWant(theme,0);
+						
+						while(control == false || theme.length() == 0) {
+							
+							JOptionPane.showMessageDialog(tmpFrame ,"Only character admitted." ,"Input Error" ,JOptionPane.ERROR_MESSAGE);
+							theme = JOptionPane.showInputDialog("New Theme");
+							
+							if(theme != null) {
+								if(theme.length() != 0) {
+									control = isWhatYouWant(theme,0);
+								}
+							}else {
+								flag = 1;
+								break;
+							}
+							
+						}
+						//Inserimento nel db
+						if(flag == 0) {
+							//TODO INSERIMENTO EFFETTIVO NEL DB
+							System.out.println(theme);
+						}else {
+							//GESTISCE CHIUSURA NELL'ERRORE
+							JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+						}
+						
+					}else {
+						//GESTISCE INVIO VUOTO ALL'INIZIO
+						JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+					}
+				}else {
+					//GESTISCE CHIUSURA ALL'INIZIO
+					JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
+				}
+			}
+			
+		});
+		
+		JMenu gestisciStudentiMenu = new JMenu("Gestisci Studenti");
+		navigaMenu.add(gestisciStudentiMenu);
+		
+		JMenuItem iscriviMenuItem = new JMenuItem("Iscrivi");
+		iscriviMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+		gestisciStudentiMenu.add(iscriviMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME INSERISCI STUDENTI IN CORSO
+		
+		JMenuItem ricercaMenuItem = new JMenuItem("Ricerca");
+		gestisciStudentiMenu.add(ricercaMenuItem);
+//		TODO INSERISCI PASSAGGIO FRAME CREA RICERCA STUDENTI
+		
+		JLabel labelTitle = new JLabel("GRU-Solution");
+		labelTitle.setForeground(Color.BLACK);
+		labelTitle.setFont(new Font("Kimberley Bl", Font.PLAIN, 35));
+		labelTitle.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelTitle.setBounds(80, 57, 227, 53);
+		add(labelTitle);
+		
+		JLabel labelProgramImage = new JLabel("");
+		labelProgramImage.setBounds(317, 33, 109, 114);
+		
+		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\programImage.gif"
+				+ "");
+		labelProgramImage.setIcon(image);
+		add(labelProgramImage);
+		
+		labelHourDate = new JLabel("");
+		labelHourDate.setHorizontalAlignment(SwingConstants.CENTER);
+		labelHourDate.setFont(new Font("Arial Black", Font.PLAIN, 17));
+		labelHourDate.setBounds(236, 463, 265, 53);
+		labelHourDate.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 0, Color.black));
+		add(labelHourDate);
+		//Raggira lo start del timer dopo un secondo
+		data = new Date();
+		stringDate = data.toLocaleString();
+		labelHourDate.setText(stringDate);
+		
+		setTimer();
+		
+	}
+	
+	public void setTimer() {
+		timer = new Timer(1000,new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				data = new Date();
+				stringDate = data.toLocaleString();
+				labelHourDate.setText(stringDate);
+			}		
+		});	
+		timer.setRepeats(true);
+		timer.start();
+	}
+
+	@Override
+	public boolean isWhatYouWant(String input , int flag) {
+		// TODO Auto-generated method stub
+		//FLAG 0 PER STRINGA 1 PER NUMERI
+		if(flag == 0) {
+		    char[] tmp = input.toCharArray();
+
+		    for (char c : tmp) {
+		        if(!Character.isLetter(c)) {
+		            return false;
+		        }
+		    }
+
+		    return true;
+			
+		}else 
+			  for (int i = 0; i < input.length(); i++) {
+				   char ch = input.charAt(i);
+				   if (!Character.isDigit(ch)) {
+				    return false;
+				   }
+				  }
+
+				  return true;
+				 
+	    
+	}
+
+	@Override
+	public boolean isEmptyArea(JTextArea input) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isEmptyField(JTextField input) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}

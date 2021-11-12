@@ -1,0 +1,41 @@
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.*;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class pannelloFirstFrame extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public pannelloFirstFrame() {
+		setLayout(null);
+		setBackground(new java.awt.Color(160, 140, 152));
+		JLabel label = new JLabel("");
+		label.setBounds(-27, 180, 477, 204);
+		add(label);
+
+		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\firstry.jpg");
+		label.setIcon(image);
+		
+		JLabel lblNewLabel = new JLabel("GRU-Solution");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("M42_FLIGHT 721", Font.PLAIN, 11));
+		lblNewLabel.setBounds(100, 0, 229, 119);
+		add(lblNewLabel);
+		
+		JButton bottone = new JButton("");
+		bottone.setToolTipText("");
+		bottone.setForeground(Color.GREEN);
+		bottone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		bottone.setBounds(174, 84, 78, 103);
+		bottone.setIcon(new ImageIcon("C:\\Users\\matti\\Desktop\\lastin.png"));
+		add(bottone);
+	}
+}

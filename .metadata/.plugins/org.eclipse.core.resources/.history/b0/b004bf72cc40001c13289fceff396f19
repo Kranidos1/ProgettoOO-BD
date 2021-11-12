@@ -1,0 +1,18 @@
+import java.awt.Component;
+
+import javax.swing.*;
+
+public class pannelloFirstFrame extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public pannelloFirstFrame() {
+		setLayout(null);
+		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\background.jpg");
+		JLabel labelImage = new JLabel();
+		labelImage.setBounds(0, 0, 450, 300);
+		labelImage.setIcon(image);
+		add(labelImage);
+	}
+}

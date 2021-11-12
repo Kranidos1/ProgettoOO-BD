@@ -1,0 +1,25 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class FirstFrame extends JFrame {
+
+	public PanelGenerale contentPane;
+
+		public FirstFrame() {
+			
+		super("Progetto");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(700,700);
+		setResizable(false);
+		
+		PanelGenerale panelGenerale = new PanelGenerale();
+		getContentPane().add(panelGenerale, BorderLayout.CENTER);
+		PanelGenerale contentPane = new PanelGenerale();
+		
+		
+	}
+}

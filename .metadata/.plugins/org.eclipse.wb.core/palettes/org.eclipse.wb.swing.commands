@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+	<addComponent
+		id="custom_1636471999488"
+		name="PanelGenerale"
+		visible="true"
+		class="PanelGenerale"
+		category="org.eclipse.wb.swing.containers"/>
+	<removeEntry
+		id="custom_1636471999488"/>
+	<addComponent
+		id="custom_1636473150088"
+		name="PanelGenerale"
+		visible="true"
+		class="PanelGenerale"
+		category="org.eclipse.wb.swing.containers"/>
+</commands>

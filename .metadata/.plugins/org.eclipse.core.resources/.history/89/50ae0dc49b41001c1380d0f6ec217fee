@@ -1,0 +1,54 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.util.Date;
+
+import javax.swing.SwingConstants;
+
+public class FirstFrame extends JFrame {
+
+	private JPanel contentPane;
+	public Date data;
+	public String stringDate;
+	JLabel labelHourDate;
+	
+	public FirstFrame() {
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 509, 532);
+		getContentPane().setLayout(null);
+		GeneralPanel panel = new GeneralPanel();
+		getContentPane().add(panel);
+		
+		labelHourDate = new JLabel("");
+		labelHourDate.setHorizontalAlignment(SwingConstants.CENTER);
+		labelHourDate.setFont(new Font("Arial Black", Font.ITALIC, 20));
+		labelHourDate.setBounds(197, 420, 293, 69);
+		panel.add(labelHourDate);
+		setVisible(true);
+		
+		setHourDate();
+	}
+	
+	public void setHourDate() {
+		
+		while(true) {
+			data = new Date();
+			stringDate = data.toGMTString();
+			labelHourDate.setText(stringDate);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+}

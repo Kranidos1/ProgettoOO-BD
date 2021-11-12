@@ -1,0 +1,4 @@
+
+public interface ControlloStringhe {
+	public boolean isAlpha(String input);
+}
