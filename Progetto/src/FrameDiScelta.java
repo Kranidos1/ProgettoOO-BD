@@ -26,6 +26,7 @@ public class FrameDiScelta extends JFrame{
 	private boolean control;
 	private int flag = 0;
 	private Controller controller;
+	private GestioneCorsiFrame gestioneCorsi;
 	
 	public FrameDiScelta(){
 		//RIGA 16 24 FRAME GENERICO
@@ -84,6 +85,12 @@ public class FrameDiScelta extends JFrame{
 		buttonAreaTematica.setBounds(165, 168, 160, 32);
 		panel.add(buttonAreaTematica);
 		
-
+		buttonGestioneCorsi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				gestioneCorsi = new GestioneCorsiFrame();
+			}
+		});
+		
 	}
 }

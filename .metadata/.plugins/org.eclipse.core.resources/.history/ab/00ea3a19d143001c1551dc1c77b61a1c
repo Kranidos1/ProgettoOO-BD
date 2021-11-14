@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
+
 import javax.swing.Timer;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -24,15 +26,19 @@ import javax.swing.JTextArea;
 import java.awt.Frame;
 import java.awt.Insets;
 
-public class GeneralPanel extends JPanel implements ControlloStringhe{
+public class GeneralPanel extends JPanel {
 ;
 	private Timer timer;
 	private Date data;
 	private String stringDate;
-	private JLabel labelHourDate;
-	private creaCorsoFrame frame;
+	public JLabel labelHourDate;
+	private CreaCorsoFrame frame;
 	private	JMenuItem corsoMenuItem;
 	private boolean control;
+	private int flag = 0;
+	private JFrame fram;
+	private FrameDiScelta frameHome;
+	private Controller controller;
 	
 	public GeneralPanel() 
 	{
@@ -41,6 +47,7 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 		setLayout(null);
 		setSize(501, 516);
 		
+		controller = new Controller();
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 0, 0, 1));
@@ -69,11 +76,28 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 		navigaMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
 		menuBar.add(navigaMenu);
 		
+		JMenuItem homeMenuItem = new JMenuItem("Home");
+		homeMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(menuBar);
+				fram.setVisible(false);
+				frameHome = new FrameDiScelta();
+				
+			}
+			
+		});
+		navigaMenu.add(homeMenuItem);
+		
 		JMenu creaMenu = new JMenu("Crea");
+		creaMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
 		navigaMenu.add(creaMenu);
 		
 		corsoMenuItem = new JMenuItem("Corso");
 		creaMenu.add(corsoMenuItem);
+		corsoMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
 //		TODO INSERISCI PASSAGGIO FRAME CREA CORSO
 		corsoMenuItem.addActionListener(new ActionListener() {
 
@@ -81,10 +105,10 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				//PRENDE IL FRAME PADRE
-				JFrame fram = (JFrame) SwingUtilities.getRoot(menuBar);
+				fram = (JFrame) SwingUtilities.getRoot(menuBar);
 				fram.setVisible(false);
 				
-				frame = new creaCorsoFrame();
+				frame = new CreaCorsoFrame();
 				frame.setVisible(true);
 			}
 			
@@ -92,36 +116,13 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 		
 		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
 		creaMenu.add(areaTematicaMenuItem);
-//		TODO INSERISCI PASSAGGIO FRAME CREA AREA
-		areaTematicaMenuItem.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				String theme = JOptionPane.showInputDialog("New Theme");
-				//TODO Funzione add theme nel db
-				if(theme != null && theme.isEmpty() == false) {
-					control = isAlpha(theme);
-					JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(menuBar);
-					
-					while(control == false) {
-						
-						JOptionPane.showMessageDialog(tmpFrame ,"Only character admitted." ,"Input Error" ,JOptionPane.ERROR_MESSAGE);
-						theme = JOptionPane.showInputDialog("New Theme");
-						control = isAlpha(theme);
-						
-					}
-					//Inserimento nel db
-					System.out.println(theme);
-				}
-			}
-			
-		});
 		
 		JMenu gestisciStudentiMenu = new JMenu("Gestisci Studenti");
 		navigaMenu.add(gestisciStudentiMenu);
 		
 		JMenuItem iscriviMenuItem = new JMenuItem("Iscrivi");
+		iscriviMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
 		gestisciStudentiMenu.add(iscriviMenuItem);
 //		TODO INSERISCI PASSAGGIO FRAME INSERISCI STUDENTI IN CORSO
 		
@@ -155,6 +156,16 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 		stringDate = data.toLocaleString();
 		labelHourDate.setText(stringDate);
 		
+		areaTematicaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//AGGIUNGE AREATEMATICA
+				controller.newTheme(labelHourDate);
+			}
+		});
+		
 		setTimer();
 		
 	}
@@ -174,21 +185,4 @@ public class GeneralPanel extends JPanel implements ControlloStringhe{
 		timer.start();
 	}
 
-	@Override
-	public boolean isAlpha(String input) {
-		// TODO Auto-generated method stub
-	    char[] tmpChar = input.toCharArray();
-
-	    for (char c : tmpChar) {
-	    	
-	        if(!Character.isLetter(c)) {
-	        	
-	            return false;
-	            
-	        }
-	    }
-	    
-	    return true;
-	    
-	}
 }

@@ -40,8 +40,7 @@ public class GeneralPanel extends JPanel {
 	private FrameDiScelta frameHome;
 	private Controller controller;
 	
-	public GeneralPanel() 
-	{
+	public GeneralPanel() {
 
 		setBackground(Color.white);
 		setLayout(null);

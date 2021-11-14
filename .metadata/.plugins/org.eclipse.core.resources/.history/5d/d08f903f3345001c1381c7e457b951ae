@@ -1,0 +1,19 @@
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class TablePanel extends JPanel {
+
+	public TablePanel() {
+		setSize(481,268);
+		setLayout(null);
+		JTable table;
+		String[] columns = {"Name","Age"};
+		table = new JTable(2,0);
+
+	}
+
+	setLayout(null);
+
+}

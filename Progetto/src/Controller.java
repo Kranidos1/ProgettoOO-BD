@@ -181,7 +181,7 @@ public class Controller implements ControlloStringhe {
 				if(c == false && u == true) {
 					if(d == false) {
 						//TODO SALVATAGGIO EFFETTIVO INSERIMENTO DB ricorda di estrarre stringhe dall'area tematica e aggiungerle una a una nell'oggetto desiderato.
-						
+						//CONTROLO SU LISTA DI SELECTED THEME
 						
 						
 					}else

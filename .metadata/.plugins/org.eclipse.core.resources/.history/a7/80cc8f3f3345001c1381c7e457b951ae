@@ -1,0 +1,17 @@
+import javax.swing.JPanel;
+import javax.swing.JTable;
+
+public class TablePanel extends JPanel {
+
+	public TablePanel() {
+		setSize(481,268);
+		setLayout(null);
+		JTable table;
+		String[] columns = {"Name","Age"};
+		table = new JTable(null,columns);
+		table.setFillsViewportHeight(true);
+		setVisible(true);
+//		add(table);
+	}
+
+}

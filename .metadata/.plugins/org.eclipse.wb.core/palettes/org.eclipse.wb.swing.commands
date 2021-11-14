@@ -14,4 +14,7 @@
 		visible="true"
 		class="PanelGenerale"
 		category="org.eclipse.wb.swing.containers"/>
+	<moveEntry
+		id="org.eclipse.wb.swing.components.awt java.awt.Panel"
+		category="org.eclipse.wb.swing.components.awt"/>
 </commands>
