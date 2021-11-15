@@ -197,8 +197,20 @@ public class GeneralPanel extends JPanel {
 			
 		});
 		
-	}
-	
+		modificaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				EmCorsoFrame nuovoFrame = new EmCorsoFrame();
+				
+			}
+			
+		});
+		
+	}	
 	
 	
 	public void setTimer() {

@@ -76,7 +76,7 @@ public class GestioneCorsiFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);
-				EmCorsoFrame nuovoFrame = new EmCorsoFrame();
+				EliminaModificaCorsoFrame nuovoFrame = new EliminaModificaCorsoFrame();
 				
 			}
 		});
