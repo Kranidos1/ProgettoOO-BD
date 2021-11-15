@@ -3,6 +3,8 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
@@ -15,13 +17,20 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet.ColorAttribute;
 import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class CreaCorsoFrame extends JFrame{
 
@@ -132,9 +141,14 @@ public class CreaCorsoFrame extends JFrame{
 		descriptionLabel.setBounds(10, 276, 71, 14);
 		panel.add(descriptionLabel);
 		
-		Choice choiceOption = new Choice();
+		JComboBox<String> choiceOption = new JComboBox<String>();
+		choiceOption.setMaximumRowCount(5);
+		choiceOption.addItem("Pippo");
+		choiceOption.addItem("Baudo");
+		choiceOption.setBackground(Color.white);
 		choiceOption.setBounds(130, 244, 172, 20);
 		panel.add(choiceOption);
+		
 		
 		JLabel themesLabel = new JLabel("Themes");
 		themesLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
@@ -149,25 +163,11 @@ public class CreaCorsoFrame extends JFrame{
 		buttonCleanAll.setBounds(130, 465, 89, 23);
 		panel.add(buttonCleanAll);
 		
-		JTextArea textAreaSelectedTheme = new JTextArea();
-		textAreaSelectedTheme.setEditable(false);
-		textAreaSelectedTheme.setBounds(338, 293, 153, 148);
-		textAreaSelectedTheme.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-		panel.add(textAreaSelectedTheme);
-		
 		JLabel lblSelectedTheme = new JLabel("Selected Theme");
 		lblSelectedTheme.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSelectedTheme.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		lblSelectedTheme.setBounds(339, 276, 135, 14);
 		panel.add(lblSelectedTheme);
-		
-		JButton buttonCleanArea = new JButton("Clean");
-		buttonCleanArea.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		buttonCleanArea.setForeground(Color.RED);
-		buttonCleanArea.setBorder(new RoundBorderBotton(10));
-		buttonCleanArea.setBackground(Color.WHITE);
-		buttonCleanArea.setBounds(444, 445, 47, 14);
-		panel.add(buttonCleanArea);
 		
 		JButton buttonSaveTheme = new JButton("Save Theme");
 		buttonSaveTheme.setEnabled(false);
@@ -178,13 +178,24 @@ public class CreaCorsoFrame extends JFrame{
 		buttonSaveTheme.setBounds(396, 245, 78, 14);
 		panel.add(buttonSaveTheme);
 		
-		buttonCleanArea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				textAreaSelectedTheme.setText("");
-				
-			}
-		});
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		JList<String> list = new JList<String>(model);
+		list.setValueIsAdjusting(true);
+		list.setBounds(158, 331, 1, 1);
+		list.setLayoutOrientation(JList.VERTICAL_WRAP);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setBounds(338, 293, 153, 148);
+		panel.add(scrollPane);
+		scrollPane.setBorder(BorderFactory.createMatteBorder(2 , 2, 2, 2, Color.black));
+		
+		JButton buttonCleanArea = new JButton("Clean Area");
+		buttonCleanArea.setForeground(Color.RED);
+		buttonCleanArea.setBorder(new RoundBorderBotton(10));
+		buttonCleanArea.setBackground(Color.WHITE);
+		buttonCleanArea.setBounds(385, 444, 89, 14);
+		panel.add(buttonCleanArea);
 		
 		checkBox.addActionListener(new ActionListener() {
 
@@ -205,7 +216,7 @@ public class CreaCorsoFrame extends JFrame{
 				textFieldMax.setText("");
 				textFieldName.setText("");
 				textFieldTheme.setText("");
-				textAreaSelectedTheme.setText("");
+				model.removeAllElements();
 				
 			}
 		});
@@ -216,7 +227,7 @@ public class CreaCorsoFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				//BOOLEAN DI CONTROLLO
-				controller.insertCorsoDb(fram, textFieldName, textFieldMax, textFieldMin, textAreaDescrizione, textAreaSelectedTheme);
+				controller.insertCorsoDb(fram, textFieldName, textFieldMax, textFieldMin, textAreaDescrizione, model);
 				
 			}
 			
@@ -225,12 +236,34 @@ public class CreaCorsoFrame extends JFrame{
 		buttonSaveTheme.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.insertNewThemeFromField(fram, textFieldTheme, textAreaSelectedTheme);
+				controller.insertNewThemeFromField(fram, textFieldTheme, model);
 				
 			}			
 		});
 		
+		choiceOption.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					
+					String theme = (String) e.getItem();
+					controller.insertInListAndControl(model ,theme ,fram);
+					
+				}
+			}
+			
+		});
+		
+		buttonCleanArea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				model.removeAllElements();
+				
+			}
+		});
+		
 		setVisible(true);
 	}
-	
 }

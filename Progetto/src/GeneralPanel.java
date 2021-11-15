@@ -39,6 +39,7 @@ public class GeneralPanel extends JPanel {
 	private JFrame fram;
 	private FrameDiScelta frameHome;
 	private Controller controller;
+	private StatisticheCorsoFrame frameStats;
 	
 	public GeneralPanel() {
 
@@ -47,6 +48,7 @@ public class GeneralPanel extends JPanel {
 		setSize(501, 516);
 		
 		controller = new Controller();
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 0, 0, 1));
@@ -61,33 +63,13 @@ public class GeneralPanel extends JPanel {
 		
 		JMenuItem exitMenu = new JMenuItem("Exit");
 		fileMenu.add(exitMenu);
-		exitMenu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				System.exit(0);
-			}
-			
-		});
 		
 		JMenu navigaMenu = new JMenu("Naviga");
 		navigaMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
 		menuBar.add(navigaMenu);
 		
 		JMenuItem homeMenuItem = new JMenuItem("Home");
-		homeMenuItem.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				fram = (JFrame) SwingUtilities.getRoot(menuBar);
-				fram.setVisible(false);
-				frameHome = new FrameDiScelta();
-				
-			}
-			
-		});
 		navigaMenu.add(homeMenuItem);
 		
 		JMenu creaMenu = new JMenu("Crea");
@@ -97,21 +79,6 @@ public class GeneralPanel extends JPanel {
 		corsoMenuItem = new JMenuItem("Corso");
 		creaMenu.add(corsoMenuItem);
 		corsoMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
-//		TODO INSERISCI PASSAGGIO FRAME CREA CORSO
-		corsoMenuItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//PRENDE IL FRAME PADRE
-				fram = (JFrame) SwingUtilities.getRoot(menuBar);
-				fram.setVisible(false);
-				
-				frame = new CreaCorsoFrame();
-				frame.setVisible(true);
-			}
-			
-		});
 		
 		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
 		creaMenu.add(areaTematicaMenuItem);
@@ -123,11 +90,21 @@ public class GeneralPanel extends JPanel {
 		JMenuItem iscriviMenuItem = new JMenuItem("Iscrivi");
 		iscriviMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
 		gestisciStudentiMenu.add(iscriviMenuItem);
-//		TODO INSERISCI PASSAGGIO FRAME INSERISCI STUDENTI IN CORSO
+
 		
 		JMenuItem ricercaMenuItem = new JMenuItem("Ricerca");
 		gestisciStudentiMenu.add(ricercaMenuItem);
-//		TODO INSERISCI PASSAGGIO FRAME CREA RICERCA STUDENTI
+		
+		JMenu GestisciCorsoMenu = new JMenu("Gestisci Corso");
+		GestisciCorsoMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
+		navigaMenu.add(GestisciCorsoMenu);
+		
+		JMenuItem visualizzaStatisticheMenuItem = new JMenuItem("Visualizza Statistiche");
+		GestisciCorsoMenu.add(visualizzaStatisticheMenuItem);
+		
+		JMenuItem modificaMenuItem = new JMenuItem("Modifica/Elimina Corso");
+		GestisciCorsoMenu.add(modificaMenuItem);
+
 		
 		JLabel labelTitle = new JLabel("GRU-Solution");
 		labelTitle.setForeground(Color.BLACK);
@@ -162,12 +139,67 @@ public class GeneralPanel extends JPanel {
 				// TODO Auto-generated method stub
 				//AGGIUNGE AREATEMATICA
 				controller.newTheme(labelHourDate);
+				
 			}
+		});
+		
+		corsoMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//PRENDE IL FRAME PADRE
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				
+				frame = new CreaCorsoFrame();
+				frame.setVisible(true);
+			}
+			
+		});
+		
+		homeMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				frameHome = new FrameDiScelta();
+				
+			}
+			
+		});
+		
+		exitMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.exit(0);
+			}
+			
 		});
 		
 		setTimer();
 		
+		visualizzaStatisticheMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				frameStats = new StatisticheCorsoFrame();
+				frameStats.setVisible(true);
+				
+			}
+			
+		});
+		
 	}
+	
+	
 	
 	public void setTimer() {
 		timer = new Timer(1000,new ActionListener() {
@@ -183,5 +215,4 @@ public class GeneralPanel extends JPanel {
 		timer.setRepeats(true);
 		timer.start();
 	}
-
 }

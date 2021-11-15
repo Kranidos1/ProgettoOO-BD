@@ -35,7 +35,7 @@ public class StatisticheCorsoFrame extends JFrame {
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
+			new Object[][] {{"Pippo","Baudo","Tiririr","Cacca","cacca"}
 			},
 			columns
 		));
@@ -43,7 +43,7 @@ public class StatisticheCorsoFrame extends JFrame {
 		scrollPaneTable.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
 		scrollPaneTable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPaneTable.setBounds(10, 175, 481, 277);
-		table.setBackground(Color.WHITE);
+		scrollPaneTable.setBackground(Color.WHITE);
 		panel.add(scrollPaneTable);
 		
 		setVisible(true);
