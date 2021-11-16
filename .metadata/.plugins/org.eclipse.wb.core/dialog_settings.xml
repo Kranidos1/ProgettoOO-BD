@@ -36,4 +36,14 @@
 		<item key="width" value="525"/>
 		<item key="height" value="399"/>
 	</section>
+	<section name="org.eclipse.wb.internal.core.editor.palette.dialogs.ImportArchiveDialog">
+		<item key="x" value="697"/>
+		<item key="y" value="299"/>
+		<item key="width" value="525"/>
+		<item key="height" value="442"/>
+		<list key="HISTORY_JAR_LIST">
+			<item value="C:\Users\matti\Desktop\JCalendar\jgoodies-common-1.2.0.jar"/>
+			<item value="C:\Users\matti\Desktop\JCalendar\jcalendar-1.4.jar"/>
+		</list>
+	</section>
 </section>

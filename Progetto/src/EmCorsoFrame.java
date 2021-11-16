@@ -58,6 +58,7 @@ public class EmCorsoFrame extends JFrame {
 		//FUNZIONA SU CLICK E DECIDE COSA MODIFICARE O ELIMINARE
 //		listCorsi.addMouseListener(new MouseAdapter() {
 //			
+		
 //		       public void mouseClicked(MouseEvent e) {
 //		    	   
 //		            if ( e.getClickCount() == 2) {
@@ -100,7 +101,7 @@ public class EmCorsoFrame extends JFrame {
 		buttonModifica.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-//				TODO CREACORSOFRAME con valori preimpostati e messaggio per conferma
+//				TODO CREACORSOFRAME con valori preimpostati e messaggio per e conferma effettiva modifica nel caso
 
 			}
 		});

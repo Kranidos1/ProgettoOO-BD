@@ -1,4 +1,7 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -9,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import com.toedter.calendar.JDateChooser;
 
 public class Controller implements ControlloStringhe {
 
@@ -107,25 +112,50 @@ public class Controller implements ControlloStringhe {
 	
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) {
 		
-		//SI RIFERISCE A FLAG 0 = a, 1 = b , 2 = c , 3 = d , 4 = f
+		//SI RIFERISCE A FLAG 0 = a, 1 = b , 2 = c , 3 = d , dal 4 in poi per iscrivistudenteframe
 		switch(flag) {
 		case 0:
+			//NOME
 			JOptionPane.showMessageDialog(fram, "Invalid Name", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			inputField.setText("");
 			break;
 		case 1:
-			
+			//NUMERIMAX
 			JOptionPane.showMessageDialog(fram, "Invalid NumberMax Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			inputField.setText("");
 			break;
 		case 2:
-			
+			//NUMERIMIN
 			JOptionPane.showMessageDialog(fram, "Invalid NumberMin Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			inputField.setText("");
 			break;
-		case 3:
-			
+		case 3:		
+			//DESCRIZIONE
 			JOptionPane.showMessageDialog(fram, "Empty Description.Invalid Description Format", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 4:
+			//COGNOME
+			JOptionPane.showMessageDialog(fram, "Invalid Surname.", "Invalid Surname", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 5:
+			//DATA
+			JOptionPane.showMessageDialog(fram, "Invalid Date.", "Invalid Date", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 6:
+			//CF
+			JOptionPane.showMessageDialog(fram, "Invalid CF.", "Invalid CF", JOptionPane.ERROR_MESSAGE);
+			inputField.setText("");
+			break;
+		case 7:
+			//FIELD GENERICO
+			JOptionPane.showMessageDialog(fram, "Empty Field.Please,insert something.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			break;
+		case 8: 
+			//DATA
+			JOptionPane.showMessageDialog(fram, "Wrong Date.Stunder must be over 18.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			break;
 		}
 	}
@@ -262,6 +292,139 @@ public class Controller implements ControlloStringhe {
 			
 		}
 		
+	}
+	
+	public int controlloCF(JTextField cfTextField ,JLabel cfLabel) {
+		
+		String tmpCf = cfTextField.getText();
+		
+		if(tmpCf.length() == 16) {
+			char a;
+			int i = 0;
+			while(i < 16) {
+				a = tmpCf.charAt(i);
+				
+				if(i < 6) {
+					if(!Character.isLetter(a)) {
+						//SBAGLIATO INPUT
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+						return 0;
+					}
+				}
+				
+				if( i == 6 || i == 7) {
+					if(!Character.isDigit(a)) {
+						//SBAGLIATO INPUT
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+						return 0;
+					}
+				}
+				
+				if( i == 8) {
+					if(!Character.isLetter(a)) {
+						//SBAGLIATO INPUT
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+						return 0;
+					}
+				}
+				
+				if( i == 9 || i == 10) {
+					if(!Character.isDigit(a)) {
+						//SBAGLIATO INPUT
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+						return 0;
+					}
+					
+					if( i == 11) {
+						if(!Character.isLetter(a)) {
+							//SBAGLIATO INPUT
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+							return 0;
+						}
+					}	
+					
+					if( i > 11 && i < 15) {
+						if(!Character.isDigit(a)) {
+							//SBAGLIATO INPUT
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+							return 0;
+						}
+					}
+					
+					if( i == 15) {
+						if(!Character.isLetter(a)) {
+							//SBAGLIATO INPUT
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLabel), null, cfTextField, 6);
+							return 0;
+						}
+					}
+					
+				}
+				
+				i++;
+				
+			}
+		}		
+		
+		return 1;
+		
+	}
+	
+	public void controlloInserimento(JTextField nomeField , JTextField cognomeField ,JTextField corsoField ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField){
+		
+		String tmpNome = nomeField.getText();
+		String tmpCorso = corsoField.getText();
+		String tmpCognome = cognomeField.getText();
+
+		if(!isEmptyField(corsoField)) {
+			if(isWhatYouWant(tmpCorso, 0)) {
+				
+				if(!isEmptyField(nomeField)) {
+					if(isWhatYouWant(tmpNome, 0)) {
+						
+						if(!isEmptyField(cognomeField)) {
+							if(isWhatYouWant(tmpCognome, 0)) {
+								
+								
+								Date date;
+								String d = "2004-12-31";
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+								date = dateChooser.getDate();
+								Date data;
+								try {
+									data = sdf.parse(d);
+									if(date.before(data)) {
+										//controllo data ma prima cf
+										if(controlloCF(cfField, cfLab) == 1) {
+											//input corretto
+											//Inserimento
+											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+											
+											
+										}else
+											jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
+									}else {
+										//gestione errore data
+										
+									}
+								} catch (ParseException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+							}else
+								jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
+						}else
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);			
+					}else
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, nomeField, 0);
+				}else
+					jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, corsoField, 3);
+		}else
+			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
+				
 	}
 }
 

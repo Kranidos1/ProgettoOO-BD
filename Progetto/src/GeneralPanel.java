@@ -53,7 +53,7 @@ public class GeneralPanel extends JPanel {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 0, 0, 1));
 		menuBar.setBounds(0, 0, 501, 22);
-		menuBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+		menuBar.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
 		add(menuBar);
 		
 		JMenu fileMenu = new JMenu("File");
@@ -65,6 +65,7 @@ public class GeneralPanel extends JPanel {
 		fileMenu.add(exitMenu);
 		
 		JMenu navigaMenu = new JMenu("Naviga");
+		navigaMenu.setMnemonic('N');
 		navigaMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
 		menuBar.add(navigaMenu);
 		

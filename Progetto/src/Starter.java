@@ -22,6 +22,7 @@ public class Starter {
 //	System.out.println("ciao");
 //}
 		new FirstFrame();
+		
 	}
 
 }

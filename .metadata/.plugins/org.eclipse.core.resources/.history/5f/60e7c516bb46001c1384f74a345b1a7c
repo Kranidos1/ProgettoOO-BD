@@ -1,0 +1,99 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.Color;
+
+public class IscriviStudenteFrame extends JFrame {
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private JTextField corsoTextField;
+	private JTextField nomeTextField;
+	private JTextField cognomeTextField;
+	private JTextField dataTextField;
+	private JTextField cfTextField;
+	
+	public IscriviStudenteFrame() {
+		
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		panel = new GeneralPanel();
+		panel.setBounds(0, 0, 501, 516);
+		getContentPane().add(panel);
+		setVisible(true);
+		
+		corsoTextField = new JTextField();
+		corsoTextField.setBounds(160, 144, 150, 20);
+		panel.add(corsoTextField);
+		corsoTextField.setColumns(50);
+		
+		nomeTextField = new JTextField();
+		nomeTextField.setColumns(50);
+		nomeTextField.setBounds(160, 200, 150, 20);
+		panel.add(nomeTextField);
+		
+		cognomeTextField = new JTextField();
+		cognomeTextField.setColumns(50);
+		cognomeTextField.setBounds(160, 253, 150, 20);
+		panel.add(cognomeTextField);
+		
+		dataTextField = new JTextField();
+		dataTextField.setColumns(50);
+		dataTextField.setBounds(160, 306, 150, 20);
+		panel.add(dataTextField);
+		
+		cfTextField = new JTextField();
+		cfTextField.setColumns(50);
+		cfTextField.setBounds(160, 360, 150, 20);
+		panel.add(cfTextField);
+		
+		JLabel corsoLabel = new JLabel("Corso");
+		corsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		corsoLabel.setBounds(64, 144, 86, 20);
+		panel.add(corsoLabel);
+		
+		JLabel nomeLabel = new JLabel("Nome");
+		nomeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		nomeLabel.setBounds(64, 200, 86, 20);
+		panel.add(nomeLabel);
+		
+		JLabel cognomeLabel = new JLabel("Cognome");
+		cognomeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		cognomeLabel.setBounds(64, 253, 86, 20);
+		panel.add(cognomeLabel);
+		
+		JLabel dataLabel = new JLabel("Data di Nascita");
+		dataLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		dataLabel.setBounds(64, 306, 86, 20);
+		panel.add(dataLabel);
+		
+		JLabel cfLabel = new JLabel("Codice Fiscale");
+		cfLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		cfLabel.setBounds(64, 360, 86, 20);
+		panel.add(cfLabel);
+		
+		JButton saveButton = new JButton("Save");
+		saveButton.setForeground(Color.RED);
+		saveButton.setBorder(new RoundBorderBotton(10));
+		saveButton.setBackground(Color.WHITE);
+		saveButton.setBounds(349, 281, 104, 32);
+		panel.add(saveButton);
+		
+		
+	}
+}

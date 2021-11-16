@@ -92,5 +92,14 @@ public class FrameDiScelta extends JFrame{
 			}
 		});
 		
+		btnGestioneStudenti.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new GestioneStudentiFrame();
+				
+			}
+		});
+		
 	}
 }
