@@ -24,14 +24,14 @@
 	</section>
 	<section name="quick_assist_proposal_size">
 		<item key="size.x" value="428"/>
-		<item key="size.y" value="236"/>
+		<item key="size.y" value="686"/>
 	</section>
 	<section name="RefactoringWizard.preview">
 		<item key="width" value="600"/>
 		<item key="height" value="400"/>
 	</section>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
-		<item key="updateSimilarElements" value="false"/>
+		<item key="updateSimilarElements" value="true"/>
 		<item key="updateSimilarElementsMatchStrategy" value="1"/>
 		<item key="updateTextualMatches" value="false"/>
 	</section>
@@ -69,5 +69,7 @@
 			<list key="workingSets">
 			</list>
 		</section>
+	</section>
+	<section name="RenameInformationPopup">
 	</section>
 </section>

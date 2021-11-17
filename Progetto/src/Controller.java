@@ -1,3 +1,4 @@
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ import javax.swing.SwingUtilities;
 
 import com.toedter.calendar.JDateChooser;
 
-public class Controller implements ControlloStringhe {
+public class Controller implements ControlloEOperazioniSuFrame {
 
-	@Override
+	
 	public boolean isWhatYouWant(String input, int flag) {
 		// TODO Auto-generated method stub
 		// FLAG 0 STRINGHE 1 INT
@@ -44,7 +45,7 @@ public class Controller implements ControlloStringhe {
 				  return true;
 	}
 
-	@Override
+
 	public boolean isEmptyArea(JTextArea input) {
 		// TODO Auto-generated method stub
 		String tmp = input.getText();
@@ -54,7 +55,7 @@ public class Controller implements ControlloStringhe {
 			return false;
 	}
 
-	@Override
+
 	public boolean isEmptyField(JTextField input) {
 		// TODO Auto-generated method stub
 		String tmp = input.getText();
@@ -64,6 +65,7 @@ public class Controller implements ControlloStringhe {
 			return false;
 	}
 	
+
 	public void newTheme(JLabel label) {
 		String theme = JOptionPane.showInputDialog("New Theme");
 		//TODO Funzione add theme nel db
@@ -110,6 +112,7 @@ public class Controller implements ControlloStringhe {
 		}
 	}
 	
+	
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) {
 		
 		//SI RIFERISCE A FLAG 0 = a, 1 = b , 2 = c , 3 = d , dal 4 in poi per iscrivistudenteframe
@@ -151,14 +154,11 @@ public class Controller implements ControlloStringhe {
 			break;
 		case 7:
 			//FIELD GENERICO
-			JOptionPane.showMessageDialog(fram, "Empty Field.Please,insert something.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-			break;
-		case 8: 
-			//DATA
-			JOptionPane.showMessageDialog(fram, "Wrong Date.Stunder must be over 18.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(fram, "Empty Fields.Please,insert something.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			break;
 		}
 	}
+	
 	
 	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel) {
 
@@ -191,6 +191,7 @@ public class Controller implements ControlloStringhe {
 			
 		}
 	}
+
 	
 	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model) {
 		String name,maxString,minString;
@@ -238,6 +239,7 @@ public class Controller implements ControlloStringhe {
 		
 	}
 	
+
 	public void insertNewThemeFromField(JFrame fram ,JTextField field ,DefaultListModel<String> model) {
 		
 		String theme = field.getText();
@@ -267,6 +269,7 @@ public class Controller implements ControlloStringhe {
 		}
 	}
 	
+
 	public void insertInListAndControl(DefaultListModel<String> model ,String control ,JFrame fram) {
 		
 		//CONTROLLO DUPLICATI PRIMA DELL'AGGIUNTA
@@ -294,6 +297,7 @@ public class Controller implements ControlloStringhe {
 		
 	}
 	
+
 	public int controlloCF(JTextField cfTextField ,JLabel cfLabel) {
 		
 		String tmpCf = cfTextField.getText();
@@ -364,13 +368,15 @@ public class Controller implements ControlloStringhe {
 				i++;
 				
 			}
-		}		
+			return 1;
+		}else
+			return 0;
 		
-		return 1;
 		
 	}
 	
-	public void controlloInserimento(JTextField nomeField , JTextField cognomeField ,JTextField corsoField ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField){
+
+	public void controlloInserimentoStudente(JTextField nomeField , JTextField cognomeField ,JTextField corsoField ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField){
 		
 		String tmpNome = nomeField.getText();
 		String tmpCorso = corsoField.getText();
@@ -387,30 +393,19 @@ public class Controller implements ControlloStringhe {
 								
 								
 								Date date;
-								String d = "2004-12-31";
+								String dbDate;
 								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 								date = dateChooser.getDate();
-								Date data;
-								try {
-									data = sdf.parse(d);
-									if(date.before(data)) {
+								dbDate = sdf.format(date);
 										//controllo data ma prima cf
 										if(controlloCF(cfField, cfLab) == 1) {
 											//input corretto
 											//Inserimento
-											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
 											
 											
 										}else
 											jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
-									}else {
-										//gestione errore data
-										
-									}
-								} catch (ParseException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
 								
 							}else
 								jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
@@ -424,7 +419,173 @@ public class Controller implements ControlloStringhe {
 				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, corsoField, 3);
 		}else
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
+		
+
+	}
+	
+	public int isEnbl(JTextField field ,int value) {
+		
+		if(field.isEnabled()) {
+			
+			field.setEnabled(false);
+			field.setText("");
+			value -= 1;
+			return value;
+			
+		}else {
+			
+			field.setEnabled(true);
+			value += 1;
+			return value;
+			
+		}
+			
+	}
+	
+	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,int flagNome ,int flagCognome ,int flagCf ,JLabel label) {
+		
+		String tmpNome = nome.getText();
+		String tmpCognome = cognome.getText();
+		String tmpCf = cf.getText();
+		
+			
+		if(flagNome == 1 && flagCognome == 1 && flagCf == 1 ) {
+			//TUTTO
+			
+			//controlla anche se vuoto
+			if(controlloCF(cf ,label) == 1) {
 				
+				if(!tmpNome.isEmpty()) {
+					if(isWhatYouWant(tmpNome, 0)) {
+						
+						if(!tmpCognome.isEmpty()) {
+							if(isWhatYouWant(tmpCognome, 0)) {
+								//RICERCA
+								
+							}else
+								jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+						}else
+							jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+						
+					}else
+						jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+				
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(label), null, cf, 6);
+			
+		}
+		
+		if(flagNome == 1 && flagCognome == 1 && flagCf == 0 ) {
+			//NOME E COGNOME
+			
+			if(!tmpNome.isEmpty()) {
+				if(isWhatYouWant(tmpNome, 0)) {
+					
+					if(!tmpCognome.isEmpty()) {
+						if(isWhatYouWant(tmpCognome, 0)) {
+							//RICERCA
+							
+						}else
+							jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+					}else
+						jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+					
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+			}else
+				jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+			
+		}
+		
+		if(flagNome == 1 && flagCognome == 0 && flagCf == 1 ) {
+			//NOME E CF
+			
+			//controlla anche se vuoto cf
+			if(controlloCF(cf ,label) == 1) {
+				
+				if(!tmpNome.isEmpty()) {
+					if(isWhatYouWant(tmpNome, 0)) {
+						//RICERCA
+						
+					}else
+						jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+				
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(label), null, cf, 6);
+		}
+		
+		if(flagNome == 1 && flagCognome == 0 && flagCf == 0 ) {
+			//SOLO NOME
+			
+			if(!tmpNome.isEmpty()) {
+				if(isWhatYouWant(tmpNome, 0)) {
+					//RICERCA NOME
+					
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+			}else
+				jpanelManagementCreaCorsoFrame(null, null, nome, 0);
+			}
+		
+		if(flagNome == 0 && flagCognome == 1 && flagCf == 1 ) {
+			//COGNOME E CF
+			//controlla anche se vuoto
+			if(controlloCF(cf ,label) == 1) {
+			
+				if(!tmpCognome.isEmpty()) {
+					if(isWhatYouWant(tmpCognome, 0)) {
+						//RICERCA COGNOME E CF
+						
+					}else
+						jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+				
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(label), null, cf, 6);
+		}
+		
+		
+		if(flagNome == 0 && flagCognome == 1 && flagCf == 0 ) {
+			//SOLO COGNOME
+			if(!tmpCognome.isEmpty()) {
+				if(isWhatYouWant(tmpCognome, 0)) {
+					//RICERCA COGNOME
+					
+				}else
+					jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+			}else
+				jpanelManagementCreaCorsoFrame(null, null, cognome, 4);
+		}
+		
+		if(flagNome == 0 && flagCognome == 0 && flagCf == 1 ) {
+			//SOLO CF
+			//controlla anche se vuoto
+			if(controlloCF(cf ,label) == 1) {
+				
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(label), null, cf, 6);
+		}
+		
+		if(flagNome == 0 && flagCognome == 0 && flagCf == 0 ) {
+			//RICERCA NULLA SOLO ERRORE
+			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(label), null, null, 7);
+			
+		}
+	}
+	
+	//TODO
+	public void ricercaStudenti(JTextField corso ,JLabel labelCorso) {
+		String tmpCorso = corso.getText();
+		if(!tmpCorso.isEmpty()) {
+			//effettua ricerca
+			
+		}else
+			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
 	}
 }
 

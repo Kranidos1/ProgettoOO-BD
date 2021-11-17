@@ -30,26 +30,33 @@ public class GestioneStudentiFrame extends JFrame {
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
 		
-		JButton buttonIscrivi = new JButton("Iscrivi");
-		buttonIscrivi.setForeground(Color.RED);
-		buttonIscrivi.setBorder(new RoundBorderBotton(10));
-		buttonIscrivi.setBackground(Color.WHITE);
-		buttonIscrivi.setBounds(93, 156, 187, 37);
-		panel.add(buttonIscrivi);
+		JButton buttonRicercaStudente = new JButton("Ricerca Studente");
+		buttonRicercaStudente.setForeground(Color.RED);
+		buttonRicercaStudente.setBorder(new RoundBorderBotton(10));
+		buttonRicercaStudente.setBackground(Color.WHITE);
+		buttonRicercaStudente.setBounds(124, 254, 250, 37);
+		panel.add(buttonRicercaStudente);
 		
 		JButton buttonVisualizzaStats = new JButton("Visualizza Statistiche Studente");
 		buttonVisualizzaStats.setForeground(Color.RED);
 		buttonVisualizzaStats.setBorder(new RoundBorderBotton(10));
 		buttonVisualizzaStats.setBackground(Color.WHITE);
-		buttonVisualizzaStats.setBounds(93, 236, 187, 37);
+		buttonVisualizzaStats.setBounds(124, 334, 250, 37);
 		panel.add(buttonVisualizzaStats);
 		
-		JButton buttonListaStudenti = new JButton("Boccia/Promuovi");
-		buttonListaStudenti.setForeground(Color.RED);
-		buttonListaStudenti.setBorder(new RoundBorderBotton(10));
-		buttonListaStudenti.setBackground(Color.WHITE);
-		buttonListaStudenti.setBounds(93, 316, 187, 37);
-		panel.add(buttonListaStudenti);
+		JButton buttonBocciaPromuovi = new JButton("Boccia/Promuovi");
+		buttonBocciaPromuovi.setForeground(Color.RED);
+		buttonBocciaPromuovi.setBorder(new RoundBorderBotton(10));
+		buttonBocciaPromuovi.setBackground(Color.WHITE);
+		buttonBocciaPromuovi.setBounds(124, 415, 250, 37);
+		panel.add(buttonBocciaPromuovi);
+		
+		JButton buttonIscrivi = new JButton("Iscrivi");
+		buttonIscrivi.setForeground(Color.RED);
+		buttonIscrivi.setBorder(new RoundBorderBotton(10));
+		buttonIscrivi.setBackground(Color.WHITE);
+		buttonIscrivi.setBounds(124, 175, 250, 37);
+		panel.add(buttonIscrivi);
 		setVisible(true);
 		
 		buttonIscrivi.addActionListener(new ActionListener() {
@@ -61,5 +68,22 @@ public class GestioneStudentiFrame extends JFrame {
 			}
 		});
 		
+		buttonRicercaStudente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new RicercaStudente();
+				
+			}
+		});
+		
+		buttonVisualizzaStats.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				setVisible(false);
+				new VisualizzaStatisticheStudentiFrame();
+				
+			}
+		});
 	}
 }

@@ -62,13 +62,13 @@ public class FrameDiScelta extends JFrame{
 		buttonGestioneLezioni.setBounds(331, 226, 160, 32);
 		panel.add(buttonGestioneLezioni);
 		
-		JButton btnGestioneStudenti = new JButton("Gestione Studenti");
-		btnGestioneStudenti.setForeground(Color.RED);
-		btnGestioneStudenti.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
-		btnGestioneStudenti.setBorder(new RoundBorderBotton(10));
-		btnGestioneStudenti.setBackground(Color.WHITE);
-		btnGestioneStudenti.setBounds(165, 283, 160, 32);
-		panel.add(btnGestioneStudenti);
+		JButton buttonGestioneStudenti = new JButton("Gestione Studenti");
+		buttonGestioneStudenti.setForeground(Color.RED);
+		buttonGestioneStudenti.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		buttonGestioneStudenti.setBorder(new RoundBorderBotton(10));
+		buttonGestioneStudenti.setBackground(Color.WHITE);
+		buttonGestioneStudenti.setBounds(165, 283, 160, 32);
+		panel.add(buttonGestioneStudenti);
 		
 		JButton buttonAreaTematica = new JButton("Crea Area Tematica");
 		buttonAreaTematica.addActionListener(new ActionListener() {
@@ -92,7 +92,7 @@ public class FrameDiScelta extends JFrame{
 			}
 		});
 		
-		btnGestioneStudenti.addActionListener(new ActionListener() {
+		buttonGestioneStudenti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);

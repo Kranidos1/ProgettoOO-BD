@@ -96,11 +96,16 @@ public class GeneralPanel extends JPanel {
 		JMenuItem ricercaMenuItem = new JMenuItem("Ricerca");
 		gestisciStudentiMenu.add(ricercaMenuItem);
 		
+		JMenuItem statsMenuItem = new JMenuItem("Stats Studenti");
+		statsMenuItem.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
+		gestisciStudentiMenu.add(statsMenuItem);
+		
 		JMenu GestisciCorsoMenu = new JMenu("Gestisci Corso");
 		GestisciCorsoMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
 		navigaMenu.add(GestisciCorsoMenu);
 		
 		JMenuItem visualizzaStatisticheMenuItem = new JMenuItem("Visualizza Statistiche");
+		visualizzaStatisticheMenuItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
 		GestisciCorsoMenu.add(visualizzaStatisticheMenuItem);
 		
 		JMenuItem modificaMenuItem = new JMenuItem("Modifica/Elimina Corso");
@@ -206,6 +211,44 @@ public class GeneralPanel extends JPanel {
 				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
 				fram.setVisible(false);
 				EmCorsoFrame nuovoFrame = new EmCorsoFrame();
+				
+			}
+			
+		});
+		
+		iscriviMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				IscriviStudenteFrame frameStud = new IscriviStudenteFrame();
+			}
+			
+		});
+		
+		statsMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				VisualizzaStatisticheStudentiFrame frameStats = new VisualizzaStatisticheStudentiFrame();
+				
+			}
+			
+		});
+		
+		ricercaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				RicercaStudente frame = new RicercaStudente();
 				
 			}
 			
