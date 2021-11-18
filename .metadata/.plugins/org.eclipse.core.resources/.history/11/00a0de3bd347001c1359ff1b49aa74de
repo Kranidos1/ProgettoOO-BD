@@ -37,7 +37,7 @@ public class GestioneStudentiFrame extends JFrame {
 		buttonRicercaStudente.setBounds(124, 254, 250, 37);
 		panel.add(buttonRicercaStudente);
 		
-		JButton buttonVisualizzaStats = new JButton("Visualizza Statistiche Studenti");
+		JButton buttonVisualizzaStats = new JButton("Visualizza Statistiche Studente");
 		buttonVisualizzaStats.setForeground(Color.RED);
 		buttonVisualizzaStats.setBorder(new RoundBorderBotton(10));
 		buttonVisualizzaStats.setBackground(Color.WHITE);

@@ -122,13 +122,6 @@ public class RicercaStudente extends JFrame {
 		cfCheck.setHorizontalAlignment(SwingConstants.CENTER);
 		cfCheck.setBounds(251, 229, 15, 22);
 		panel.add(cfCheck);
-		
-		JButton buttonElimina = new JButton("Elimina Studente");
-		buttonElimina.setForeground(Color.RED);
-		buttonElimina.setBorder(new RoundBorderBotton(10));
-		buttonElimina.setBackground(Color.WHITE);
-		buttonElimina.setBounds(52, 463, 126, 26);
-		panel.add(buttonElimina);
 		setVisible(true);
 		
 		nomeCheck.addActionListener(new ActionListener() {

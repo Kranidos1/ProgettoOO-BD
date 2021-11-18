@@ -19,8 +19,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Component;
-import javax.swing.Box;
 
 public class FrameDiScelta extends JFrame{
 	
@@ -50,7 +48,7 @@ public class FrameDiScelta extends JFrame{
 		
 		JButton buttonGestioneCorsi = new JButton("Gestione Corsi");
 		buttonGestioneCorsi.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
-		buttonGestioneCorsi.setBounds(10, 263, 198, 53);
+		buttonGestioneCorsi.setBounds(10, 226, 160, 32);
 		buttonGestioneCorsi.setBorder(new RoundBorderBotton(10));
 		buttonGestioneCorsi.setForeground(Color.BLACK);
 		buttonGestioneCorsi.setBackground(Color.WHITE);
@@ -61,7 +59,7 @@ public class FrameDiScelta extends JFrame{
 		buttonGestioneLezioni.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		buttonGestioneLezioni.setBorder(new RoundBorderBotton(10));
 		buttonGestioneLezioni.setBackground(Color.WHITE);
-		buttonGestioneLezioni.setBounds(283, 263, 198, 53);
+		buttonGestioneLezioni.setBounds(331, 226, 160, 32);
 		panel.add(buttonGestioneLezioni);
 		
 		JButton buttonGestioneStudenti = new JButton("Gestione Studenti");
@@ -69,7 +67,7 @@ public class FrameDiScelta extends JFrame{
 		buttonGestioneStudenti.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		buttonGestioneStudenti.setBorder(new RoundBorderBotton(10));
 		buttonGestioneStudenti.setBackground(Color.WHITE);
-		buttonGestioneStudenti.setBounds(149, 353, 198, 53);
+		buttonGestioneStudenti.setBounds(165, 283, 160, 32);
 		panel.add(buttonGestioneStudenti);
 		
 		JButton buttonAreaTematica = new JButton("Crea Area Tematica");
@@ -84,7 +82,7 @@ public class FrameDiScelta extends JFrame{
 		buttonAreaTematica.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		buttonAreaTematica.setBorder(new RoundBorderBotton(10));
 		buttonAreaTematica.setBackground(Color.WHITE);
-		buttonAreaTematica.setBounds(149, 175, 198, 53);
+		buttonAreaTematica.setBounds(165, 168, 160, 32);
 		panel.add(buttonAreaTematica);
 		
 		buttonGestioneCorsi.addActionListener(new ActionListener() {

@@ -30,12 +30,12 @@ public class StatisticheCorsoFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		panel = new GeneralPanel();
-		String[] columns = {"NomeCorso","N.Studenti","MediaPresenza","MinimoPresenza","MassimoPresenza","RiempimentoMedio"};
+		String[] columns = {"NomeCorso","MediaPresenza","MinimoPresenza","MassimoPresenza","RiempimentoMedio"};
 		getContentPane().add(panel);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
-			new Object[][] {{"Pippo","Baudo","Tiririr","Cacca","cacca","cacca"}
+			new Object[][] {{"Pippo","Baudo","Tiririr","Cacca","cacca"}
 			},
 			columns
 		));

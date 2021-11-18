@@ -35,7 +35,7 @@ public class StatisticheCorsoFrame extends JFrame {
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
-			new Object[][] {{"Pippo","Baudo","Tiririr","Cacca","cacca","cacca"}
+			new Object[][] {{"Pippo","Baudo","Tiririr","Cacca","cacca"}
 			},
 			columns
 		));

@@ -46,6 +46,7 @@ public class GeneralPanel extends JPanel {
 		setBackground(Color.white);
 		setLayout(null);
 		setSize(501, 516);
+		setBorder(BorderFactory.createLineBorder(Color.black));
 		controller = new Controller();
 		
 		
