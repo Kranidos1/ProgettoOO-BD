@@ -1,0 +1,124 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+
+import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
+
+public class CreaLezione extends JFrame {
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private JTextField titoloField;
+	private JTextField textField;
+	
+	public CreaLezione() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		panel = new GeneralPanel();
+		panel.setLocation(0, 11);
+		getContentPane().add(panel);
+		
+		JLabel titoloLabel = new JLabel("Titolo");
+		titoloLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		titoloLabel.setBounds(10, 142, 58, 21);
+		panel.add(titoloLabel);
+		
+		titoloField = new JTextField();
+		titoloField.setBounds(77, 142, 133, 21);
+		panel.add(titoloField);
+		titoloField.setColumns(10);
+		
+		JLabel dataLabel = new JLabel("Data");
+		dataLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		dataLabel.setBounds(22, 180, 46, 21);
+		panel.add(dataLabel);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(77, 181, 155, 20);
+		
+		Date dataAttuale = new Date();
+		
+		int anno = dataAttuale.getYear();
+		int day = dataAttuale.getDate();
+		int month = dataAttuale.getMonth();
+		
+		Integer dayMin = day + 1;
+		Integer annoMin = anno + 1900;
+		Integer monthMin = month + 1;
+		
+		String yearMin = annoMin.toString();
+		String giornoMin = dayMin.toString();
+		String meseMin = monthMin.toString();
+		
+		String datMin;
+		Date dataMin;
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+
+		datMin = yearMin + "." + meseMin + "."+ giornoMin;;
+		
+		try {
+
+			dataMin = format.parse(datMin);
+			dateChooser.setMinSelectableDate(dataMin);
+			dateChooser.setDate(dataMin);
+			
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		dateChooser.setLocale(getLocale());
+		dateChooser.setDateFormatString("yyyy.MM.dd");
+		panel.add(dateChooser);
+		
+		JPanel panelDurata = new JPanel();
+		panelDurata.setBackground(Color.WHITE);
+		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Inizio"));
+		panelDurata.setBounds(32, 212, 77, 53);
+		panel.add(panelDurata);
+		panelDurata.setLayout(null);
+		
+		SpinnerDateModel model = new SpinnerDateModel();
+		model.setCalendarField(Calendar.HOUR_OF_DAY);
+		JSpinner spinner = new JSpinner(model);
+		
+		spinner.setBounds(10, 15, 52, 27);
+		panelDurata.add(spinner);
+		spinner.setEditor(new JSpinner.DateEditor(spinner, "hh:mm"));
+		SimpleDateFormat form = new SimpleDateFormat("hh:mm");
+		Object pippo = spinner.getValue();
+		String boh = form.format(pippo);
+		System.out.println(boh);
+	
+		
+
+		
+		
+		setVisible(true);
+	}
+}

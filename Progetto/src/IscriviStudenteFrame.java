@@ -97,14 +97,19 @@ public class IscriviStudenteFrame extends JFrame {
 		dateChooser.setBounds(160, 306, 170, 20);
 		
 		Date dataAttuale = new Date();
+		
 		int anno = dataAttuale.getYear();
+		
 		Integer maggiorenne = (anno - 18) + 1900;
+		Integer annoMin = (anno - 60) + 1900;
+		
 		String year = maggiorenne.toString();
 		String datMax;
 		String datMin;
+		
 		Date dataMax;
 		Date dataMin;
-		Integer annoMin = (anno - 60) + 1900;
+		
 		String yearMin = annoMin.toString();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
 		datMax = year + ".12.31";
@@ -113,6 +118,7 @@ public class IscriviStudenteFrame extends JFrame {
 		try {
 			
 			dataMax = format.parse(datMax);
+			System.out.println(dataMax);
 			dateChooser.setMaxSelectableDate(dataMax);
 			dataMin = format.parse(datMin);
 			dateChooser.setMinSelectableDate(dataMin);

@@ -21,6 +21,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.Box;
+import com.toedter.calendar.JDateChooser;
 
 public class RicercaStudente extends JFrame {
 
@@ -34,6 +36,7 @@ public class RicercaStudente extends JFrame {
 	int flagNome = 0;
 	int flagCf = 0;
 	int flagCognome = 0;
+	int flagDate = 0;
 	private Controller controller;
 	
 	public RicercaStudente() {
@@ -52,35 +55,35 @@ public class RicercaStudente extends JFrame {
 		controller = new Controller();
 		JLabel nomeLabel = new JLabel("Nome");
 		nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		nomeLabel.setBounds(52, 144, 46, 20);
+		nomeLabel.setBounds(52, 112, 46, 20);
 		panel.add(nomeLabel);
 		
 		nomeField = new JTextField();
 		nomeField.setEnabled(false);
-		nomeField.setBounds(108, 144, 137, 20);
+		nomeField.setBounds(108, 112, 137, 20);
 		panel.add(nomeField);
 		nomeField.setColumns(10);
 		
 		cognomeField = new JTextField();
 		cognomeField.setEnabled(false);
 		cognomeField.setColumns(10);
-		cognomeField.setBounds(108, 187, 137, 20);
+		cognomeField.setBounds(108, 157, 137, 20);
 		panel.add(cognomeField);
 		
 		JLabel cognomeLabel = new JLabel("Cognome");
 		cognomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		cognomeLabel.setBounds(38, 187, 60, 20);
+		cognomeLabel.setBounds(38, 157, 60, 20);
 		panel.add(cognomeLabel);
 		
 		cfField = new JTextField();
 		cfField.setEnabled(false);
 		cfField.setColumns(10);
-		cfField.setBounds(108, 231, 137, 20);
+		cfField.setBounds(108, 198, 137, 20);
 		panel.add(cfField);
 		
 		JLabel cfLabel = new JLabel("CF");
 		cfLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		cfLabel.setBounds(52, 231, 46, 20);
+		cfLabel.setBounds(52, 198, 46, 20);
 		panel.add(cfLabel);
 		
 		JTable tableStats = new JTable();
@@ -108,27 +111,47 @@ public class RicercaStudente extends JFrame {
 		JCheckBox nomeCheck = new JCheckBox("");
 		nomeCheck.setBackground(Color.white);
 		nomeCheck.setHorizontalAlignment(SwingConstants.CENTER);
-		nomeCheck.setBounds(251, 142, 15, 22);
+		nomeCheck.setBounds(251, 112, 15, 22);
 		panel.add(nomeCheck);
 		
 		JCheckBox cognomeCheck = new JCheckBox("");
 		cognomeCheck.setBackground(Color.white);
 		cognomeCheck.setHorizontalAlignment(SwingConstants.CENTER);
-		cognomeCheck.setBounds(251, 187, 15, 22);
+		cognomeCheck.setBounds(251, 155, 15, 22);
 		panel.add(cognomeCheck);
 		
 		JCheckBox cfCheck = new JCheckBox("");
 		cfCheck.setBackground(Color.white);
 		cfCheck.setHorizontalAlignment(SwingConstants.CENTER);
-		cfCheck.setBounds(251, 229, 15, 22);
+		cfCheck.setBounds(251, 196, 15, 22);
 		panel.add(cfCheck);
 		
 		JButton buttonElimina = new JButton("Elimina Studente");
 		buttonElimina.setForeground(Color.RED);
 		buttonElimina.setBorder(new RoundBorderBotton(10));
 		buttonElimina.setBackground(Color.WHITE);
-		buttonElimina.setBounds(52, 463, 126, 26);
+		buttonElimina.setBounds(52, 468, 126, 26);
 		panel.add(buttonElimina);
+		
+		Component verticalStrut = Box.createVerticalStrut(20);
+		verticalStrut.setBounds(220, 217, 0, 26);
+		panel.add(verticalStrut);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setEnabled(false);
+		dateChooser.setBounds(108, 238, 137, 20);
+		panel.add(dateChooser);
+		
+		JLabel lblNewLabel = new JLabel("Data Iscrizione");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel.setBounds(10, 238, 88, 20);
+		panel.add(lblNewLabel);
+		
+		JCheckBox dateCheck = new JCheckBox("");
+		dateCheck.setHorizontalAlignment(SwingConstants.CENTER);
+		dateCheck.setBackground(Color.WHITE);
+		dateCheck.setBounds(251, 238, 15, 22);
+		panel.add(dateCheck);
 		setVisible(true);
 		
 		nomeCheck.addActionListener(new ActionListener() {
@@ -137,7 +160,7 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				flagNome = controller.isEnbl(nomeField, flagNome);
+				flagNome = controller.isEnbl(nomeField, flagNome ,null);
 				
 			}
 			
@@ -149,7 +172,7 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				flagCognome = controller.isEnbl(cognomeField, flagCognome);
+				flagCognome = controller.isEnbl(cognomeField, flagCognome ,null);
 				
 			}
 			
@@ -161,8 +184,18 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				flagCf = controller.isEnbl(cfField, flagCf);
+				flagCf = controller.isEnbl(cfField, flagCf ,null);
 				
+			}
+			
+		});
+		
+		dateCheck.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				flagDate = controller.isEnbl(null ,flagDate ,dateChooser);
 			}
 			
 		});
@@ -170,7 +203,7 @@ public class RicercaStudente extends JFrame {
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.ricercaStudente(nomeField, cognomeField, cfField, flagNome, flagCognome, flagCf, cfLabel);
+				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser ,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel);
 				
 			}
 		});

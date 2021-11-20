@@ -1,4 +1,6 @@
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -6,23 +8,30 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 public class Starter {
 //
 	public static void main(String[] args){
-//
-//Connection connection = null;
-//try {
-//	Class.forName("org.postgresql.Driver");
-//	connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres","Pippo200-");
-//	if(connection != null) {
-//		System.out.println("WELL");
-//}catch(Exception e) {
-//	System.out.println("ciao");
-//}
-		new FirstFrame();
-//		new VisualizzaStatisticheStudentiFrame();
+
+		//new FirstFrame();
+		new GestisciLezioniFrame();
+		
 	}
+	
+//	listCorsi.addMouseListener(new MouseAdapter() {
+//		
+//	    public void mouseClicked(MouseEvent evt) {
+//	        JList list = (JList) evt.getSource();
+//	        if (evt.getClickCount() == 2) {
+//
+//	            // Double-click detected
+//	            int index = listCorsi.locationToIndex(evt.getPoint());
+//	            //PRENDE OGGETTO CLICCATO DUE VOLTE
+//	        }
+//	    }
+//	    
+//	});
 
 }

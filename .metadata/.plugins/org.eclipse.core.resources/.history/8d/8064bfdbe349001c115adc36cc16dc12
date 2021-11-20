@@ -1,0 +1,36 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class GestisciLezioniFrame extends JFrame {
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private Controller controller;
+	
+	public GestisciLezioniFrame() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 518, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		panel = new GeneralPanel();
+		getContentPane().add(panel);
+		
+		controller = new Controller();
+		
+		
+		
+		setVisible(true);
+	}
+
+}

@@ -1,0 +1,71 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JList;
+import javax.swing.JButton;
+import java.awt.Font;
+
+public class GestisciPresenzeFrame extends JFrame {
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private Controller controller;
+	private JTextField corsoField;
+	
+	public GestisciPresenzeFrame() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		panel = new GeneralPanel();
+		getContentPane().add(panel);
+		
+		JPanel primoStepPanel = new JPanel();
+		primoStepPanel.setBackground(Color.white);
+		primoStepPanel.setBounds(10, 135, 217, 313);
+		panel.add(primoStepPanel);
+		primoStepPanel.setLayout(null);
+		
+		JList listCorsi = new JList();
+		listCorsi.setBounds(0, 71, 164, 242);
+		primoStepPanel.add(listCorsi);
+		listCorsi.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Corsi"));
+		
+		corsoField = new JTextField();
+		corsoField.setBounds(69, 11, 132, 20);
+		primoStepPanel.add(corsoField);
+		corsoField.setColumns(10);
+		
+		JLabel corsoLabel = new JLabel("Corso");
+		corsoLabel.setBounds(0, 10, 40, 22);
+		primoStepPanel.add(corsoLabel);
+		corsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		JButton btnCerca = new JButton("Cerca Corso");
+		btnCerca.setBounds(93, 42, 95, 22);
+		primoStepPanel.add(btnCerca);
+		btnCerca.setForeground(Color.RED);
+		btnCerca.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnCerca.setBorder(new RoundBorderBotton(10));
+		btnCerca.setBackground(Color.WHITE);
+		
+		
+		
+		setVisible(true);
+	}
+}

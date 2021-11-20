@@ -61,7 +61,7 @@ public class FrameDiScelta extends JFrame{
 		buttonGestioneLezioni.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		buttonGestioneLezioni.setBorder(new RoundBorderBotton(10));
 		buttonGestioneLezioni.setBackground(Color.WHITE);
-		buttonGestioneLezioni.setBounds(283, 263, 198, 53);
+		buttonGestioneLezioni.setBounds(293, 263, 198, 53);
 		panel.add(buttonGestioneLezioni);
 		
 		JButton buttonGestioneStudenti = new JButton("Gestione Studenti");
@@ -99,6 +99,15 @@ public class FrameDiScelta extends JFrame{
 				
 				setVisible(false);
 				new GestioneStudentiFrame();
+				
+			}
+		});
+		
+		buttonGestioneLezioni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new GestisciLezioniFrame();
 				
 			}
 		});

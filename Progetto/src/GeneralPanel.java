@@ -82,6 +82,9 @@ public class GeneralPanel extends JPanel {
 		
 		JMenuItem areaTematicaMenuItem = new JMenuItem("AreaTematica");
 		creaMenu.add(areaTematicaMenuItem);
+		
+		JMenuItem creaLezioneMenuItem = new JMenuItem("Crea Lezione");
+		creaMenu.add(creaLezioneMenuItem);
 
 		
 		JMenu gestisciStudentiMenu = new JMenu("Gestisci Studenti");
@@ -109,6 +112,15 @@ public class GeneralPanel extends JPanel {
 		
 		JMenuItem modificaMenuItem = new JMenuItem("Modifica/Elimina Corso");
 		GestisciCorsoMenu.add(modificaMenuItem);
+		
+		JMenu gestisciLezioniMenu = new JMenu("Gestisci Lezioni");
+		navigaMenu.add(gestisciLezioniMenu);
+		
+		JMenuItem gestisciPresenzeMenuItem = new JMenuItem("GestisciPresenze");
+		gestisciLezioniMenu.add(gestisciPresenzeMenuItem);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("");
+		gestisciLezioniMenu.add(mntmNewMenuItem);
 
 		
 		JLabel labelTitle = new JLabel("GRU-Solution");
@@ -253,6 +265,31 @@ public class GeneralPanel extends JPanel {
 			
 		});
 		
+		creaLezioneMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				CreaLezione frame = new CreaLezione();
+				
+			}
+			
+		});
+		
+		gestisciPresenzeMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				GestisciPresenzeFrame frame = new GestisciPresenzeFrame();
+				
+			}
+			
+		});
 	}	
 	
 	

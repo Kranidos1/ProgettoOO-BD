@@ -12,8 +12,6 @@ public interface ControlloEOperazioniSuFrame {
 	
 	//return true
 	public boolean isWhatYouWant(String input , int flag);
-	public boolean isEmptyArea(JTextArea input);
-	public boolean isEmptyField(JTextField input);
 	public void newTheme(JLabel label);
 	// 0 nome   1 max  2 min 3 descrizione 4 cognome 5 data 6 cf 7 generico 8 maggiorenne
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) ;
@@ -24,6 +22,6 @@ public interface ControlloEOperazioniSuFrame {
 	public int controlloCF(JTextField cfTextField ,JLabel cfLabel);
 	public void controlloInserimentoStudente(JTextField nomeField , JTextField cognomeField ,JTextField corsoField ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField);
 	//TextField generico con controllocheckbox e ricerca
-	public int isEnbl(JTextField field ,int value);
+	public int isEnbl(JTextField field ,int value ,JDateChooser date);
 	
 }

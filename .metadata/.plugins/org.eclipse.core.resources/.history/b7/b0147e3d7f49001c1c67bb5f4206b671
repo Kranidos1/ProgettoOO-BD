@@ -1,0 +1,91 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JList;
+import javax.swing.JButton;
+import java.awt.Font;
+import com.toedter.calendar.JDateChooser;
+
+public class GestisciPresenzeFrame extends JFrame {
+
+	private JPanel contentPane;
+	private GeneralPanel panel;
+	private Controller controller;
+	private JTextField corsoField;
+	
+	public GestisciPresenzeFrame() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 555);
+		getContentPane().setLayout(null);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+		panel = new GeneralPanel();
+		getContentPane().add(panel);
+		
+		JPanel primoStepPanel = new JPanel();
+		primoStepPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Primo Step"));
+		primoStepPanel.setBackground(Color.white);
+		primoStepPanel.setBounds(10, 110, 200, 338);
+		panel.add(primoStepPanel);
+		primoStepPanel.setLayout(null);
+		
+		JList listCorsi = new JList();
+		listCorsi.setBounds(10, 81, 181, 242);
+		primoStepPanel.add(listCorsi);
+		listCorsi.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Corsi"));
+		
+		corsoField = new JTextField();
+		corsoField.setBounds(49, 19, 132, 20);
+		primoStepPanel.add(corsoField);
+		corsoField.setColumns(10);
+		
+		JLabel corsoLabel = new JLabel("Corso");
+		corsoLabel.setBounds(0, 18, 39, 22);
+		primoStepPanel.add(corsoLabel);
+		corsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		JButton cercaCorsoButton = new JButton("Cerca Corso");
+		cercaCorsoButton.setBounds(69, 50, 95, 20);
+		primoStepPanel.add(cercaCorsoButton);
+		cercaCorsoButton.setForeground(Color.RED);
+		cercaCorsoButton.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		cercaCorsoButton.setBorder(new RoundBorderBotton(10));
+		cercaCorsoButton.setBackground(Color.WHITE);
+		
+		JPanel secondoStepPanel = new JPanel();
+		secondoStepPanel.setBackground(Color.white);
+		secondoStepPanel.setBounds(220, 123, 271, 329);
+		panel.add(secondoStepPanel);
+		secondoStepPanel.setLayout(null);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(10, 40, 126, 20);
+		secondoStepPanel.add(dateChooser);
+		
+		JButton btnCercaLezione = new JButton("Cerca Lezione");
+		btnCercaLezione.setForeground(Color.RED);
+		btnCercaLezione.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnCercaLezione.setBorder(new RoundBorderBotton(10));
+		btnCercaLezione.setBackground(Color.WHITE);
+		btnCercaLezione.setBounds(146, 40, 95, 20);
+		secondoStepPanel.add(btnCercaLezione);
+		
+		
+		
+		setVisible(true);
+	}
+}
