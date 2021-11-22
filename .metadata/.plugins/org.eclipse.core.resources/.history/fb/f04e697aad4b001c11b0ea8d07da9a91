@@ -1,0 +1,9 @@
+package Oggetti.DAO;
+
+import java.sql.Connection;
+
+public class CorsoETemaDao {
+	
+	public void inserimento(Connection connection ,int corsoId ,String nomeTema);
+	
+}

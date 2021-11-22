@@ -1,0 +1,35 @@
+package Oggetti;
+import java.util.Date;
+
+public class Studente {
+	private String nome;
+	private String cognome;
+	private Date data;
+	private String CF;
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getCognome() {
+		return cognome;
+	}
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
+	}
+	public Date getData() {
+		return data;
+	}
+	public void setData(Date data) {
+		this.data = data;
+	}
+	public String getCF() {
+		return CF;
+	}
+	public void setCF(String cF) {
+		CF = cF;
+	}
+
+}

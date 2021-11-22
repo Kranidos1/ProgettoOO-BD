@@ -1,0 +1,25 @@
+package Oggetti.DAO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import Oggetti.AreaTematica;
+
+public class AreaTematicaDaoImpl {
+	
+	public void inserimento(AreaTematica tema ,Connection connection) {
+		
+		String statement = "INSERT INTO \"AreaTematica\" VALUES (" + tema.getNome() + ");";
+		
+		try {
+			
+			Statement inserimento = connection.createStatement();
+			inserimento.execute(statement);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

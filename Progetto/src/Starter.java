@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import Frames.Controller;
+import Frames.FirstFrame;
+import Frames.GestisciLezioniFrame;
+import Oggetti.DAO.CorsoDaoImpl;
+
 public class Starter {
 //
 	public static void main(String[] args){
 
-		//new FirstFrame();
-		new GestisciLezioniFrame();
+		new FirstFrame();
 		
 	}
 	

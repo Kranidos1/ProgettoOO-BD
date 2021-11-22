@@ -1,0 +1,13 @@
+package Oggetti.DAO;
+
+import java.sql.Connection;
+
+import javax.swing.DefaultListModel;
+
+import Oggetti.AreaTematica;
+
+public interface AreaTematicaDao {
+
+	public void inserimento(AreaTematica tema ,Connection connection);
+	public void getThemes(DefaultListModel model ,Connection connection);
+}

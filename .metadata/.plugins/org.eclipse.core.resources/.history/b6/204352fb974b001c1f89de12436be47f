@@ -1,0 +1,11 @@
+package Oggetti.DAO;
+
+import java.sql.Connection;
+
+import Oggetti.AreaTematica;
+
+public interface AreaTematicaDao {
+
+	public void inserimento(AreaTematica tema ,Connection connection);
+	
+}
