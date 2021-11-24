@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -305,6 +306,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 									
 									associazione.inserimento(connection, corsoDaoImpl.getNextCorsoId(connection), tmp.get(j));
 									j ++;
+									
 								}
 								
 							}		
@@ -530,7 +532,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 	}
 	
-	public int isEnbl(JTextField field ,int value ,JDateChooser date ) {
+	public int isEnbl(JTextField field ,int value ,JDateChooser date ,JList list ) {
 		
 			if(field != null) {
 				if(field.isEnabled()) {
@@ -547,31 +549,50 @@ public class Controller implements ControlloEOperazioniSuFrame {
 					return value;
 					
 				}
-			}else {
-				
-				if(date.isEnabled()) {
-					date.setEnabled(false);
-					value -= 1;
-					return value;	
+			}else 
+				if(date != null) {
+					{
+						
+						if(date.isEnabled()) {
+							date.setEnabled(false);
+							value -= 1;
+							return value;	
+						}else {
+							date.setEnabled(true);
+							value += 1;
+							return value;
+						}
+					}
 				}else {
-					date.setEnabled(true);
-					value += 1;
-					return value;
+					
+					if(list.isEnabled()) {
+						
+						list.setEnabled(false);
+						value -= 1;
+						return value;
+						
+					}else {
+						
+						list.setEnabled(true);
+						value += 1;
+						return value;
+						
+					}
 				}
-			}
-		
 			
 	}
 	
-	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label) {
+	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String tmpNome = nome.getText();
 		String tmpCognome = cognome.getText();
 		String tmpCf = cf.getText();
 		//controllo per invocazione tostringgetdate
+
+		String tmpDate = null;
 		if(dataDateChooser.getDate() != null) {
-			String tmpDate = sdf.format(dataDateChooser.getDate()).toString();
+			tmpDate = sdf.format(dataDateChooser.getDate());
 		}
 		//LA DATA NON VA CONTROLLATA,GIA CONTROLALTA PRIMA
 
@@ -584,6 +605,19 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		//SOLO DATA
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 0 && flagDate == 1) {
 			
+			StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+			Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByData(connection, tmpDate);
+			
+			int sizeLista = Arrays.asList(listaStudenti).size();
+			int i = 0;
+			
+			while(i < sizeLista) {
+				
+				model.addRow(listaStudenti[i]);
+				i++;
+				
+			}
+			
 		}
 		
 		//SOLO CF
@@ -592,6 +626,19 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			if(tmpCf != null) {
 				if(controlloCF(cf ,label) == 1) {
 					//ricerca per cf
+					
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByCf(connection, tmpCf);
+					
+					int sizeLista = Arrays.asList(listaStudenti).size();
+					int i = 0;
+					
+					while(i < sizeLista) {
+						
+						model.addRow(listaStudenti[i]);
+						i++;
+						
+					}
 					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
@@ -607,6 +654,19 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(isWhatYouWant(tmpNome ,0)) {
 					//comando ricerca
 					
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByCognome(connection, tmpCognome);
+					
+					int sizeLista = Arrays.asList(listaStudenti).size();
+					int i = 0;
+					
+					while(i < sizeLista) {
+						
+						model.addRow(listaStudenti[i]);
+						i++;
+						
+					}
+					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
 			}else
@@ -614,12 +674,25 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			
 		}
 		
-		//SOLO NOME
+		//SOLO NOME //FATTOTOOTTOTOTOTO
 		if(flagNome == 1 && flagCognome == 0 && flagCf == 0 && flagDate == 0) {
 			//erroreerororororororo
 			if(tmpNome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 					//comando ricerca
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByName(connection, tmpNome);
+					
+					int sizeLista = Arrays.asList(listaStudenti).size();
+					int i = 0;
+					
+					while(i < sizeLista) {
+						
+						model.addRow(listaStudenti[i]);
+						i++;
+						
+					}
+					
 					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,nome ,0);

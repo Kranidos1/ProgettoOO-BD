@@ -21,6 +21,9 @@ public class Starter {
 	public static void main(String[] args){
 
 		new FirstFrame();
+//		Controller controller = new Controller();
+//		CorsoDaoImpl corso = new CorsoDaoImpl();
+//		corso.getNomiCorsiByKey(controller.getConnection(),"ALF" );
 		
 	}
 	

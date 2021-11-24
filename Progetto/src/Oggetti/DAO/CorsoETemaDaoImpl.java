@@ -1,7 +1,9 @@
 package Oggetti.DAO;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 
 public class CorsoETemaDaoImpl implements CorsoETemaDao {
 
@@ -18,6 +20,36 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public LinkedList<String> ricercaCorsoByTheme(Connection connection ,String theme) {
+		
+		LinkedList<String> lista = new LinkedList<String>();
+		
+		String statement = "SELECT \"CorsoId\" FROM \"Corso-Tema\" WHERE \"NomeTema\" = '" + theme + "';";
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet result = ricerca.executeQuery(statement);
+			
+			while(result.next()) {
+				
+				lista.add(result.getString(1));
+				
+			}
+			
+			
+			return lista;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return null;
 	}
 	
 }

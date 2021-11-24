@@ -40,7 +40,7 @@ public class EmCorsoFrame extends JFrame {
 	public EmCorsoFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);
@@ -163,7 +163,7 @@ public class EmCorsoFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				checkCat = controller.isEnbl(categoryField, checkCat ,null);
+				checkCat = controller.isEnbl(categoryField, checkCat ,null ,null);
 				
 			}
 			
@@ -174,7 +174,7 @@ public class EmCorsoFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				checkK = controller.isEnbl(keyField, checkK ,null);
+				checkK = controller.isEnbl(keyField, checkK ,null ,null);
 				
 			}
 			

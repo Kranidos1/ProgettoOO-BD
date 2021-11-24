@@ -30,7 +30,7 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 	
 	public VisualizzaStatisticheStudentiFrame() {
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);

@@ -1,5 +1,6 @@
 package Frames;
 import java.awt.*;
+import javax.imageio.ImageIO;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,6 +13,9 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.*;
@@ -29,8 +33,7 @@ public class FirstFrame extends JFrame {
 	public FirstFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
-		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);
 		getContentPane().setLayout(null);
@@ -40,7 +43,7 @@ public class FirstFrame extends JFrame {
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
 		
-		ImageIcon iconlabelImageFirstFrame = new ImageIcon("C:\\Users\\matti\\Desktop\\program.jpg");
+		ImageIcon iconlabelImageFirstFrame = new ImageIcon(getClass().getResource("/imgs//program.jpg"));
 		JLabel labelImageFirstFrame = new JLabel("");
 		labelImageFirstFrame.setBounds(23, 148, 454, 179);
 		labelImageFirstFrame.setIcon(iconlabelImageFirstFrame);

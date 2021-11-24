@@ -1,0 +1,203 @@
+package Oggetti.DAO;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+
+import Oggetti.Studente;
+
+public class StudenteDaoImpl implements StudenteDao {
+	
+public void inserimento(Connection connection ,Studente studente) {
+	
+	String statement = "INSERT INTO \"Studente\" (\"Nome\",\"Cognome\",\"DataN\",\"Cf\",\"DataIscrizione\") VALUES ('" +studente.getNome()+"','"+studente.getCognome()+"','"
+	+studente.getData()+"','"+studente.getCF()+"','"+studente.getDataIscrizione()+"'"+ ");";
+	
+	try {
+		
+		Statement inserimento = connection.createStatement();
+		inserimento.execute(statement);
+		System.out.println("done");
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
+	
+	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + name + "%';";
+	
+	try {
+		
+		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet risultato = ricerca.executeQuery(statement);
+		
+		int size = 0;
+		while(risultato.next()) {
+			
+			size++;
+			
+		}
+		risultato.beforeFirst();
+		
+		
+		Vector[][] vettoreStudenti = new Vector[size][3];
+		
+		int i = 0;
+		while(risultato.next()) {
+			
+			vettoreStudenti[i][0] = new Vector();
+			vettoreStudenti[i][0].add(risultato.getString(1));
+			vettoreStudenti[i][1] = new Vector();
+			vettoreStudenti[i][1].add(risultato.getString(2));
+			vettoreStudenti[i][2] = new Vector();
+			vettoreStudenti[i][2].add(risultato.getString(3));
+			
+			i++;
+		}
+		
+		return vettoreStudenti;
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+	
+}
+
+public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome) {
+	
+	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + cognome + "%';";
+	
+	try {
+		
+		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet risultato = ricerca.executeQuery(statement);
+		
+		int size = 0;
+		while(risultato.next()) {
+			
+			size++;
+			
+		}
+		risultato.beforeFirst();
+		
+		
+		Vector[][] vettoreStudenti = new Vector[size][3];
+		
+		int i = 0;
+		while(risultato.next()) {
+			
+			vettoreStudenti[i][0] = new Vector();
+			vettoreStudenti[i][0].add(risultato.getString(1));
+			vettoreStudenti[i][1] = new Vector();
+			vettoreStudenti[i][1].add(risultato.getString(2));
+			vettoreStudenti[i][2] = new Vector();
+			vettoreStudenti[i][2].add(risultato.getString(3));
+			
+			i++;
+		}
+		
+		return vettoreStudenti;
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+	
+}
+
+public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
+	
+	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cf\" LIKE '" + cf + "';";
+	
+	try {
+		
+		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet risultato = ricerca.executeQuery(statement);
+		
+		int size = 0;
+		while(risultato.next()) {
+			
+			size++;
+			
+		}
+		risultato.beforeFirst();
+		
+		
+		Vector[][] vettoreStudenti = new Vector[size][3];
+		
+		int i = 0;
+		while(risultato.next()) {
+			
+			vettoreStudenti[i][0] = new Vector();
+			vettoreStudenti[i][0].add(risultato.getString(1));
+			vettoreStudenti[i][1] = new Vector();
+			vettoreStudenti[i][1].add(risultato.getString(2));
+			vettoreStudenti[i][2] = new Vector();
+			vettoreStudenti[i][2].add(risultato.getString(3));
+			
+			i++;
+		}
+		
+		return vettoreStudenti;
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+	
+}
+
+public Vector[][] ricercaStudenteByData(Connection connection ,String data) {
+	
+	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"DataIscrizione\" LIKE to_date('" + data + "','Mon-YYYY');";
+	
+	try {
+		
+		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet risultato = ricerca.executeQuery(statement);
+		
+		int size = 0;
+		while(risultato.next()) {
+			
+			size++;
+			
+		}
+		risultato.beforeFirst();
+		
+		
+		Vector[][] vettoreStudenti = new Vector[size][3];
+		
+		int i = 0;
+		while(risultato.next()) {
+			
+			vettoreStudenti[i][0] = new Vector();
+			vettoreStudenti[i][0].add(risultato.getString(1));
+			vettoreStudenti[i][1] = new Vector();
+			vettoreStudenti[i][1].add(risultato.getString(2));
+			vettoreStudenti[i][2] = new Vector();
+			vettoreStudenti[i][2].add(risultato.getString(3));
+			
+			i++;
+		}
+		
+		return vettoreStudenti;
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+	
+}
+
+
+}

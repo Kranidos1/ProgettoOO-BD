@@ -46,7 +46,7 @@ public class GestisciPresenzeFrame extends JFrame {
 	public GestisciPresenzeFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 640, 640);
@@ -212,7 +212,7 @@ public class GestisciPresenzeFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				flagCorso = controller.isEnbl(corsoField, flagCorso, null);
+				flagCorso = controller.isEnbl(corsoField, flagCorso, null ,null);
 				
 			}
 			
@@ -223,7 +223,7 @@ public class GestisciPresenzeFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				flagKey = controller.isEnbl(keyField, flagKey, null);
+				flagKey = controller.isEnbl(keyField, flagKey, null ,null);
 				
 			}
 			
@@ -234,7 +234,7 @@ public class GestisciPresenzeFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				flagTheme = controller.isEnbl(themeField, flagTheme, null);
+				flagTheme = controller.isEnbl(themeField, flagTheme, null ,null);
 				
 			}
 			

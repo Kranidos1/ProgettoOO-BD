@@ -24,6 +24,6 @@ public interface ControlloEOperazioniSuFrame {
 	public int controlloCF(JTextField cfTextField ,JLabel cfLabel);
 	public void controlloInserimentoStudente(JTextField nomeField , JTextField cognomeField ,JList list ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField);
 	//TextField generico con controllocheckbox e ricerca
-	public int isEnbl(JTextField field ,int value ,JDateChooser date);
+	public int isEnbl(JTextField field ,int value ,JDateChooser date ,JList lista);
 	
 }

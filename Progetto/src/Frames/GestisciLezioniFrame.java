@@ -23,7 +23,7 @@ public class GestisciLezioniFrame extends JFrame {
 	public GestisciLezioniFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 518, 555);

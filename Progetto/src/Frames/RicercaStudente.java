@@ -42,7 +42,7 @@ public class RicercaStudente extends JFrame {
 	
 	public RicercaStudente() {
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);
@@ -88,14 +88,13 @@ public class RicercaStudente extends JFrame {
 		panel.add(cfLabel);
 		
 		JTable tableStats = new JTable();
-		tableStats.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Nome" ,"Cognome" ,"CF", "Corso","N.Lezioni" ,"Presenze" ,"Assenze  "
-			}
-		));
+		DefaultTableModel model = new DefaultTableModel(new Object[][] {
+		},
+		new String[] {
+			"Nome" ,"Cognome" ,"CF", "Corso","N.Lezioni" ,"Presenze" ,"Assenze  "
+		});
 		
+		tableStats.setModel(model);
 		scrollPane = new JScrollPane(tableStats);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -161,7 +160,7 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				flagNome = controller.isEnbl(nomeField, flagNome ,null);
+				flagNome = controller.isEnbl(nomeField, flagNome ,null ,null);
 				
 			}
 			
@@ -173,7 +172,7 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				flagCognome = controller.isEnbl(cognomeField, flagCognome ,null);
+				flagCognome = controller.isEnbl(cognomeField, flagCognome ,null ,null);
 				
 			}
 			
@@ -185,7 +184,7 @@ public class RicercaStudente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				flagCf = controller.isEnbl(cfField, flagCf ,null);
+				flagCf = controller.isEnbl(cfField, flagCf ,null ,null);
 				
 			}
 			
@@ -196,7 +195,7 @@ public class RicercaStudente extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				flagDate = controller.isEnbl(null ,flagDate ,dateChooser);
+				flagDate = controller.isEnbl(null ,flagDate ,dateChooser ,null);
 			}
 			
 		});
@@ -204,7 +203,7 @@ public class RicercaStudente extends JFrame {
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser ,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel);
+				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser ,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel ,model);
 				
 			}
 		});

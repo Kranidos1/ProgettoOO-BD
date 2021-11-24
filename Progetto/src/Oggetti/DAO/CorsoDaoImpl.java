@@ -53,7 +53,6 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			int code = Integer.parseInt(lista.get(size));
 			
-			
 			return code;
 			
 		} catch (SQLException e) {
@@ -104,9 +103,13 @@ public class CorsoDaoImpl implements CorsoDao{
 			Statement ricerca = connection.createStatement();
 			ResultSet risultato = ricerca.executeQuery(statement);
 			String risu = null;
+			
 			while(risultato.next()) {
+				
 				risu = risultato.getString(1).toString();
+				
 			}
+			
 			int corsoId = Integer.parseInt(risu);
 			return corsoId;
 			
@@ -117,4 +120,126 @@ public class CorsoDaoImpl implements CorsoDao{
 		return 0;
 		
 	}
+	
+	public LinkedList<String> getNomiCorsiByKey(Connection connection ,String key) {
+		
+		LinkedList<String> lista = new LinkedList<String>();
+		
+		String statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Nome\" LIKE '%" + key + "%' OR \"Descrizione\" LIKE '%" + key + "%';";
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet risultato = ricerca.executeQuery(statement);
+			
+			while(risultato.next()) {
+				
+				lista.add(risultato.getString(1).toString());
+				
+			}
+			
+			return lista;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+		
+	}
+	
+	public LinkedList<String> getNomiById(Connection connection ,LinkedList<String> list) {
+		
+		String stringRicerca = null;	
+		String statement ;
+		
+		LinkedList<String> tmpNomi = new LinkedList<String>();
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet risultato;
+			
+			int i = 0;
+			
+			if(list.get(i) != null) {
+				
+				while(i < list.size()) {
+					
+					stringRicerca = list.get(i);
+					statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"CorsoId\" = '" + stringRicerca + "';";
+					risultato = ricerca.executeQuery(statement);
+						
+					risultato.next();
+					tmpNomi.add(risultato.getString(1));
+					
+						i++;
+						
+				}
+				
+			}
+			
+			
+			return tmpNomi;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+	}
+	
+	public LinkedList<String> getCorsiTramiteKeyETema(Connection connection ,String key ,String theme) {
+		
+		LinkedList<String> lista = new LinkedList<String>();
+		CorsoETemaDaoImpl corsoTema = new CorsoETemaDaoImpl();
+		
+		//TROVA GLI ID TRAMITE TEMA
+		LinkedList<String> listaIdCorsi = corsoTema.ricercaCorsoByTheme(connection , theme);
+		
+		
+		int size = listaIdCorsi.size();
+
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet risultato;
+			String statementCorso;
+			
+			int i = 0;
+			
+			while(i < size) {
+				
+				statementCorso = "SELECT \"Nome\" FROM \"Corso\" WHERE (\"Nome\" LIKE '%" + key + "%' OR \"Descrizione\" LIKE '%" + key + "%') AND \"Corso\".\"CorsoId\" = '" + listaIdCorsi.get(i) + "';";
+				risultato = ricerca.executeQuery(statementCorso);
+				
+				
+				while(risultato.next()) {
+					
+					lista.add(risultato.getString(1));
+				
+				}
+
+				
+				i++;
+				
+			}
+			
+			return lista;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+		
+	}
+	
+	
 }

@@ -60,7 +60,7 @@ public class CreaCorsoFrame extends JFrame{
 	public CreaCorsoFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\matti\\Desktop\\lastin.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		controller = new Controller();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

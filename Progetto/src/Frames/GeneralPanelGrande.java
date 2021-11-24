@@ -99,7 +99,7 @@ public class GeneralPanelGrande extends JPanel {
 		gestisciStudentiMenu.add(statsMenuItem);
 		
 		JMenu GestisciCorsoMenu = new JMenu("Gestisci Corso");
-		GestisciCorsoMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
+		GestisciCorsoMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
 		navigaMenu.add(GestisciCorsoMenu);
 		
 		JMenuItem visualizzaStatisticheMenuItem = new JMenuItem("Visualizza Statistiche");
@@ -126,8 +126,7 @@ public class GeneralPanelGrande extends JPanel {
 		JLabel labelProgramImage = new JLabel("");
 		labelProgramImage.setBounds(317, 33, 109, 114);
 		
-		ImageIcon image = new ImageIcon("C:\\Users\\matti\\Desktop\\programImage.gif"
-				+ "");
+		ImageIcon image = new ImageIcon(getClass().getResource("/imgs//programImage.gif"));
 		labelProgramImage.setIcon(image);
 		add(labelProgramImage);
 		
