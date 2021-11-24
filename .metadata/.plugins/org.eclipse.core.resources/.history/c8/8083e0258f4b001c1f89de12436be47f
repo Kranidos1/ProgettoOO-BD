@@ -1,5 +1,0 @@
-package Oggetti.DAO;
-
-public class CorsoDaoImpl implements CorsoDao{
-
-}

@@ -22,7 +22,7 @@ public class GestioneCorsiFrame extends JFrame {
 	
 	public GestioneCorsiFrame() {
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GestioneCorsiFrame.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);

@@ -44,7 +44,7 @@ public class IscriviStudenteFrame extends JFrame {
 	
 	public IscriviStudenteFrame() {
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(IscriviStudenteFrame.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);

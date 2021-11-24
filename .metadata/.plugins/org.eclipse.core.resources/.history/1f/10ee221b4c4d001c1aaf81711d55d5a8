@@ -46,7 +46,7 @@ public class GestisciPresenzeFrame extends JFrame {
 	public GestisciPresenzeFrame() {
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GestisciPresenzeFrame.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 640, 640);

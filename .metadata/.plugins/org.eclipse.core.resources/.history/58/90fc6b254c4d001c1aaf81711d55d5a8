@@ -20,7 +20,7 @@ public class GestioneStudentiFrame extends JFrame {
 	
 	public GestioneStudentiFrame() {
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GestioneStudentiFrame.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FirstFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);

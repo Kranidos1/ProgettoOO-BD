@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="DefaultTable"/>
+		<item key="selection" value="C:"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="C:"/>
+			<item value="C"/>
+			<item value="tableModel"/>
+			<item value="ricercaStud"/>
+			<item value="model"/>
+			<item value="inserimento"/>
 			<item value="defaulttable"/>
 			<item value="scroll"/>
 			<item value="isen"/>
 			<item value="controlloinserimentostudente"/>
 			<item value="controllostudente"/>
 			<item value="studente"/>
-			<item value="inserimento"/>
 			<item value="corso"/>
 			<item value="controllo"/>
-			<item value="model"/>
 			<item value="controlloinserimento"/>
-			<item value="system."/>
-			<item value="areatematica"/>
-			<item value="textfieldtheme"/>
-			<item value="textenable"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="974"/>
-		<item key="DIALOG_Y_ORIGIN" value="286"/>
+		<item key="DIALOG_X_ORIGIN" value="694"/>
+		<item key="DIALOG_Y_ORIGIN" value="196"/>
 		<item key="DIALOG_WIDTH" value="712"/>
 		<item key="DIALOG_HEIGHT" value="607"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
