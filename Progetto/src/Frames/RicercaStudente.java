@@ -24,11 +24,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.Box;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Font;
 
 public class RicercaStudente extends JFrame {
 
 	private JPanel contentPane;
-	private GeneralPanel panel;
+	private GeneralPanelGrande panel;
 	private JTextField nomeField;
 	private JTextField cognomeField;
 	private JTextField cfField;
@@ -45,12 +46,12 @@ public class RicercaStudente extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RicercaStudente.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 517, 555);
+		setBounds(100, 100, 639, 555);
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		panel = new GeneralPanel();
-		panel.setBounds(0, 0, 501, 516);
+		panel = new GeneralPanelGrande();
+		panel.setBounds(0, 0, 623, 516);
 		getContentPane().add(panel);
 		
 		controller = new Controller();
@@ -88,24 +89,30 @@ public class RicercaStudente extends JFrame {
 		panel.add(cfLabel);
 		
 		JTable tableStats = new JTable();
+		tableStats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {
 		},
 		new String[] {
-			"Nome" ,"Cognome" ,"CF", "Corso","N.Lezioni" ,"Presenze" ,"Assenze  "
+			"Nome" ,"Cognome" ,"CF","Corso","N.Lezioni" ,"Presenze" ,"Assenze"
 		});
-		
+		tableStats.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableStats.setModel(model);
+		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
+		tableStats.getColumnModel().getColumn(4).setPreferredWidth(65);
+		tableStats.getColumnModel().getColumn(5).setPreferredWidth(65);
+		tableStats.getColumnModel().getColumn(6).setPreferredWidth(75);
+		
 		scrollPane = new JScrollPane(tableStats);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(0, 269, 501, 183);
+		scrollPane.setBounds(20, 269, 593, 183);
 		panel.add(scrollPane);
 		
 		buttonRicerca = new JButton("Ricerca");
 		buttonRicerca.setForeground(Color.RED);
 		buttonRicerca.setBorder(new RoundBorderBotton(10));
 		buttonRicerca.setBackground(Color.WHITE);
-		buttonRicerca.setBounds(319, 185, 97, 26);
+		buttonRicerca.setBounds(326, 190, 97, 37);
 		panel.add(buttonRicerca);
 		
 		JCheckBox nomeCheck = new JCheckBox("");
@@ -130,12 +137,8 @@ public class RicercaStudente extends JFrame {
 		buttonElimina.setForeground(Color.RED);
 		buttonElimina.setBorder(new RoundBorderBotton(10));
 		buttonElimina.setBackground(Color.WHITE);
-		buttonElimina.setBounds(52, 468, 126, 26);
+		buttonElimina.setBounds(263, 463, 126, 26);
 		panel.add(buttonElimina);
-		
-		Component verticalStrut = Box.createVerticalStrut(20);
-		verticalStrut.setBounds(220, 217, 0, 26);
-		panel.add(verticalStrut);
 		
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setEnabled(false);

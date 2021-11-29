@@ -241,5 +241,27 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 	}
 	
+	public String getNomeById(Connection connection ,String id) {
+		
+		String statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"CorsoId\" = '" + id + "';";
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet risultato = ricerca.executeQuery(statement);
+			if(risultato.next()) {
+				String result = risultato.getString(1);
+				return result;
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
 	
 }

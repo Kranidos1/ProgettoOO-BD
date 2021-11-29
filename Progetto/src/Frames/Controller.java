@@ -512,7 +512,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 											stud.inserimento(connection, studente);
 											
 											IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
-											associazione.inserimento(connection, corsoId, studente.getCF());
+											associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
 
 											
 										}else
@@ -606,7 +606,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 0 && flagDate == 1) {
 			
 			StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
-			Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByData(connection, tmpDate);
+			Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByDataIscrizione(connection, tmpDate);
 			
 			int sizeLista = Arrays.asList(listaStudenti).size();
 			int i = 0;
@@ -708,6 +708,32 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(controlloCF(cf ,label) == 1) {
 					//ricerca per cf
 					
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					List<String>[] listaStudenti;
+					listaStudenti = studenteRicerca.ricercaStudenteByCfEData(connection, tmpCf, tmpDate);
+					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+					int i = 0;
+
+
+					while(i < Arrays.asList(listaStudenti).size()) {
+						
+						if(!listaStudenti[i].isEmpty()) {
+							
+							fixedList[i] = new Vector();
+							fixedList[i].add(listaStudenti[i].get(0));
+							fixedList[i].add(listaStudenti[i].get(1));
+							fixedList[i].add(listaStudenti[i].get(2));
+							fixedList[i].add(listaStudenti[i].get(3));
+							fixedList[i].add(listaStudenti[i].get(4));
+							fixedList[i].add(listaStudenti[i].get(5));
+							fixedList[i].add(listaStudenti[i].get(6));
+							model.addRow(fixedList[i]);
+							
+						}
+						i++;
+
+					}
+					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 			}else
@@ -721,6 +747,31 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			if(tmpCognome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					List<String>[] listaStudenti;
+					listaStudenti = studenteRicerca.ricercaStudenteByCognomeEData(connection, tmpCognome, tmpDate);
+					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+					int i = 0;
+
+
+					while(i < Arrays.asList(listaStudenti).size()) {
+						
+						if(!listaStudenti[i].isEmpty()) {
+							
+							fixedList[i] = new Vector();
+							fixedList[i].add(listaStudenti[i].get(0));
+							fixedList[i].add(listaStudenti[i].get(1));
+							fixedList[i].add(listaStudenti[i].get(2));
+							fixedList[i].add(listaStudenti[i].get(3));
+							fixedList[i].add(listaStudenti[i].get(4));
+							fixedList[i].add(listaStudenti[i].get(5));
+							fixedList[i].add(listaStudenti[i].get(6));
+							model.addRow(fixedList[i]);
+							
+						}
+						i++;
+
+					}
 					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
@@ -736,7 +787,29 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					if(tmpCf != null) {
 						if(controlloCF(cf ,label) == 1) {
+							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByCognomeECf(connection, tmpCognome, tmpCf);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
 
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								fixedList[i] = new Vector();
+								fixedList[i].add(listaStudenti[i].get(0));
+								fixedList[i].add(listaStudenti[i].get(1));
+								fixedList[i].add(listaStudenti[i].get(2));
+								fixedList[i].add(listaStudenti[i].get(3));
+								fixedList[i].add(listaStudenti[i].get(4));
+								fixedList[i].add(listaStudenti[i].get(5));
+								fixedList[i].add(listaStudenti[i].get(6));
+								System.out.println(fixedList[i]);
+								model.addRow(fixedList[i]);
+								i++;
+
+							}
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
@@ -754,7 +827,28 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 			if(tmpNome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
+					
+					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					List<String>[] listaStudenti;
+					listaStudenti = studenteRicerca.ricercaStudenteByNomeEData(connection, tmpNome, tmpDate);
+					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+					int i = 0;
 
+
+					while(i < Arrays.asList(listaStudenti).size()) {
+						
+						fixedList[i] = new Vector();
+						fixedList[i].add(listaStudenti[i].get(0));
+						fixedList[i].add(listaStudenti[i].get(1));
+						fixedList[i].add(listaStudenti[i].get(2));
+						fixedList[i].add(listaStudenti[i].get(3));
+						fixedList[i].add(listaStudenti[i].get(4));
+						fixedList[i].add(listaStudenti[i].get(5));
+						fixedList[i].add(listaStudenti[i].get(6));
+						model.addRow(fixedList[i]);
+						i++;
+
+					}
 					
 				}else
 					jpanelManagementCreaCorsoFrame(null ,null ,nome ,0);
@@ -770,7 +864,29 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					if(tmpCf != null) {
 						if(controlloCF(cf ,label) == 1) {
+							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByNomeECf(connection, tmpNome, tmpCf);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
 
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								fixedList[i] = new Vector();
+								fixedList[i].add(listaStudenti[i].get(0));
+								fixedList[i].add(listaStudenti[i].get(1));
+								fixedList[i].add(listaStudenti[i].get(2));
+								fixedList[i].add(listaStudenti[i].get(3));
+								fixedList[i].add(listaStudenti[i].get(4));
+								fixedList[i].add(listaStudenti[i].get(5));
+								fixedList[i].add(listaStudenti[i].get(6));
+								model.addRow(fixedList[i]);
+								i++;
+
+							}
+							
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
@@ -792,6 +908,33 @@ public class Controller implements ControlloEOperazioniSuFrame {
 					if(tmpCognome != null) {
 						if(isWhatYouWant(tmpNome ,0)) {
 							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByNomeECognome(connection, tmpNome, tmpCognome);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
+
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								if(!listaStudenti[i].isEmpty()) {
+									
+									fixedList[i] = new Vector();
+									fixedList[i].add(listaStudenti[i].get(0));
+									fixedList[i].add(listaStudenti[i].get(1));
+									fixedList[i].add(listaStudenti[i].get(2));
+									fixedList[i].add(listaStudenti[i].get(3));
+									fixedList[i].add(listaStudenti[i].get(4));
+									fixedList[i].add(listaStudenti[i].get(5));
+									fixedList[i].add(listaStudenti[i].get(6));
+									model.addRow(fixedList[i]);
+									
+								}
+								System.out.println(fixedList[i]);
+								i++;
+
+							}
+							
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
@@ -812,7 +955,32 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					if(tmpCf != null) {
 						if(controlloCF(cf ,label) == 1) {
+							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByCognomeDataECf(connection, tmpCognome, tmpDate ,tmpCf);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
 
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								if(!listaStudenti[i].isEmpty()) {
+									
+									fixedList[i] = new Vector();
+									fixedList[i].add(listaStudenti[i].get(0));
+									fixedList[i].add(listaStudenti[i].get(1));
+									fixedList[i].add(listaStudenti[i].get(2));
+									fixedList[i].add(listaStudenti[i].get(3));
+									fixedList[i].add(listaStudenti[i].get(4));
+									fixedList[i].add(listaStudenti[i].get(5));
+									fixedList[i].add(listaStudenti[i].get(6));
+									model.addRow(fixedList[i]);
+									
+								}
+								i++;
+
+							}
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
@@ -833,7 +1001,32 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					if(tmpCf != null) {
 						if(controlloCF(cf ,label) == 1) {
+							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByNomeDataECf(connection, tmpNome, tmpDate ,tmpCf);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
 
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								if(!listaStudenti[i].isEmpty()) {
+									
+									fixedList[i] = new Vector();
+									fixedList[i].add(listaStudenti[i].get(0));
+									fixedList[i].add(listaStudenti[i].get(1));
+									fixedList[i].add(listaStudenti[i].get(2));
+									fixedList[i].add(listaStudenti[i].get(3));
+									fixedList[i].add(listaStudenti[i].get(4));
+									fixedList[i].add(listaStudenti[i].get(5));
+									fixedList[i].add(listaStudenti[i].get(6));
+									model.addRow(fixedList[i]);
+									
+								}
+								i++;
+
+							}
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
@@ -854,7 +1047,32 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					if(tmpCognome != null) {
 						if(isWhatYouWant(tmpNome ,0)) {
+							
+							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+							List<String>[] listaStudenti;
+							listaStudenti = studenteRicerca.ricercaStudenteByNomeDataECognome(connection, tmpNome, tmpDate ,tmpCognome);
+							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+							int i = 0;
 
+
+							while(i < Arrays.asList(listaStudenti).size()) {
+								
+								if(!listaStudenti[i].isEmpty()) {
+									
+									fixedList[i] = new Vector();
+									fixedList[i].add(listaStudenti[i].get(0));
+									fixedList[i].add(listaStudenti[i].get(1));
+									fixedList[i].add(listaStudenti[i].get(2));
+									fixedList[i].add(listaStudenti[i].get(3));
+									fixedList[i].add(listaStudenti[i].get(4));
+									fixedList[i].add(listaStudenti[i].get(5));
+									fixedList[i].add(listaStudenti[i].get(6));
+									model.addRow(fixedList[i]);
+									
+								}
+								i++;
+
+							}
 							
 						}else
 							jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
@@ -879,6 +1097,31 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							if(tmpCf != null) {
 								if(controlloCF(cf ,label) == 1) {
 
+									StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+									List<String>[] listaStudenti;
+									listaStudenti = studenteRicerca.ricercaStudenteByNomeCfECognome(connection, tmpNome, tmpCf ,tmpCognome);
+									Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+									int i = 0;
+
+
+									while(i < Arrays.asList(listaStudenti).size()) {
+										
+										if(!listaStudenti[i].isEmpty()) {
+											
+											fixedList[i] = new Vector();
+											fixedList[i].add(listaStudenti[i].get(0));
+											fixedList[i].add(listaStudenti[i].get(1));
+											fixedList[i].add(listaStudenti[i].get(2));
+											fixedList[i].add(listaStudenti[i].get(3));
+											fixedList[i].add(listaStudenti[i].get(4));
+											fixedList[i].add(listaStudenti[i].get(5));
+											fixedList[i].add(listaStudenti[i].get(6));
+											model.addRow(fixedList[i]);
+											
+										}
+										i++;
+
+									}
 									
 								}else
 									jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);

@@ -7,9 +7,9 @@ import java.sql.Statement;
 import Oggetti.Studente;
 
 public class IscrizioneDaoImpl {
-	public void inserimento(Connection connection ,int CorsoId ,String Cf) {
+	public void inserimento(Connection connection ,int CorsoId ,String Cf ,String data) {
 		
-		String statement = "INSERT INTO \"Iscrizione\" (\"Cf\",\"Iscritto\",\"CorsoId\") VALUES ('"+Cf+"','"+true+"','"+CorsoId+"');";
+		String statement = "INSERT INTO \"Iscrizione\" (\"Cf\",\"DataIscrizione\",\"CorsoId\") VALUES ('"+Cf+"','"+data+"','"+CorsoId+"');";
 		
 		try {
 			
