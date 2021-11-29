@@ -240,7 +240,7 @@ public class CreaCorsoFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				//BOOLEAN DI CONTROLLO
-				controller.insertCorsoDb(fram, textFieldName, textFieldMax, textFieldMin, textAreaDescrizione, model);
+				controller.insertCorsoDb(fram, textFieldName, textFieldMax, textFieldMin, textAreaDescrizione, model ,0 ,null);
 				
 			}
 			
@@ -279,6 +279,7 @@ public class CreaCorsoFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				
 				model.removeAllElements();
+				
 				
 			}
 		});

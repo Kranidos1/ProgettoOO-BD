@@ -245,8 +245,9 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	}
 
 	
-	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model) {
+	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model ,int flag ,String corsoId) {
 		
+		//FLAG 0 PER INSERIMENTO DA 0 1 PER UPDATE
 		CorsoDaoImpl corsoDaoImpl = new CorsoDaoImpl();
 		String name,maxString,minString;
 		boolean a,b,c,d,v,u;
@@ -290,30 +291,38 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							
 						}
 						
-						//INSERIMENTO EFFETTIVO DEL CORSO
-						corsoDaoImpl.inserimento(corso, connection);
+						//INSERIMENTO EFFETTIVO DELCORSO
 						
-						
-						CorsoETemaDaoImpl associazione = new CorsoETemaDaoImpl();
-						
-						
-						Timer timer = new Timer(1000,new ActionListener() {
+						if(flag == 0) {
+							corsoDaoImpl.inserimento(corso, connection);
+							
+							
+							CorsoETemaDaoImpl associazione = new CorsoETemaDaoImpl();
+							
+							
+							Timer timer = new Timer(1000,new ActionListener() {
 
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								// TODO Auto-generated method stub
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									// TODO Auto-generated method stub
 
-								while(j < tmp.size()) {
+									while(j < tmp.size()) {
+										
+										associazione.inserimento(connection, corsoDaoImpl.getNextCorsoId(connection), tmp.get(j));
+										j ++;
+										
+									}
 									
-									associazione.inserimento(connection, corsoDaoImpl.getNextCorsoId(connection), tmp.get(j));
-									j ++;
-									
-								}
+								}		
+							});	
+							timer.setRepeats(false);
+							timer.start();
+						}else
+							if(flag == 1) {
 								
-							}		
-						});	
-						timer.setRepeats(false);
-						timer.start();
+								corsoDaoImpl.updateCorso(connection, corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
+								
+							}
 
 						
 				}else

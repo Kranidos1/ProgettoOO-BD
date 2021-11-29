@@ -4,9 +4,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import Oggetti.Corso;
 
@@ -263,5 +268,74 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 	}
 	
+	
+	public void deleteCorsoByName(Connection connection ,String nome) {
+		
+		String statement = "DELETE FROM \"Corso\" WHERE \"Nome\" = '" + nome + "';";
+		
+		try {
+			
+			Statement delete = connection.createStatement();
+			
+			if(delete.execute(statement)) {
+				
+				JOptionPane.showMessageDialog(null ,"Corso cancellato correttamente", "PSQL", JOptionPane.INFORMATION_MESSAGE);
+				
+			}
+				
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public List<String> getCorso(Connection connection ,String nome) {
+		
+		List<String> result = new LinkedList();
+		
+		String statement = "SELECT \"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\" FROM \"Corso\" WHERE \"Nome\" = '"+ nome + "';";
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet risultato = ricerca.executeQuery(statement);
+			
+			while(risultato.next()) {
+				
+				result.add(risultato.getString(1));
+				result.add(risultato.getString(2));
+				result.add(risultato.getString(3));
+				result.add(risultato.getString(4));
+				result.add(risultato.getString(5));
+				
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public void updateCorso(Connection connection ,String id ,String nome ,String descrizione ,String maxPartecipanti ,String minPartecipazione) {
+		
+		String statement = "UPDATE \"Corso\" SET \"Nome\" = '" + nome + "', \"Descrizione\" = '" + descrizione + "', \"MaxPartecipanti\" = '"+ maxPartecipanti + "', \"MinPartecipazione\" = '" + minPartecipazione + "' WHERE \"CorsoId\" = " + id + ";" ;
+		
+		try {
+			
+			Statement update = connection.createStatement();
+			update.execute(statement);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 }

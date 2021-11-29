@@ -1,6 +1,10 @@
 package Frames;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -13,27 +17,28 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.border.MatteBorder;
 
+import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.CorsoDaoImpl;
+import Oggetti.DAO.CorsoETemaDaoImpl;
+
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 public class EmCorsoFrame extends JFrame {
 
 	private JPanel contentPane;
 	private GeneralPanel panel;
-	private JTextField categoryField;
-	private JTextField keyField;
 	private Controller controller;
-	private JCheckBox checkKey;
-	private JCheckBox checkCategory;
-	private JLabel categoryLabel;
-	private JLabel keyLabel;
 	private int checkK = 0;
 	private int checkCat = 0;
 	
@@ -57,13 +62,12 @@ public class EmCorsoFrame extends JFrame {
 		listCorsi.setVisibleRowCount(4);
 		listCorsi.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCorsi.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.BLACK));
-		listCorsi.setBounds(10, 196, 481, 260);
-		model.addElement("ciao");
-		model.addElement("cia1o");
-		model.addElement("cia12o");
-		model.addElement("ci3ao");
-		model.addElement("cia34o");
-		model.addElement("cia454o");
+		listCorsi.setBounds(10, 154, 481, 260);
+		
+		CorsoDaoImpl corso = new CorsoDaoImpl();
+		
+		List<String> corsi = corso.getNomiCorsi(controller.getConnection());
+		model.addAll(corsi);
 		
 		//TODO
 		//aggiungere cose
@@ -86,54 +90,15 @@ public class EmCorsoFrame extends JFrame {
 		buttonElimina.setForeground(Color.RED);
 		buttonElimina.setBorder(new RoundBorderBotton(10));
 		buttonElimina.setBackground(Color.WHITE);
-		buttonElimina.setBounds(10, 467, 83, 26);
+		buttonElimina.setBounds(120, 425, 83, 26);
 		panel.add(buttonElimina);
 		
 		JButton buttonModifica = new JButton("Modifica");
 		buttonModifica.setForeground(Color.RED);
 		buttonModifica.setBorder(new RoundBorderBotton(10));
 		buttonModifica.setBackground(Color.WHITE);
-		buttonModifica.setBounds(132, 467, 83, 26);
+		buttonModifica.setBounds(276, 425, 83, 26);
 		panel.add(buttonModifica);
-		
-		categoryField = new JTextField();
-		categoryField.setEnabled(false);
-		categoryField.setColumns(10);
-		categoryField.setBounds(69, 127, 119, 20);
-		panel.add(categoryField);
-		
-		keyField = new JTextField();
-		keyField.setEnabled(false);
-		keyField.setColumns(10);
-		keyField.setBounds(69, 165, 119, 20);
-		panel.add(keyField);
-		
-		checkCategory = new JCheckBox("");
-		checkCategory.setBackground(Color.WHITE);
-		checkCategory.setBounds(194, 127, 21, 17);
-		panel.add(checkCategory);
-		
-		checkKey = new JCheckBox("");
-		checkKey.setBackground(Color.WHITE);
-		checkKey.setBounds(194, 165, 21, 17);
-		panel.add(checkKey);
-		
-		JButton buttonRicerca = new JButton("Ricerca");
-		buttonRicerca.setForeground(Color.RED);
-		buttonRicerca.setBorder(new RoundBorderBotton(10));
-		buttonRicerca.setBackground(Color.WHITE);
-		buttonRicerca.setBounds(241, 138, 75, 26);
-		panel.add(buttonRicerca);
-		
-		categoryLabel = new JLabel("Category");
-		categoryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		categoryLabel.setBounds(0, 127, 57, 20);
-		panel.add(categoryLabel);
-		
-		keyLabel = new JLabel("Key");
-		keyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		keyLabel.setBounds(12, 165, 47, 17);
-		panel.add(keyLabel);
 		
 		setVisible(true);
 		
@@ -144,9 +109,11 @@ public class EmCorsoFrame extends JFrame {
 				int answer = JOptionPane.showConfirmDialog((JFrame) SwingUtilities.getRoot(buttonModifica), "are you sure you want to delete " + tmp + "?", "Confirm", JOptionPane.YES_NO_OPTION);
 				//0 true 1 false
 				if(answer == 0) {
+					//TODO QUI OVVIAMENTE PARTE ANCHE ELIMINAZIONE DAL DB
+					
 					model.removeElement(tmp);
+					corso.deleteCorsoByName(controller.getConnection(), tmp);
 				}
-				//TODO QUI OVVIAMENTE PARTE ANCHE ELIMINAZIONE DAL DB
 			}
 		});
 		
@@ -154,35 +121,37 @@ public class EmCorsoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 //				TODO CREACORSOFRAME con valori preimpostati e messaggio per e conferma effettiva modifica nel caso
+				String tmp = listCorsi.getSelectedValue().toString();
+				//creo frame
+				List<String> listaValori = corso.getCorso(controller.getConnection(), tmp);
+				CorsoETemaDaoImpl temi = new CorsoETemaDaoImpl();
+				List<String> listaTemiCorso = temi.getAllThemeOfCorso(controller.getConnection(), listaValori.get(4));
+				AreaTematicaDaoImpl areaTematica = new AreaTematicaDaoImpl();
+				
+				LinkedList<String> listaTemi = areaTematica.getThemes(controller.getConnection());
+				
+				ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
+				frame.getNomeField().setText(listaValori.get(0));
+				frame.getTextAreaDescrizione().setText(listaValori.get(1));
+				frame.getMaxField().setText(listaValori.get(2));
+				frame.getMinField().setText(listaValori.get(3));
+				frame.setId(listaValori.get(4));
+				
+				DefaultListModel model = (DefaultListModel) frame.getList().getModel();
+				model.addAll(listaTemiCorso);
+				
+				JComboBox<String> box = frame.getChoiceOption();
+				Iterator<String> iterator =  listaTemi.iterator();
+				
+				while(iterator.hasNext()) {
+					
+					box.addItem(iterator.next());
+					
+				}
 
-			}
-		});
-		
-		checkCategory.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				checkCat = controller.isEnbl(categoryField, checkCat ,null ,null);
 				
 			}
-			
 		});
 		
-		checkKey.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				checkK = controller.isEnbl(keyField, checkK ,null ,null);
-				
-			}
-			
-		});
-		
-		buttonRicerca.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 	}
 }

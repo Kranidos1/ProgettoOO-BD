@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import Oggetti.Studente;
-import Oggetti.DAO.Exceptions.DaoExceptions;
 
 public class StudenteDaoImpl implements StudenteDao {
 	

@@ -9,7 +9,7 @@ public class RoundBorderBotton implements Border{
 	
 	 private int radius;
 	 
-	 RoundBorderBotton(int radius) {
+	 public RoundBorderBotton(int radius) {
 	        this.radius = radius;
 	    }
 	 

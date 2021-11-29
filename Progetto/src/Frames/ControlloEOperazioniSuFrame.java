@@ -18,7 +18,7 @@ public interface ControlloEOperazioniSuFrame {
 	// 0 nome   1 max  2 min 3 descrizione 4 cognome 5 data 6 cf 7 generico 8 maggiorenne
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) ;
 	public int textEnableDisable(JButton button ,JFrame fram ,int count ,JTextField field ,JPanel pabel);
-	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model);
+	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model ,int flag ,String corsoId);
 	public void insertNewThemeFromField(JFrame fram ,JTextField field ,DefaultListModel<String> model);
 	public void insertInListAndControl(DefaultListModel<String> model ,String control ,JFrame fram);
 	public int controlloCF(JTextField cfTextField ,JLabel cfLabel);

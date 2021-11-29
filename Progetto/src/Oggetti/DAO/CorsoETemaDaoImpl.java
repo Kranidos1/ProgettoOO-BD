@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
+import java.util.List;
 
 public class CorsoETemaDaoImpl implements CorsoETemaDao {
 
@@ -52,4 +53,47 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 		return null;
 	}
 	
+	public List<String> getAllThemeOfCorso(Connection connection ,String id) {
+		
+		List<String> risultato = new LinkedList<String>();
+		String statement = "SELECT \"NomeTema\" FROM \"Corso-Tema\" WHERE \"CorsoId\" = '" + id + "';";
+		System.out.println(id);
+		
+		try {
+			
+			Statement ricerca = connection.createStatement();
+			ResultSet result = ricerca.executeQuery(statement);
+			
+			while(result.next()) {
+				
+				risultato.add(result.getString(1));
+				
+			}
+			
+			return risultato;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public void deleteCollegamento(Connection connection ,String id) {
+		
+		String statement = "DELETE FROM \"Corso-Tema\" WHERE \"CorsoId\" = '" + id + "';";
+		
+		try {
+			
+			Statement delete = connection.createStatement();
+			delete.execute(statement);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 }
