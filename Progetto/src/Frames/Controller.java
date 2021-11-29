@@ -1,4 +1,5 @@
 package Frames;
+
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -498,11 +499,13 @@ public class Controller implements ControlloEOperazioniSuFrame {
 											//TODO 
 											//Inserimento
 											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
-											System.out.println("ciao");
+											
 											StudenteDaoImpl stud = new StudenteDaoImpl();
-											CorsoDaoImpl corso = new CorsoDaoImpl();
-											int corsoId = corso.trovaCorsoId(connection, tmpCorso);
 											Studente studente = new Studente();
+											CorsoDaoImpl corso = new CorsoDaoImpl();
+											
+											int corsoId = corso.trovaCorsoId(connection, tmpCorso);
+											
 											studente.setCF(cfField.getText().toString());
 											studente.setNome(tmpNome);
 
@@ -512,7 +515,15 @@ public class Controller implements ControlloEOperazioniSuFrame {
 											stud.inserimento(connection, studente);
 											
 											IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
-											associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
+											int procedere = associazione.controlloDuplicati(connection, studente.getCF(), corsoId);
+											
+											if(procedere == 1) {
+												
+												associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
+												
+											}else
+												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+											
 
 											
 										}else

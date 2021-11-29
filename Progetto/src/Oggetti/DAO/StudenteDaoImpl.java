@@ -13,9 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import Oggetti.Studente;
+import Oggetti.DAO.Exceptions.DaoExceptions;
 
 public class StudenteDaoImpl implements StudenteDao {
 	
@@ -28,11 +30,12 @@ public void inserimento(Connection connection ,Studente studente) {
 		
 		Statement inserimento = connection.createStatement();
 		inserimento.execute(statement);
-		System.out.println("done");
+		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+//		e.printStackTrace();
+		JOptionPane.showMessageDialog(null, "Studente gia' presente nei database,ma inserito comunque nel corso indicato.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 	}
 }
 
@@ -62,7 +65,7 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 		
 		
 		
-		Vector[][] vettoreStudenti = new Vector[size][8];
+		Vector[][] vettoreStudenti = new Vector[size][7];
 		
 		int i = 0;
 		while(risultato.next()) {
@@ -124,7 +127,7 @@ public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome
 		risultato.beforeFirst();
 		
 		
-		Vector[][] vettoreStudenti = new Vector[size][8];
+		Vector[][] vettoreStudenti = new Vector[size][7];
 		
 		int i = 0;
 		while(risultato.next()) {
@@ -185,7 +188,7 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 		risultato.beforeFirst();
 		
 		
-		Vector[][] vettoreStudenti = new Vector[size][8];
+		Vector[][] vettoreStudenti = new Vector[size][7];
 		
 		int i = 0;
 		while(risultato.next()) {

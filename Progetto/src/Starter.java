@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import Frames.Controller;
 import Frames.FirstFrame;
 import Frames.GestisciLezioniFrame;
 import Oggetti.DAO.CorsoDaoImpl;

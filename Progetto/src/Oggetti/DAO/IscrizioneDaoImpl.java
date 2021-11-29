@@ -1,6 +1,7 @@
 package Oggetti.DAO;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -21,4 +22,30 @@ public class IscrizioneDaoImpl {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public int controlloDuplicati(Connection connection ,String cf ,int corsoId) {
+		
+		String statementControllo = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" = '" + cf + "' AND \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(statementControllo);
+			
+			if(risultato.next()) {
+				return 0;
+			}else
+				return 1;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return 0;
+	}
 }
+
