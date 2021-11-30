@@ -1175,10 +1175,36 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	}
 	
 	//TODOx
-	public void ricercaStudenti(JTextField corso ,JLabel labelCorso) {
-		String tmpCorso = corso.getText();
-		if(!tmpCorso.isEmpty()) {
+	public void ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model) {
+		
+		if(corso.getSelectedValue() != null) {
 			//effettua ricerca
+			String tmpCorso = corso.getSelectedValue().toString();
+			IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
+			List[] listaStudenti = associazione.getStudentiByCorsoName(connection, tmpCorso);
+			
+			Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
+			int i = 0;
+
+
+			while(i < Arrays.asList(listaStudenti).size()) {
+				
+				if(!listaStudenti[i].isEmpty()) {
+					
+					fixedList[i] = new Vector();
+					fixedList[i].add(listaStudenti[i].get(0));
+					fixedList[i].add(listaStudenti[i].get(1));
+					fixedList[i].add(listaStudenti[i].get(2));
+					fixedList[i].add(listaStudenti[i].get(3));
+					fixedList[i].add(listaStudenti[i].get(4));
+					fixedList[i].add(listaStudenti[i].get(5));
+					model.addRow(fixedList[i]);
+					
+				}
+				i++;
+
+			}
+			
 			
 		}else
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);

@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,18 +16,23 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
+import Oggetti.DAO.CorsoDaoImpl;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
 public class VisualizzaStatisticheStudentiFrame extends JFrame {
 
 	private JPanel contentPane;
 	private GeneralPanel panel;
-	private JTextField corsoField;
 	private Controller controller;
 	
 	public VisualizzaStatisticheStudentiFrame() {
@@ -45,19 +51,17 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		
 		controller = new Controller();
 		JTable tableStats = new JTable();
-		tableStats.setModel(new DefaultTableModel(
-			new Object[][] {
-				//qui vanno i data
-			},
-			new String[] {
-				"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze", "%Assenze"
-			}
-		));
+		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze", "%Assenze"});
+		tableStats.setModel(modelTable);
+		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
+		tableStats.getColumnModel().getColumn(3).setPreferredWidth(75);
+		tableStats.getColumnModel().getColumn(4).setPreferredWidth(75);
+		tableStats.getColumnModel().getColumn(5).setPreferredWidth(75);
 		
 		JScrollPane scrollPaneTable = new JScrollPane(tableStats);
 		scrollPaneTable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPaneTable.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPaneTable.setBounds(0, 152, 501, 309);
+		scrollPaneTable.setBounds(0, 215, 501, 246);
 		panel.add(scrollPaneTable);
 		scrollPaneTable.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black));
 		
@@ -66,22 +70,27 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		corsoLabel.setBounds(10, 121, 54, 20);
 		panel.add(corsoLabel);
 		
-		corsoField = new JTextField();
-		corsoField.setBounds(74, 121, 136, 20);
-		panel.add(corsoField);
-		corsoField.setColumns(10);
-		
 		JButton buttonRicerca = new JButton("Ricerca");
 		buttonRicerca.setForeground(Color.RED);
 		buttonRicerca.setBorder(new RoundBorderBotton(10));
 		buttonRicerca.setBackground(Color.WHITE);
-		buttonRicerca.setBounds(225, 121, 68, 20);
+		buttonRicerca.setBounds(289, 154, 68, 20);
 		panel.add(buttonRicerca);
+		
+		DefaultListModel modelList = new DefaultListModel();
+		JList list = new JList(modelList);
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+		scrollPane.setBounds(74, 121, 180, 83);
+		panel.add(scrollPane);
+		
+		CorsoDaoImpl riempiListaCorsi = new CorsoDaoImpl();
+		modelList.addAll(riempiListaCorsi.getNomiCorsi(controller.getConnection()));
 		
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.ricercaStudenti(corsoField, corsoLabel);
+				controller.ricercaStudenti(list ,corsoLabel ,modelTable);
 				
 			}
 		});
