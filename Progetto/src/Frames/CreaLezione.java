@@ -19,6 +19,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
+import javax.swing.JSpinner.DateEditor;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
@@ -116,8 +117,8 @@ public class CreaLezione extends JFrame {
 		
 		JPanel panelInizio = new JPanel();
 		panelInizio.setBackground(Color.WHITE);
-		panelInizio.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Inizio"));
-		panelInizio.setBounds(51, 272, 85, 63);
+		panelInizio.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Ora Inizio"));
+		panelInizio.setBounds(32, 272, 104, 63);
 		panel.add(panelInizio);
 		panelInizio.setLayout(null);
 		
@@ -131,26 +132,26 @@ public class CreaLezione extends JFrame {
 		
 		JPanel panelDurata = new JPanel();
 		panelDurata.setLayout(null);
-		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Durata"));
+		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Durata Ore/Minuti"));
 		panelDurata.setBackground(Color.WHITE);
-		panelDurata.setBounds(172, 272, 85, 63);
+		panelDurata.setBounds(172, 272, 105, 63);
 		panel.add(panelDurata);
 		
 		JSpinner spinnerDurata = new JSpinner(new SpinnerDateModel(new Date(1637337589030L), null, null, Calendar.HOUR_OF_DAY));
-		spinnerDurata.setBounds(10, 21, 65, 31);
+		spinnerDurata.setBounds(10, 21, 74, 31);
 		spinnerDurata.setEditor(new JSpinner.DateEditor(spinnerDurata, "kk:mm"));
 		panelDurata.add(spinnerDurata);
 		
-		JTextPane textArea = new JTextPane();
-		textArea.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-		textArea.setBounds(10, 346, 481, 106);
-		panel.add(textArea);
+		JTextPane textAreaDescrizione = new JTextPane();
+		textAreaDescrizione.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black), "Descrizione"));
+		textAreaDescrizione.setBounds(10, 336, 481, 126);
+		panel.add(textAreaDescrizione);
 		
 		JButton buttonSave = new JButton("Save");
 		buttonSave.setForeground(Color.RED);
 		buttonSave.setBorder(new RoundBorderBotton(10));
 		buttonSave.setBackground(Color.WHITE);
-		buttonSave.setBounds(310, 298, 97, 37);
+		buttonSave.setBounds(310, 272, 97, 37);
 		panel.add(buttonSave);
 		
 		DefaultListModel modelList = new DefaultListModel();
@@ -173,8 +174,14 @@ public class CreaLezione extends JFrame {
 	
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				controller.inserisciLezione(titoloField, dateChooser, spinnerInizio, spinnerDurata, textArea, form, hourForm);
+				
+				if(listCorsi.getSelectedValue() != null) {
+					
+					String corso = listCorsi.getSelectedValue().toString();
+					controller.inserisciLezione(corso ,titoloField ,dateChooser ,spinnerInizio ,spinnerDurata ,textAreaDescrizione ,form ,hourForm);
+					
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 				
 			}
 		});

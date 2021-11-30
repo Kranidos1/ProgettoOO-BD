@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DateEditor;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -37,6 +38,8 @@ import Oggetti.DAO.CorsoDaoImpl;
 
 import Oggetti.DAO.CorsoETemaDaoImpl;
 import Oggetti.DAO.IscrizioneDaoImpl;
+import Oggetti.DAO.LezioneDaoImpl;
+import Oggetti.DAO.PresenzaDaoImpl;
 import Oggetti.DAO.StudenteDaoImpl;
 
 public class Controller implements ControlloEOperazioniSuFrame {
@@ -211,6 +214,10 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		case 9:
 			//INVALID MAX E MIN
 			JOptionPane.showMessageDialog(fram, "Max < Min that's not possible.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			break;
+		case 10:
+			//nessuna scelta dalla list
+			JOptionPane.showMessageDialog(fram, "You didn't select anything from the list.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			break;
 		}
 	}
@@ -1210,7 +1217,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
 	}
 	
-	public void inserisciLezione(JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat formDate ,SimpleDateFormat hourForm) {
+	public void inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat formDate ,SimpleDateFormat hourForm) {
 		
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
@@ -1228,7 +1235,51 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						String durata = tmpDurata.toString();
 						
 						//WORK
-						System.out.println("ciao");
+						JSpinner.DateEditor de = new JSpinner.DateEditor(spinnerIn ,"HH:mm");
+						String orarioInizioLezione = de.getFormat().format(spinnerIn.getValue());
+						String durataLezione = de.getFormat().format(spinnerDur.getValue());
+						String ora = durataLezione.substring(0, 2);
+						int oreMinuti = Integer.parseInt(ora) * 60;
+						int minuti = Integer.parseInt(durataLezione.substring(3,5));
+						oreMinuti += minuti;
+						
+						if(Integer.parseInt(orarioInizioLezione.substring(0,2)) < 8 || Integer.parseInt(orarioInizioLezione.substring(0,2)) > 19) {
+							
+							if(Integer.parseInt(orarioInizioLezione.substring(0,2)) < 8) {
+								
+								JOptionPane.showMessageDialog(area, "Troppo presto per una lezione!.");
+								
+							}else
+								JOptionPane.showMessageDialog(area, "Troppo tardi per una lezione!.");
+								
+						}else {
+							//inserimento
+							if(oreMinuti > 299) {
+								
+								JOptionPane.showMessageDialog(area, "Durata maggiore alle 4 ore e 59 minuti.Impossibile aggiungere.");
+								
+							}else{
+								//Inserimento
+								CorsoDaoImpl corsoDao = new CorsoDaoImpl();
+								LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
+								Lezione lezione = new Lezione();
+								
+								SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+								lezione.setTitolo(tmpTitle);
+								lezione.setDescrizione(area.getText());
+								lezione.setOraInizio(orarioInizioLezione);
+								lezione.setDurata(oreMinuti);
+								lezione.setData(format.format(dateChooser.getDate()));
+								lezione.setCorsoId(corsoDao.trovaCorsoId(connection, corso));
+								
+								lezioneDao.inserimentoLezione(connection, lezione);
+								int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
+								
+								PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
+								presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+								
+							}
+						}
 						
 					}else
 						jpanelManagementCreaCorsoFrame(null, null, title, 7);
