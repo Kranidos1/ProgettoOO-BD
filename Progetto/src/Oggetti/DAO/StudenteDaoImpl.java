@@ -77,7 +77,6 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 			vettoreStudenti[i][2] = new Vector();
 			vettoreStudenti[i][2].add(risultato.getString(3));
 			
-			System.out.println(risultato.getString(3));
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 
@@ -269,7 +268,6 @@ public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String 
 				vettoreStudenti[i][3] = new Vector();
 				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i][3].add(corsoById);
-				System.out.println(vettoreStudenti[i]);
 				
 				i++;
 			}
@@ -375,8 +373,6 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 		
 		int i = 0;
 		
-	
-			System.out.println("ciao");
 			
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + nome + "%' AND \"Cf\" LIKE '%" + cf + "%';" ;
 			
@@ -448,8 +444,6 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 		
 		int i = 0;
 		
-	
-			System.out.println("ciao");
 			
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + Cognome + "%' AND \"Cf\" LIKE '%" + cf + "%';" ;
 			
@@ -895,7 +889,6 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 					
 					corsoById = corso.getNomeById(connection, corsoId.getString(1));
 					vettoreStudenti[i].add(corsoById);
-					System.out.println("ciao");
 					
 				}
 				

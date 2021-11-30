@@ -88,8 +88,8 @@ public class CorsoDaoImpl implements CorsoDao{
 			while(result.next()) {
 				
 				lista.add(result.getString(1));
-				System.out.println(lista.get(i));
 				i++;
+				
 			}
 			
 			int size = lista.size();

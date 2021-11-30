@@ -494,7 +494,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		if(!list.getSelectedValue().toString().isEmpty()) {
 			
 			String tmpCorso = list.getSelectedValue().toString();
-			System.out.println(tmpCorso);
 			
 				if(!tmpNome.isEmpty()) {
 					if(isWhatYouWant(tmpNome, 0)) {
@@ -826,7 +825,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								fixedList[i].add(listaStudenti[i].get(4));
 								fixedList[i].add(listaStudenti[i].get(5));
 								fixedList[i].add(listaStudenti[i].get(6));
-								System.out.println(fixedList[i]);
 								model.addRow(fixedList[i]);
 								i++;
 
@@ -945,7 +943,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 									model.addRow(fixedList[i]);
 									
 								}
-								System.out.println(fixedList[i]);
 								i++;
 
 							}

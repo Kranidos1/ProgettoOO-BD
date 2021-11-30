@@ -7,19 +7,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
 import com.toedter.calendar.JDateChooser;
+
+import Oggetti.DAO.CorsoDaoImpl;
 
 import java.awt.Color;
 import javax.swing.SpinnerModel;
@@ -28,6 +33,7 @@ import javax.swing.JTextPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
 
 public class CreaLezione extends JFrame {
 
@@ -38,6 +44,8 @@ public class CreaLezione extends JFrame {
 	private Controller controller;
 	
 	public CreaLezione() {
+			
+		//TODO CONTROLLO SU LEZIONE GIA' ESISTENTE PER QUEL GIORNO
 		
 		super("Project GRU");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(CreaLezione.class.getResource("/imgs/lastin.png")));
@@ -49,28 +57,28 @@ public class CreaLezione extends JFrame {
 		setLocationRelativeTo(null);
 		
 		panel = new GeneralPanel();
-		panel.setLocation(0, 11);
+		panel.setLocation(0, 0);
 		getContentPane().add(panel);
 		
 		controller = new Controller();
 		
 		JLabel titoloLabel = new JLabel("Titolo");
 		titoloLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		titoloLabel.setBounds(10, 142, 58, 21);
+		titoloLabel.setBounds(10, 208, 58, 21);
 		panel.add(titoloLabel);
 		
 		titoloField = new JTextField();
-		titoloField.setBounds(77, 142, 181, 21);
+		titoloField.setBounds(76, 208, 181, 21);
 		panel.add(titoloField);
 		titoloField.setColumns(10);
 		
 		JLabel dataLabel = new JLabel("Data");
 		dataLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		dataLabel.setBounds(22, 180, 46, 21);
+		dataLabel.setBounds(22, 240, 46, 21);
 		panel.add(dataLabel);
 		
 		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(77, 181, 201, 20);
+		dateChooser.setBounds(76, 241, 201, 20);
 		
 		Date dataAttuale = new Date();
 		
@@ -109,7 +117,7 @@ public class CreaLezione extends JFrame {
 		JPanel panelInizio = new JPanel();
 		panelInizio.setBackground(Color.WHITE);
 		panelInizio.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Inizio"));
-		panelInizio.setBounds(50, 212, 85, 63);
+		panelInizio.setBounds(51, 272, 85, 63);
 		panel.add(panelInizio);
 		panelInizio.setLayout(null);
 		
@@ -125,7 +133,7 @@ public class CreaLezione extends JFrame {
 		panelDurata.setLayout(null);
 		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Durata"));
 		panelDurata.setBackground(Color.WHITE);
-		panelDurata.setBounds(173, 212, 85, 63);
+		panelDurata.setBounds(172, 272, 85, 63);
 		panel.add(panelDurata);
 		
 		JSpinner spinnerDurata = new JSpinner(new SpinnerDateModel(new Date(1637337589030L), null, null, Calendar.HOUR_OF_DAY));
@@ -135,15 +143,30 @@ public class CreaLezione extends JFrame {
 		
 		JTextPane textArea = new JTextPane();
 		textArea.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-		textArea.setBounds(10, 286, 481, 166);
+		textArea.setBounds(10, 346, 481, 106);
 		panel.add(textArea);
 		
 		JButton buttonSave = new JButton("Save");
 		buttonSave.setForeground(Color.RED);
 		buttonSave.setBorder(new RoundBorderBotton(10));
 		buttonSave.setBackground(Color.WHITE);
-		buttonSave.setBounds(296, 153, 97, 37);
+		buttonSave.setBounds(310, 298, 97, 37);
 		panel.add(buttonSave);
+		
+		DefaultListModel modelList = new DefaultListModel();
+		JList listCorsi = new JList(modelList);
+		JScrollPane scrollPaneCorsi = new JScrollPane(listCorsi);
+		scrollPaneCorsi.setBounds(76, 118, 181, 81);
+		panel.add(scrollPaneCorsi);
+		
+		CorsoDaoImpl corsi = new CorsoDaoImpl();
+		List<String> listaCorsi = corsi.getNomiCorsi(controller.getConnection());
+		modelList.addAll(listaCorsi);
+		
+		JLabel corsoLabel = new JLabel("Corsi");
+		corsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		corsoLabel.setBounds(10, 118, 58, 21);
+		panel.add(corsoLabel);
 		SimpleDateFormat form = new SimpleDateFormat("kk:mm");
 		Object pippo = spinnerInizio.getValue();
 		String boh = form.format(pippo);

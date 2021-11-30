@@ -57,7 +57,6 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 		
 		List<String> risultato = new LinkedList<String>();
 		String statement = "SELECT \"NomeTema\" FROM \"Corso-Tema\" WHERE \"CorsoId\" = '" + id + "';";
-		System.out.println(id);
 		
 		try {
 			
