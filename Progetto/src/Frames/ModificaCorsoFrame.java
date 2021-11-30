@@ -227,7 +227,7 @@ public class ModificaCorsoFrame extends JFrame {
 					corsoTema.inserimento(controller.getConnection(), idCorso, iteratore.next());	
 					
 				}
-				System.out.println(idCorso);
+
 				controller.insertCorsoDb((JFrame) SwingUtilities.getRoot(lblSelectedTheme), nomeField, maxField, minField, textAreaDescrizione, model, 1, Integer.toString(idCorso));
 				
 			}

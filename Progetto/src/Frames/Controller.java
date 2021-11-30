@@ -208,6 +208,10 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			//Invalid input
 			JOptionPane.showMessageDialog(fram, "Invalid Input.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			break;
+		case 9:
+			//INVALID MAX E MIN
+			JOptionPane.showMessageDialog(fram, "Max < Min that's not possible.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			break;
 		}
 	}
 	
@@ -268,6 +272,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			if(b == false && v == true) {
 				if(c == false && u == true) {
 		
+					if( Integer.parseInt(maxString) > Integer.parseInt(minString) ) {
+						
 						//TODO SALVATAGGIO EFFETTIVO INSERIMENTO DB ricorda di estrarre stringhe dall'area tematica e aggiungerle una a una nell'oggetto desiderato.
 						//INSERIMENTO ELEMENTI LIST
 						List<String> tmp = new ArrayList<String>();
@@ -323,7 +329,9 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								corsoDaoImpl.updateCorso(connection, corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
 								
 							}
-
+						
+					}else
+						jpanelManagementCreaCorsoFrame(fram,null,null,9);
 						
 				}else
 					jpanelManagementCreaCorsoFrame(fram,null,min,2);
@@ -644,7 +652,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 1 && flagDate == 0) {
 			//erroreerororororororo
 			if(tmpCf != null) {
-				if(controlloCF(cf ,label) == 1) {
 					//ricerca per cf
 					
 					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
@@ -660,8 +667,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						
 					}
 					
-				}else
-					jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 			}else
 				jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 			
@@ -725,7 +730,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 1 && flagDate == 1) {
 
 			if(tmpCf != null) {
-				if(controlloCF(cf ,label) == 1) {
 					//ricerca per cf
 					
 					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
@@ -754,8 +758,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 					}
 					
-				}else
-					jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 			}else
 				jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 			
@@ -806,7 +808,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(isWhatYouWant(tmpNome ,0)) {
 
 					if(tmpCf != null) {
-						if(controlloCF(cf ,label) == 1) {
 							
 							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
@@ -831,8 +832,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 							}
 							
-						}else
-							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					}else
 						jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					
@@ -883,7 +882,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(isWhatYouWant(tmpNome ,0)) {
 
 					if(tmpCf != null) {
-						if(controlloCF(cf ,label) == 1) {
 							
 							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
@@ -907,9 +905,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 							}
 							
-							
-						}else
-							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					}else
 						jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					
@@ -974,7 +969,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(isWhatYouWant(tmpNome ,0)) {
 
 					if(tmpCf != null) {
-						if(controlloCF(cf ,label) == 1) {
 							
 							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
@@ -1001,9 +995,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								i++;
 
 							}
-							
-						}else
-							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
+
 					}else
 						jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					
@@ -1020,7 +1012,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(isWhatYouWant(tmpNome ,0)) {
 
 					if(tmpCf != null) {
-						if(controlloCF(cf ,label) == 1) {
+
 							
 							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
@@ -1047,9 +1039,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								i++;
 
 							}
-							
-						}else
-							jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
+
 					}else
 						jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 					
@@ -1115,7 +1105,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						if(isWhatYouWant(tmpNome ,0)) {
 
 							if(tmpCf != null) {
-								if(controlloCF(cf ,label) == 1) {
 
 									StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 									List<String>[] listaStudenti;
@@ -1142,9 +1131,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 										i++;
 
 									}
-									
-								}else
-									jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
+
 							}else
 								jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 							
@@ -1169,11 +1156,11 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						if(isWhatYouWant(tmpNome ,0)) {
 
 							if(tmpCf != null) {
-								if(controlloCF(cf ,label) == 1) {
+
 									//ricerca per cf
+								//TODO RICERCA TUTTO
+								
 									
-								}else
-									jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 							}else
 								jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
 							
@@ -1200,7 +1187,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
 	}
 	
-	public void inserisciCorso(JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat formDate ,SimpleDateFormat hourForm) {
+	public void inserisciLezione(JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat formDate ,SimpleDateFormat hourForm) {
 		
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {

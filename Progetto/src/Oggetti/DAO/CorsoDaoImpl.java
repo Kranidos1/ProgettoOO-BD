@@ -17,23 +17,62 @@ import Oggetti.Corso;
 
 public class CorsoDaoImpl implements CorsoDao{
 	
+	//TODO MAX > MIN ALTRIMENTI ERRORE
+	
 	public void inserimento(Corso corso ,Connection connection) {
 		
 		String statement = "INSERT INTO \"Corso\" (\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\") VALUES (" + "'" + corso.getNome() + "'"  + "," +  "'" + corso.getDescrizione() + "'" + ","
 		+ corso.getMaxPartecipanti() + "," + corso.getMaxPartecipanti() + ");";
 		
+		int procedere = controlloDuplicati(connection ,corso.getNome());
+		
+		if(procedere == 1) {
+			
+			try {
+				
+				Statement inserimento = connection.createStatement();
+				inserimento.execute(statement);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else {
+			
+			JOptionPane.showMessageDialog(null, "Corso gia' presente nei databas.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			
+		}
+		
+		
+	}
+	
+	
+	public int controlloDuplicati (Connection connection ,String nome) {
+		
+		String statement = "SELECT \"CorsoId\" FROM \"Corso\" WHERE \"Nome\" LIKE '" + nome + "';";
+		
+		Statement check;
 		try {
 			
-			Statement inserimento = connection.createStatement();
-			inserimento.execute(statement);
+			check = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet risultato = check.executeQuery(statement);
+			
+			if(risultato.absolute(1)) {
+				
+				return 0;
+				
+			}else
+				return 1;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
+		return 0;
 	}
-	
 	public int getNextCorsoId(Connection connection) {
 		
 		String statement = "SELECT \"CorsoId\" FROM \"Corso\";";

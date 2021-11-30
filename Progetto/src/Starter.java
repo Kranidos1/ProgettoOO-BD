@@ -16,7 +16,10 @@ import Frames.GestisciLezioniFrame;
 import Oggetti.DAO.CorsoDaoImpl;
 
 public class Starter {
-//
+//TODO CREA GESTIONETEMI FRAME
+	//TODO STATISTICHE STUDENTI TRAMITE CORSO
+	//TODO GESTIONE LEZIONI 
+	
 	public static void main(String[] args){
 
 		new FirstFrame();

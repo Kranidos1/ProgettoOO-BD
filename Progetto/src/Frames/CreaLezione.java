@@ -151,7 +151,7 @@ public class CreaLezione extends JFrame {
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				controller.inserisciCorso(titoloField, dateChooser, spinnerInizio, spinnerDurata, textArea, form, hourForm);
+				controller.inserisciLezione(titoloField, dateChooser, spinnerInizio, spinnerDurata, textArea, form, hourForm);
 				
 			}
 		});
