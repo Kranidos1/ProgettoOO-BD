@@ -35,6 +35,7 @@ public class GeneralPanelGrande extends JPanel {
 	private FrameDiScelta frameHome;
 	private Controller controller;
 	private StatisticheCorsoFrame frameStats;
+	public JMenuBar menuBar;
 	
 	public GeneralPanelGrande(){
 
@@ -44,7 +45,7 @@ public class GeneralPanelGrande extends JPanel {
 		controller = new Controller();
 		
 		
-		JMenuBar menuBar = new JMenuBar();
+		menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 0, 0, 1));
 		menuBar.setBounds(0, 0, 623, 22);
 		menuBar.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));

@@ -23,7 +23,7 @@ public class PresenzaDaoImpl {
 				
 				cf = studenti[i].get(2).substring(1, studenti[i].get(2).length()-1);
 				
-				insert = "INSERT INTO \"Presenza\" (\"LezioneId\",\"Cf\",\"Check\",\"Presente\") VALUES ('" + lezioneId + "','" + cf +"','" + false + "','X');";
+				insert = "INSERT INTO \"Presenza\" (\"LezioneId\",\"Cf\",\"Presente\") VALUES ('" + lezioneId + "','" + cf +"','X');";
 				statement.execute(insert);
 				i++;
 				
