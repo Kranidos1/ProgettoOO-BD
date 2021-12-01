@@ -26,6 +26,7 @@ import javax.swing.SpinnerDateModel;
 import com.toedter.calendar.JDateChooser;
 
 import Oggetti.DAO.CorsoDaoImpl;
+import Oggetti.DAO.LezioneDaoImpl;
 
 import java.awt.Color;
 import javax.swing.SpinnerModel;

@@ -11,5 +11,6 @@ public interface LezioneDao {
 	public int recuperaIdUltimaInserita(Connection connection);
 	public List<String> getDateLezioniDaGestire(Connection connection ,int corsoId);
 	public int getLezioneIdByData(Connection connection ,String data);
+	public void updateCheck(Connection connection ,int lezioneId);
 	
 }

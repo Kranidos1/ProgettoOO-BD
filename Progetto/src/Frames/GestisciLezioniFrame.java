@@ -51,7 +51,7 @@ public class GestisciLezioniFrame extends JFrame {
 		buttonGestisciPresenze.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		buttonGestisciPresenze.setBorder(new RoundBorderBotton(10));
 		buttonGestisciPresenze.setBackground(Color.WHITE);
-		buttonGestisciPresenze.setBounds(160, 249, 178, 41);
+		buttonGestisciPresenze.setBounds(160, 224, 178, 41);
 		panel.add(buttonGestisciPresenze);
 		
 		controller = new Controller();

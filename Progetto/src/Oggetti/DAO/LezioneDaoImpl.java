@@ -86,8 +86,7 @@ public class LezioneDaoImpl {
 	public int getLezioneIdByData(Connection connection ,String data) {
 		
 		int idLezione = 0;
-		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-		// AND \"Check\" = 'false'
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD') AND \"Check\" = 'false';";
 		try {
 			
 			Statement statement = connection.createStatement();
@@ -121,6 +120,32 @@ public class LezioneDaoImpl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public int gestioneDuplicati(Connection connection ,String data ,int corsoId) {
+		
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD') and \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			if(risultato.next()) {
+				return 0;
+			}else
+				return 1;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return 0;
 		
 	}
 }

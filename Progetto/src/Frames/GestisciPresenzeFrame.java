@@ -110,15 +110,15 @@ public class GestisciPresenzeFrame extends JFrame {
 		String data = formatDate.format(dataAttuale);
 		Date actualDate;
 		
-//		try {
-//			
-//			actualDate = formatDate.parse(data);
-//			dateChooser.setMaxSelectableDate(actualDate);
-//			
-//		} catch (ParseException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		try {
+			
+			actualDate = formatDate.parse(data);
+			dateChooser.setMaxSelectableDate(actualDate);
+			
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		dateChooser.setBounds(31, 40, 178, 20);
 		secondoStepPanel.add(dateChooser);

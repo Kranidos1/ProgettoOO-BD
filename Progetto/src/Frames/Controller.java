@@ -1273,11 +1273,18 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								lezione.setData(format.format(dateChooser.getDate()));
 								lezione.setCorsoId(corsoDao.trovaCorsoId(connection, corso));
 								
-								lezioneDao.inserimentoLezione(connection, lezione);
-								int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
+								int permesso = lezioneDao.gestioneDuplicati(connection, lezione.getData(), lezione.getCorsoId());
 								
-								PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
-								presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+								if(permesso == 1) {
+									
+									lezioneDao.inserimentoLezione(connection, lezione);
+									int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
+									
+									PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
+									presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+									
+								}else
+									JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 								
 							}
 						}
