@@ -7,15 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import Frames.Controller;
 import Frames.FirstFrame;
 import Frames.GestisciLezioniFrame;
 import Oggetti.DAO.CorsoDaoImpl;
+import Oggetti.DAO.PresenzaDaoImpl;
 
 public class Starter {
 //TODO CREA GESTIONETEMI FRAME
@@ -31,7 +35,6 @@ public class Starter {
 //		Controller controller = new Controller();
 //		CorsoDaoImpl corso = new CorsoDaoImpl();
 //		corso.getNomiCorsiByKey(controller.getConnection(),"ALF" );
-		
 	}
 	
 //	listCorsi.addMouseListener(new MouseAdapter() {

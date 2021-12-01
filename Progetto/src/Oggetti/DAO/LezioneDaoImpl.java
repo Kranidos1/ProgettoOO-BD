@@ -79,11 +79,48 @@ public class LezioneDaoImpl {
 			e.printStackTrace();
 		}
 		
-		
-		
-		
-		
 		return null;
+		
+	}
+	
+	public int getLezioneIdByData(Connection connection ,String data) {
+		
+		int idLezione = 0;
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
+		// AND \"Check\" = 'false'
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			while(risultato.next()) {
+				
+				idLezione = Integer.parseInt(risultato.getString(1));
+				
+			}
+			
+			return idLezione;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+	
+	public void updateCheck(Connection connection ,int lezioneId) {
+		String update = "UPDATE \"Lezione\" SET \"Check\" = '" + true + "' WHERE \"LezioneId\" = '" + lezioneId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
