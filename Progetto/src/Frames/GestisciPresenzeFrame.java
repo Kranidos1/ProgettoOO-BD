@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -56,6 +57,7 @@ public class GestisciPresenzeFrame extends JFrame {
 	private	StudenteDaoImpl studenteDao;
 	private CorsoDaoImpl corso;
 	private int u = 0;
+	private List<String>[] listaDate;
 	
 	public GestisciPresenzeFrame() {
 		
@@ -110,15 +112,15 @@ public class GestisciPresenzeFrame extends JFrame {
 		String data = formatDate.format(dataAttuale);
 		Date actualDate;
 		
-		try {
-			
-			actualDate = formatDate.parse(data);
-			dateChooser.setMaxSelectableDate(actualDate);
-			
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		try {
+//			
+//			actualDate = formatDate.parse(data);
+//			dateChooser.setMaxSelectableDate(actualDate);
+//			
+//		} catch (ParseException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		
 		dateChooser.setBounds(31, 40, 178, 20);
 		secondoStepPanel.add(dateChooser);
@@ -195,7 +197,17 @@ public class GestisciPresenzeFrame extends JFrame {
 				int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corsoSelected);
 				LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
 				
-				modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(controller.getConnection(), corsoId));
+//				modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(controller.getConnection(), corsoId));
+				
+				listaDate = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+				int i = 0;
+				
+				while(i < Arrays.asList(listaDate).size()) {
+					
+					modelListLezioni.addElement(listaDate[i].get(0).toString());
+					
+					i++;
+				}
 				corsoTrovatoLabel.setText(listCorsi.getSelectedValue().toString());
 				
 				dateChooser.setEnabled(true);
@@ -226,7 +238,22 @@ public class GestisciPresenzeFrame extends JFrame {
 					int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corsoSelected);
 					LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
 					
-					modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(controller.getConnection(), corsoId));
+					listaDate = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+					int i = 0;
+					
+					while(i < Arrays.asList(listaDate).size()) {
+						
+						modelListLezioni.addElement(listaDate[i].get(0).toString());
+						
+						i++;
+					}
+					
+					corsoTrovatoLabel.setText(listCorsi.getSelectedValue().toString());
+					
+					dateChooser.setEnabled(true);
+					btnCercaLezione.setEnabled(true);
+					buttonPresente.setEnabled(true);
+					buttonAssente.setEnabled(true);
 					
 		        }
 		    }
@@ -248,7 +275,19 @@ public class GestisciPresenzeFrame extends JFrame {
 					studenteDao = new StudenteDaoImpl();
 					
 					lezioneDao = new LezioneDaoImpl();
-					lezioneId = lezioneDao.getLezioneIdByData(controller.getConnection(), tmpDate);
+					//DEPRECATA
+//					lezioneId = lezioneDao.getLezioneIdByData(controller.getConnection(), tmpDate);
+					int i = 0;
+					while(i < Arrays.asList(listaDate).size()) {
+						
+						if(listaDate[i].get(0) == tmpDate) {
+							
+							lezioneId = Integer.parseInt(listaDate[i].get(1));
+							break;
+						}
+						
+						i++;
+					}
 					
 					if(lezioneId != 0) {
 						

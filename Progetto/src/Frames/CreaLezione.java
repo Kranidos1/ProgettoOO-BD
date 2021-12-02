@@ -133,14 +133,14 @@ public class CreaLezione extends JFrame {
 		
 		JPanel panelDurata = new JPanel();
 		panelDurata.setLayout(null);
-		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Durata Ore/Minuti"));
+		panelDurata.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black), "Durata in Minuti"));
 		panelDurata.setBackground(Color.WHITE);
 		panelDurata.setBounds(172, 272, 105, 63);
 		panel.add(panelDurata);
 		
-		JSpinner spinnerDurata = new JSpinner(new SpinnerDateModel(new Date(1637337589030L), null, null, Calendar.HOUR_OF_DAY));
+		JSpinner spinnerDurata = new JSpinner();
 		spinnerDurata.setBounds(10, 21, 74, 31);
-		spinnerDurata.setEditor(new JSpinner.DateEditor(spinnerDurata, "kk:mm"));
+
 		panelDurata.add(spinnerDurata);
 		
 		JTextPane textAreaDescrizione = new JTextPane();
@@ -169,9 +169,6 @@ public class CreaLezione extends JFrame {
 		corsoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		corsoLabel.setBounds(10, 118, 58, 21);
 		panel.add(corsoLabel);
-		SimpleDateFormat form = new SimpleDateFormat("kk:mm");
-		Object pippo = spinnerInizio.getValue();
-		String boh = form.format(pippo);
 	
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -179,7 +176,7 @@ public class CreaLezione extends JFrame {
 				if(listCorsi.getSelectedValue() != null) {
 					
 					String corso = listCorsi.getSelectedValue().toString();
-					controller.inserisciLezione(corso ,titoloField ,dateChooser ,spinnerInizio ,spinnerDurata ,textAreaDescrizione ,form ,hourForm);
+					controller.inserisciLezione(corso ,titoloField ,dateChooser ,spinnerInizio ,spinnerDurata ,textAreaDescrizione ,hourForm ,0 ,0);
 					
 				}else
 					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);

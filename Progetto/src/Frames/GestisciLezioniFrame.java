@@ -54,6 +54,14 @@ public class GestisciLezioniFrame extends JFrame {
 		buttonGestisciPresenze.setBounds(160, 224, 178, 41);
 		panel.add(buttonGestisciPresenze);
 		
+		JButton buttonVisualizzaLezioni = new JButton("Visualizza Lezioni");
+		buttonVisualizzaLezioni.setForeground(Color.RED);
+		buttonVisualizzaLezioni.setFont(new Font("Dialog", Font.PLAIN, 13));
+		buttonVisualizzaLezioni.setBorder(new RoundBorderBotton(10));
+		buttonVisualizzaLezioni.setBackground(Color.WHITE);
+		buttonVisualizzaLezioni.setBounds(160, 293, 178, 41);
+		panel.add(buttonVisualizzaLezioni);
+		
 		controller = new Controller();
 		
 		buttonCreaLezione.addActionListener(new ActionListener() {
@@ -70,6 +78,15 @@ public class GestisciLezioniFrame extends JFrame {
 				
 				setVisible(false);
 				new GestisciPresenzeFrame();
+				
+			}
+		});
+		
+		buttonVisualizzaLezioni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new VisualizzaLezioni();
 				
 			}
 		});

@@ -33,6 +33,7 @@ import com.toedter.calendar.JDateChooser;
 
 import Oggetti.AreaTematica;
 import Oggetti.Corso;
+import Oggetti.Lezione;
 import Oggetti.Studente;
 import Oggetti.DAO.AreaTematicaDaoImpl;
 import Oggetti.DAO.CorsoDaoImpl;
@@ -256,7 +257,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		}
 	}
 
-	
+	//0 per insert // 1 update
 	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model ,int flag ,String corsoId) {
 		
 		//FLAG 0 PER INSERIMENTO DA 0 1 PER UPDATE
@@ -1218,7 +1219,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
 	}
 	
-	public void inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat formDate ,SimpleDateFormat hourForm) {
+	public void inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
 		
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
@@ -1238,11 +1239,9 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						//WORK
 						JSpinner.DateEditor de = new JSpinner.DateEditor(spinnerIn ,"HH:mm");
 						String orarioInizioLezione = de.getFormat().format(spinnerIn.getValue());
-						String durataLezione = de.getFormat().format(spinnerDur.getValue());
-						String ora = durataLezione.substring(0, 2);
-						int oreMinuti = Integer.parseInt(ora) * 60;
-						int minuti = Integer.parseInt(durataLezione.substring(3,5));
-						oreMinuti += minuti;
+						String durataLezione = spinnerDur.getValue().toString();
+
+						int oreMinuti = Integer.parseInt(durataLezione);
 						
 						if(Integer.parseInt(orarioInizioLezione.substring(0,2)) < 8 || Integer.parseInt(orarioInizioLezione.substring(0,2)) > 19) {
 							
@@ -1273,18 +1272,27 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								lezione.setData(format.format(dateChooser.getDate()));
 								lezione.setCorsoId(corsoDao.trovaCorsoId(connection, corso));
 								
-								int permesso = lezioneDao.gestioneDuplicati(connection, lezione.getData(), lezione.getCorsoId());
-								
-								if(permesso == 1) {
+								if(flag == 0) {
 									
-									lezioneDao.inserimentoLezione(connection, lezione);
-									int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
+									int permesso = lezioneDao.gestioneDuplicati(connection, lezione.getData(), lezione.getCorsoId());
 									
-									PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
-									presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+									if(permesso == 1) {
+										
+										lezioneDao.inserimentoLezione(connection, lezione);
+										int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
+										
+										PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
+										presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+										
+									}else
+										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 									
 								}else
-									JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+									if(flag == 1) {
+										
+										lezioneDao.updateLezione(connection,lezione, lezioneIdUpd);
+										
+									}
 								
 							}
 						}

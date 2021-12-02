@@ -141,6 +141,7 @@ public class GeneralPanelGrande extends JPanel {
 		data = new Date();
 		stringDate = data.toLocaleString();
 		labelHourDate.setText(stringDate);
+		setVisible(true);
 		
 		areaTematicaMenuItem.addActionListener(new ActionListener() {
 

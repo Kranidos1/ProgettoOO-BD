@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import Frames.Lezione;
+import Oggetti.Lezione;
 
 public class LezioneDaoImpl {
 
@@ -56,10 +56,12 @@ public class LezioneDaoImpl {
 		
 	}
 	
-	public List<String> getDateLezioniDaGestire(Connection connection ,int corsoId) {
+	public List<String>[] getDateLezioniDaGestireELezione(Connection connection ,int corsoId) {
 		
-		String statement = "SELECT \"Data\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId +"' AND \"Check\" = 'false';";
-		List<String> listaRisultato = new LinkedList();
+		String statement = "SELECT \"Data\",\"LezioneId\",\"CorsoId\",\"OraInizio\",\"Durata\",\"Descrizione\",\"Titolo\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId +"' AND \"Check\" = 'false';";
+		List<String>[] listaRisultato;
+		
+		int size = 0;
 		
 		try {
 			
@@ -68,9 +70,29 @@ public class LezioneDaoImpl {
 			
 			while(risultato.next()) {
 				
-				listaRisultato.add(risultato.getString(1));
+				size++;
 				
 			}
+			risultato.beforeFirst();
+			
+			listaRisultato = new List[size];
+			
+			int i = 0;
+			
+			while(risultato.next()) {
+				
+				listaRisultato[i] = new LinkedList();
+				listaRisultato[i].add(risultato.getString(1));
+				listaRisultato[i].add(risultato.getString(2));
+				listaRisultato[i].add(risultato.getString(3));
+				listaRisultato[i].add(risultato.getString(4));
+				listaRisultato[i].add(risultato.getString(5));
+				listaRisultato[i].add(risultato.getString(6));
+				listaRisultato[i].add(risultato.getString(7));
+				
+				i++;
+			}
+			
 			
 			return listaRisultato;
 			
@@ -142,10 +164,25 @@ public class LezioneDaoImpl {
 			e.printStackTrace();
 		}
 		
-		
-		
-		
 		return 0;
+		
+	}
+	
+	public void updateLezione(Connection connection ,Lezione lezione,int lezioneId ) {
+		
+		String update = "UPDATE \"Lezione\" SET \"Titolo\" = '" + lezione.getTitolo() + "',\"Descrizione\" = '" + lezione.getDescrizione() + "',\"Durata\" = '" + 
+		lezione.getDurata() + "',\"Data\" = '" + lezione.getData() + "',\"OraInizio\" = '" + lezione.getOraInizio() + "' WHERE \"LezioneId\" = '" + lezioneId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 }
