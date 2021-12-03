@@ -98,8 +98,8 @@ public class IscriviStudenteFrame extends JFrame {
 		panel.add(cfLabel);
 		
 		DefaultListModel model = new DefaultListModel();
-		JList listStudente = new JList(model);
-		JScrollPane scrollPane = new JScrollPane(listStudente);
+		JList listCorso = new JList(model);
+		JScrollPane scrollPane = new JScrollPane(listCorso);
 		scrollPane.setBounds(160, 111, 150, 78);
 		panel.add(scrollPane);
 		CorsoDaoImpl corsoDaoImpl = new CorsoDaoImpl();
@@ -151,7 +151,7 @@ public class IscriviStudenteFrame extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.controlloInserimentoStudente(nomeTextField, cognomeTextField, listStudente, dateChooser, cfLabel, cfTextField);
+				controller.controlloInserimentoStudente(nomeTextField, cognomeTextField, listCorso, dateChooser, cfLabel, cfTextField);
 				
 			}
 		});

@@ -51,7 +51,12 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		
 		controller = new Controller();
 		JTable tableStats = new JTable();
-		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze", "%Assenze"});
+		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze", "%Assenze"}){
+			public boolean isCellEditable(int row ,int column) {
+				return false;
+			}
+		};
+		
 		tableStats.setModel(modelTable);
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
 		tableStats.getColumnModel().getColumn(3).setPreferredWidth(75);
@@ -89,6 +94,9 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				modelTable.setRowCount(0);
+				tableStats.revalidate();
 				
 				controller.ricercaStudenti(list ,corsoLabel ,modelTable);
 				

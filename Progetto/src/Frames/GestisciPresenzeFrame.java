@@ -182,6 +182,14 @@ public class GestisciPresenzeFrame extends JFrame {
 		scrollPaneLezioni.setBounds(672, 33, 224, 504);
 		panel.add(scrollPaneLezioni);
 		
+		JButton buttonReset = new JButton("CambiaCorso");
+		buttonReset.setForeground(Color.RED);
+		buttonReset.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		buttonReset.setBorder(new RoundBorderBotton(10));
+		buttonReset.setBackground(Color.WHITE);
+		buttonReset.setBounds(160, 548, 170, 20);
+		panel.add(buttonReset);
+		
 		corso = new CorsoDaoImpl();
 		model.addAll(corso.getNomiCorsi(controller.getConnection()));
 		
@@ -406,6 +414,20 @@ public class GestisciPresenzeFrame extends JFrame {
 			}
 		});
 		
+		buttonReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				buttonPresente.setEnabled(false);
+				buttonAssente.setEnabled(false);
+				btnCercaLezione.setEnabled(false);
+				dateChooser.setEnabled(false);
+				
+				primoStepPanel.setEnabled(true);
+				listCorsi.setEnabled(true);
+				stepButton.setEnabled(true);
+				
+			}
+		});
 		setVisible(true);
 	}
 }

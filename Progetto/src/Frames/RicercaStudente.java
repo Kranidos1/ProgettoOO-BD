@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JTextField;
@@ -24,6 +25,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.Box;
 import com.toedter.calendar.JDateChooser;
+
+import Oggetti.DAO.CorsoDaoImpl;
+import Oggetti.DAO.IscrizioneDaoImpl;
+import Oggetti.DAO.StudenteDaoImpl;
 
 import java.awt.Font;
 
@@ -95,7 +100,12 @@ public class RicercaStudente extends JFrame {
 		},
 		new String[] {
 			"Nome" ,"Cognome" ,"CF","Corso","N.Lezioni" ,"Presenze" ,"Assenze"
-		});
+		}) {
+			public boolean isCellEditable(int row ,int column) {
+				return false;
+			}
+		};
+	
 		tableStats.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableStats.setModel(model);
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
@@ -207,9 +217,62 @@ public class RicercaStudente extends JFrame {
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				model.setRowCount(0);
+				tableStats.revalidate();
 				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser ,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel ,model);
 				
 			}
 		});
+		
+		IscrizioneDaoImpl iscrizioneDao = new IscrizioneDaoImpl();
+		buttonElimina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int row = tableStats.getSelectedRow();
+
+				if(row != -1) {
+					
+					//PRENDO CF E TOLGO LE QUADRE
+					String cf = model.getValueAt(row, 2).toString();
+					String cfFormatted = cf.substring(1, cf.length()-1);
+					
+					String corso = model.getValueAt(row, 3).toString();
+					if(!corso.substring(1, corso.length()-1).equals("Empty")) {
+						
+						System.out.println(corso.substring(1, corso.length()-1));
+						int answer = JOptionPane.showConfirmDialog(null, "Sicuro di voler eliminare questo studente da questo corso?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						
+						//E' SI QUINDI CANCELLA
+						if(answer == 0) {
+							
+							int corsoId;
+							CorsoDaoImpl corsoDao = new CorsoDaoImpl();
+							corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso.substring(1, corso.length()-1));
+							
+							iscrizioneDao.deleteStudente(controller.getConnection(), cfFormatted ,corsoId);
+							JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
+							model.removeRow(row);
+							
+						}
+						
+					}else {
+						
+						int risposta = JOptionPane.showConfirmDialog(null, "Studente non iscritto a corsi.Sicuro di voler eliminare questo studente dal database?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						
+						if(risposta == 0) {
+							
+							StudenteDaoImpl studenteDao = new StudenteDaoImpl();
+							studenteDao.deleteStudente(controller.getConnection(), cfFormatted);
+							JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
+							
+						}
+					}
+						
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
+	
+			}
+		});
+		
 	}
 }

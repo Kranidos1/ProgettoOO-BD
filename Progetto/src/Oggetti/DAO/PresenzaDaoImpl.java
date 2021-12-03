@@ -68,7 +68,7 @@ public class PresenzaDaoImpl {
 	
 	public void updatePresenzaStudente(Connection connection ,int lezioneId ,String cf ,String presenza) {
 		
-		System.out.println(lezioneId);
+
 		String update = "UPDATE \"Presenza\" SET \"Presente\" = '" + presenza + "' WHERE \"Cf\" = '" + cf + "' AND \"LezioneId\" = '" + lezioneId + "';";
 		
 		try {

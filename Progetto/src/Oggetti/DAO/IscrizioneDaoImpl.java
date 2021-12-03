@@ -165,5 +165,22 @@ public class IscrizioneDaoImpl {
 		
 	}
 	
+	public void deleteStudente(Connection connection ,String cf ,int corsoId) {
+		
+		String delete = "DELETE FROM \"Studente\" WHERE \"Cf\" = '" + cf + "' AND \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(delete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 }
 

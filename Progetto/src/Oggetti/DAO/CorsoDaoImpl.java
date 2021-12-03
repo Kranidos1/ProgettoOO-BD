@@ -22,7 +22,7 @@ public class CorsoDaoImpl implements CorsoDao{
 	public void inserimento(Corso corso ,Connection connection) {
 		
 		String statement = "INSERT INTO \"Corso\" (\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\") VALUES (" + "'" + corso.getNome() + "'"  + "," +  "'" + corso.getDescrizione() + "'" + ","
-		+ corso.getMaxPartecipanti() + "," + corso.getMaxPartecipanti() + ");";
+		+ corso.getMaxPartecipanti() + "," + corso.getMinPartecipazione() + ");";
 		
 		int procedere = controlloDuplicati(connection ,corso.getNome());
 		

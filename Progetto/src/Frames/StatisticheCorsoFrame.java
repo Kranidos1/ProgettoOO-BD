@@ -57,8 +57,11 @@ public class StatisticheCorsoFrame extends JFrame {
 		String[] columns = {"NomeCorso","N.Studenti","MediaPrs","MinimoPrs","MassimoPrs","RiempimentoM"};
 		getContentPane().add(panel);
 		
-		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},
-				columns);
+		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},columns){
+			public boolean isCellEditable(int row ,int column) {
+				return false;
+			}
+		};
 		table = new JTable();
 		table.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		table.setModel(modelTable);
@@ -149,6 +152,8 @@ public class StatisticheCorsoFrame extends JFrame {
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				modelTable.setRowCount(0);
+				table.revalidate();
 				CorsoETemaDaoImpl corsoTema = new CorsoETemaDaoImpl();
 				CorsoDaoImpl corso = new CorsoDaoImpl();
 				

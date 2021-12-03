@@ -76,17 +76,18 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 			vettoreStudenti[i][1].add(risultato.getString(2));
 			vettoreStudenti[i][2] = new Vector();
 			vettoreStudenti[i][2].add(risultato.getString(3));
+			vettoreStudenti[i][3] = new Vector();
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 
-			while(corsoId.next()) {
+			if(corsoId.next()) {
 				
 				corsoById = corso.getNomeById(connection, corsoId.getString(1));
-				vettoreStudenti[i][3] = new Vector();
 				vettoreStudenti[i][3].add(corsoById);
 				
-			}
+			}else
+				vettoreStudenti[i][3].add("Empty");
 			
 			i++;
 		}
@@ -137,17 +138,18 @@ public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome
 			vettoreStudenti[i][1].add(risultato.getString(2));
 			vettoreStudenti[i][2] = new Vector();
 			vettoreStudenti[i][2].add(risultato.getString(3));
+			vettoreStudenti[i][3] = new Vector();
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 
-			while(corsoId.next()) {
+			if(corsoId.next()) {
 				
 				corsoById = corso.getNomeById(connection, corsoId.getString(1));
-				vettoreStudenti[i][3] = new Vector();
 				vettoreStudenti[i][3].add(corsoById);
 				
-			}
+			}else
+				vettoreStudenti[i][3].add("Empty");
 			
 			i++;
 		}
@@ -198,17 +200,18 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 			vettoreStudenti[i][1].add(risultato.getString(2));
 			vettoreStudenti[i][2] = new Vector();
 			vettoreStudenti[i][2].add(risultato.getString(3));
+			vettoreStudenti[i][3] = new Vector();
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 			
-			while(corsoId.next()) {
+			if(corsoId.next()) {
 				
 				corsoById = corso.getNomeById(connection, corsoId.getString(1));
-				vettoreStudenti[i][3] = new Vector();
 				vettoreStudenti[i][3].add(corsoById);
 				
-			}
+			}else
+				vettoreStudenti[i][3].add("Empty");
 			
 			i++;
 		}
@@ -329,12 +332,13 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 				vettore[i].add(risultato.getString(2));
 				vettore[i].add(risultato.getString(3));
 				
-				while(corsoId.next()) {
+				if(corsoId.next()) {
 					
 					corsoById = corso.getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
-				}
+				}else
+					vettore[i].add("Empty");
 				
 				vettore[i].add("ciao");
 				vettore[i].add("ciao");
@@ -400,12 +404,13 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 				vettore[i].add(risultato.getString(2));
 				vettore[i].add(risultato.getString(3));
 				
-				while(corsoId.next()) {
+				if(corsoId.next()) {
 					
 					corsoById = corso.getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
-				}
+				}else
+					vettore[i].add("Empty");
 				
 				vettore[i].add("ciao");
 				vettore[i].add("ciao");
@@ -471,12 +476,13 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 				vettore[i].add(risultato.getString(2));
 				vettore[i].add(risultato.getString(3));
 				
-				while(corsoId.next()) {
+				if(corsoId.next()) {
 					
 					corsoById = corso.getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
-				}
+				}else
+					vettore[i].add("Empty");
 				
 				vettore[i].add("ciao");
 				vettore[i].add("ciao");
@@ -879,19 +885,23 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 				
 				statementCorso = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '%" + risultato.getString(3) + "%';";
 				
+				
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
 				
 				corsoId = perCorso.executeQuery(statementCorso);
 				
-				while(corsoId.next()) {
+				if(corsoId.next()) {
+					
 					
 					corsoById = corso.getNomeById(connection, corsoId.getString(1));
 					vettoreStudenti[i].add(corsoById);
 					
+				}else {
+					
+					vettoreStudenti[i].add("Empty");
 				}
-				
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -912,6 +922,19 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 
 }
 
+public void deleteStudente(Connection connection ,String cf) {
 
+String delete = "DELETE FROM \"Studente\" WHERE \"Cf\" = '" + cf + "';";
+
+try {
+	
+	Statement statement = connection.createStatement();
+	statement.execute(delete);
+	
+} catch (SQLException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+}
 
 }

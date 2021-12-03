@@ -150,6 +150,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 					AreaTematicaDaoImpl areaTematicaDaoImpl = new AreaTematicaDaoImpl();
 					areaTematicaDaoImpl.inserimento(tema ,connection);
 					
+					
 				}else {
 					//GESTISCE CHIUSURA NELL'ERRORE
 					JOptionPane.showMessageDialog(tmpFrame, "You didn't insert anything.");
@@ -313,7 +314,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							
 							
 							CorsoETemaDaoImpl associazione = new CorsoETemaDaoImpl();
-							
+
 							
 							Timer timer = new Timer(1000,new ActionListener() {
 
@@ -332,11 +333,23 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							});	
 							timer.setRepeats(false);
 							timer.start();
+							
+							fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
+							
+							fram.setVisible(false);
+							JOptionPane.showMessageDialog(fram, "Corso Creato!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+							new FrameDiScelta();
+							
 						}else
 							if(flag == 1) {
 								
 								corsoDaoImpl.updateCorso(connection, corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
 								
+								fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
+								
+								JOptionPane.showMessageDialog(fram, "Updated!", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
+								fram.setVisible(false);
+								new FrameDiScelta();
 							}
 						
 					}else
@@ -500,69 +513,75 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		String tmpNome = nomeField.getText();
 		String tmpCognome = cognomeField.getText();
 
-		if(!list.getSelectedValue().toString().isEmpty()) {
-			
-			String tmpCorso = list.getSelectedValue().toString();
-			
-				if(!tmpNome.isEmpty()) {
-					if(isWhatYouWant(tmpNome, 0)) {
-						
-						if(!tmpCognome.isEmpty()) {
-							if(isWhatYouWant(tmpCognome, 0)) {
-								
-								
-								Date date;
-								String dbDate;
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-								date = dateChooser.getDate();
-//								dbDate = sdf.format(date);
-										//controllo data ma prima cf
-										if(controlloCF(cfField, cfLab) == 1) {
-											//PRENDI ANCHE DATA ATTUALE
-											Date dataAttuale = new Date();
-											String AttualeData = sdf.format(date).toString();
-											//TODO 
-											//Inserimento
-											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
-											
-											StudenteDaoImpl stud = new StudenteDaoImpl();
-											Studente studente = new Studente();
-											CorsoDaoImpl corso = new CorsoDaoImpl();
-											
-											int corsoId = corso.trovaCorsoId(connection, tmpCorso);
-											
-											studente.setCF(cfField.getText().toString());
-											studente.setNome(tmpNome);
+if(list.getSelectedValue()!= null) {
+		
+		String tmpCorso = list.getSelectedValue().toString();
+		
+			if(!tmpNome.isEmpty()) {
+				if(isWhatYouWant(tmpNome, 0)) {
+					
+					if(!tmpCognome.isEmpty()) {
+						if(isWhatYouWant(tmpCognome, 0)) {
+							
+							
+							Date date;
+							String dbDate;
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+							date = dateChooser.getDate();
+//							dbDate = sdf.format(date);
+									//controllo data ma prima cf
+									if(controlloCF(cfField, cfLab) == 1) {
+										//PRENDI ANCHE DATA ATTUALE
+										Date dataAttuale = new Date();
+										String AttualeData = sdf.format(date).toString();
+										//TODO 
+										//Inserimento
+										/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
+										
+										StudenteDaoImpl stud = new StudenteDaoImpl();
+										Studente studente = new Studente();
+										CorsoDaoImpl corso = new CorsoDaoImpl();
+										
+										int corsoId = corso.trovaCorsoId(connection, tmpCorso);
+										
+										studente.setCF(cfField.getText().toString());
+										studente.setNome(tmpNome);
 
-											studente.setCognome(tmpCognome);
-											studente.setData(sdf.format(date));
-											studente.setDataIscrizione(sdf.format(dataAttuale));
-											stud.inserimento(connection, studente);
+										studente.setCognome(tmpCognome);
+										studente.setData(sdf.format(date));
+										studente.setDataIscrizione(sdf.format(dataAttuale));
+										stud.inserimento(connection, studente);
+										
+										IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
+										int procedere = associazione.controlloDuplicati(connection, studente.getCF(), corsoId);
+										
+										if(procedere == 1) {
 											
-											IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
-											int procedere = associazione.controlloDuplicati(connection, studente.getCF(), corsoId);
+											associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
 											
-											if(procedere == 1) {
-												
-												associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
-												
-											}else
-												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
-											
-
+											JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+											nomeField.setText("");
+											cognomeField.setText("");
+											cfField.setText("");
 											
 										}else
-											jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
-								
-							}else
-								jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
+											JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+										
+
+										
+									}else
+										jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
+							
 						}else
-							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);			
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
 					}else
-						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, nomeField, 0);
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);			
 				}else
-					jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
-		}else
+					jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, nomeField, 0);
+			}else
+				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
+	
+}else
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
 		
 
@@ -1261,6 +1280,12 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								JOptionPane.showMessageDialog(area, "Durata maggiore alle 4 ore e 59 minuti.Impossibile aggiungere.");
 								return 0;
 								
+							}else
+							if(oreMinuti < 45) {
+								
+								JOptionPane.showMessageDialog(area, "Durata minore ai 45 minuti.Impossibile aggiungere.");
+								return 0;
+								
 							}else{
 								//Inserimento
 								CorsoDaoImpl corsoDao = new CorsoDaoImpl();
@@ -1286,6 +1311,11 @@ public class Controller implements ControlloEOperazioniSuFrame {
 										
 										PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
 										presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+										JOptionPane.showMessageDialog(null, "Lezione salvata!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+										
+										JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(dateChooser);
+										tmpFrame.setVisible(false);
+										new FrameDiScelta();
 										
 									}else
 										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
@@ -1296,6 +1326,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 									if(permesso != 0) {
 										
 											lezioneDao.updateLezione(connection,lezione, lezioneIdUpd);
+											JOptionPane.showMessageDialog(null, "Updated!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
 											return 1;
 
 									}else

@@ -14,7 +14,7 @@ public class Studente {
 		return dataIscrizione;
 	}
 	public void setDataIscrizione(String dataIscrizione) {
-		System.out.println(dataIscrizione);
+
 		this.dataIscrizione = dataIscrizione;
 	}
 	public String getNome() {
@@ -33,7 +33,7 @@ public class Studente {
 		return data;
 	}
 	public void setData(String data) {
-		System.out.println(data);
+
 		this.data = data;
 	}
 	public String getCF() {

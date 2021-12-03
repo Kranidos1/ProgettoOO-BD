@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JSpinner.DateEditor;
 import javax.swing.JTextField;
@@ -177,6 +178,7 @@ public class CreaLezione extends JFrame {
 					
 					String corso = listCorsi.getSelectedValue().toString();
 					controller.inserisciLezione(corso ,titoloField ,dateChooser ,spinnerInizio ,spinnerDurata ,textAreaDescrizione ,hourForm ,0 ,0);
+					
 					
 				}else
 					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
