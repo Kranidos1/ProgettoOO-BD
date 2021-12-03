@@ -147,7 +147,7 @@ public class LezioneDaoImpl {
 	
 	public int gestioneDuplicati(Connection connection ,String data ,int corsoId) {
 		
-		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD') and \"CorsoId\" = '" + corsoId + "';";
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD') AND \"CorsoId\" = '" + corsoId + "';";
 		
 		try {
 			
@@ -156,6 +156,31 @@ public class LezioneDaoImpl {
 			
 			if(risultato.next()) {
 				return 0;
+			}else
+				return 1;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return 0;
+		
+	}
+	
+	public int gestioneDuplicatiUpdate(Connection connection ,String data ,int corsoId ,int lezioneId) {
+		
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE TO_CHAR(\"Data\" :: Date,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD') AND \"CorsoId\" = '" + corsoId + "' AND \"LezioneId\" != '" + lezioneId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			if(risultato.next()) {
+				
+				return 0;
+				
 			}else
 				return 1;
 			

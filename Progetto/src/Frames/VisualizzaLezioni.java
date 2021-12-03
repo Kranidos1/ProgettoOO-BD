@@ -175,24 +175,29 @@ public class VisualizzaLezioni extends JFrame {
 		visualizzaLezioniButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-			tmpCorso = listCorsi.getSelectedValue().toString();
-			visualizzaLezioniButton.setEnabled(false);		
-			corsoId = corsoDao.trovaCorsoId(controller.getConnection(), tmpCorso);
-			
-			listaDateLezioni = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
-//			modelLezioni.addAll(listaDateLezioni);
-			int i = 0;
-			
-			while(i < Arrays.asList(listaDateLezioni).size()) {
-				
-				modelLezioni.addElement(listaDateLezioni[i].get(0));
-				
-				i++;
-			}
-			
-			cercaLezioneButton.setEnabled(true);
-			listCorsi.setEnabled(false);
-			
+			if(listCorsi.getSelectedValue() != null) {
+					
+					tmpCorso = listCorsi.getSelectedValue().toString();
+					visualizzaLezioniButton.setEnabled(false);		
+					corsoId = corsoDao.trovaCorsoId(controller.getConnection(), tmpCorso);
+					
+					listaDateLezioni = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+//					modelLezioni.addAll(listaDateLezioni);
+					int i = 0;
+					
+					while(i < Arrays.asList(listaDateLezioni).size()) {
+						
+						modelLezioni.addElement(listaDateLezioni[i].get(0));
+						
+						i++;
+					}
+					
+					cercaLezioneButton.setEnabled(true);
+					listCorsi.setEnabled(false);
+					
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
+		
 			}
 		});
 		
@@ -201,44 +206,50 @@ public class VisualizzaLezioni extends JFrame {
 		cercaLezioneButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-			String data = listLezioni.getSelectedValue().toString();
-			
-				int i = 0;
-				while(i < Arrays.asList(listaDateLezioni).size()) {
+				if(listLezioni.getSelectedValue() != null) {
 					
-					if(listaDateLezioni[i].get(0) == data) {
+					String data = listLezioni.getSelectedValue().toString();
+					
+					int i = 0;
+					while(i < Arrays.asList(listaDateLezioni).size()) {
 						
-						lezioneId = Integer.parseInt(listaDateLezioni[i].get(1));
-						titoloField.setText(listaDateLezioni[i].get(6));
-						try {
-							dateChooser.setDate(dateFormat.parse(listaDateLezioni[i].get(0).toString()));
-						} catch (ParseException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
+						if(listaDateLezioni[i].get(0) == data) {
+							
+							lezioneId = Integer.parseInt(listaDateLezioni[i].get(1));
+							titoloField.setText(listaDateLezioni[i].get(6));
+							try {
+								dateChooser.setDate(dateFormat.parse(listaDateLezioni[i].get(0).toString()));
+							} catch (ParseException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							}
+							textAreaDescrizione.setText(listaDateLezioni[i].get(5));
+							try {
+								spinnerInizio.setValue(format.parseObject(listaDateLezioni[i].get(3).toString()));
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							spinnerDurata.setValue(Integer.parseInt(listaDateLezioni[i].get(4)));
+							
+							break;
+							
 						}
-						textAreaDescrizione.setText(listaDateLezioni[i].get(5));
-						try {
-							spinnerInizio.setValue(format.parseObject(listaDateLezioni[i].get(3).toString()));
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						spinnerDurata.setValue(Integer.parseInt(listaDateLezioni[i].get(4)));
 						
-						break;
-						
+						i++;
 					}
+
 					
-					i++;
-				}
-				
-				cercaLezioneButton.setEnabled(false);
-				titoloField.setEnabled(true);
-				dateChooser.setEnabled(true);
-				spinnerDurata.setEnabled(true);
-				spinnerInizio.setEnabled(true);
-				textAreaDescrizione.setEnabled(true);
-				updateButton.setEnabled(true);
+					cercaLezioneButton.setEnabled(false);
+					titoloField.setEnabled(true);
+					dateChooser.setEnabled(true);
+					spinnerDurata.setEnabled(true);
+					spinnerInizio.setEnabled(true);
+					textAreaDescrizione.setEnabled(true);
+					updateButton.setEnabled(true);
+					
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 				
 			}
 		});
@@ -267,6 +278,17 @@ public class VisualizzaLezioni extends JFrame {
 				spinnerDurata.setValue(1);
 				textAreaDescrizione.setText("");
 				
+				listaDateLezioni = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+//				modelLezioni.addAll(listaDateLezioni);
+				int i = 0;
+				
+				modelLezioni.clear();
+				while(i < Arrays.asList(listaDateLezioni).size()) {
+					
+					modelLezioni.addElement(listaDateLezioni[i].get(0));
+					
+					i++;
+				}
 				
 			}
 		});

@@ -3,28 +3,14 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.CorsoETemaDaoImpl;
 
 import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
 import java.awt.Component;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
 import java.awt.event.*;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -229,6 +215,12 @@ public class ModificaCorsoFrame extends JFrame {
 				}
 
 				controller.insertCorsoDb((JFrame) SwingUtilities.getRoot(lblSelectedTheme), nomeField, maxField, minField, textAreaDescrizione, model, 1, Integer.toString(idCorso));
+				//SALVATAGGIO A BUON FINE
+				JOptionPane.showMessageDialog((JFrame)SwingUtilities.getRoot(lblSelectedTheme) , "Saved!", "OK!", JOptionPane.INFORMATION_MESSAGE);
+				
+				//CHIUSURA FINESTRA
+				WindowEvent close = new WindowEvent((JFrame)SwingUtilities.getRoot(lblSelectedTheme) ,WindowEvent.WINDOW_CLOSING);
+				Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(close);
 				
 			}
 		});

@@ -57,5 +57,38 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 		
 	}
 	
+	public void update(Connection connection ,String oldTheme ,String newTheme) {
+		
+		String update = "UPDATE \"AreaTematica\" SET \"Nome\" = '" + newTheme + "' WHERE \"Nome\" = '" + oldTheme + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public void delete(Connection connection ,String nome) {
+		
+		String delete = "DELETE FROM \"AreaTematica\" WHERE \"Nome\" = '" + nome + "';";
+		
+		Statement statement;
+		try {
+			
+			statement = connection.createStatement();
+			statement.execute(delete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 }

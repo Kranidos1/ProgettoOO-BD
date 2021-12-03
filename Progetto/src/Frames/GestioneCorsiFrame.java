@@ -21,6 +21,7 @@ public class GestioneCorsiFrame extends JFrame {
 	private StatisticheCorsoFrame statsCorso;
 	
 	public GestioneCorsiFrame() {
+		
 		super("Project GRU");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GestioneCorsiFrame.class.getResource("/imgs/lastin.png")));
 		

@@ -1219,7 +1219,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
 	}
 	
-	public void inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
+	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
 		
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
@@ -1248,15 +1248,18 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							if(Integer.parseInt(orarioInizioLezione.substring(0,2)) < 8) {
 								
 								JOptionPane.showMessageDialog(area, "Troppo presto per una lezione!.");
+								return 0;
 								
 							}else
 								JOptionPane.showMessageDialog(area, "Troppo tardi per una lezione!.");
+								return 0;
 								
 						}else {
 							//inserimento
 							if(oreMinuti > 299) {
 								
 								JOptionPane.showMessageDialog(area, "Durata maggiore alle 4 ore e 59 minuti.Impossibile aggiungere.");
+								return 0;
 								
 							}else{
 								//Inserimento
@@ -1287,27 +1290,36 @@ public class Controller implements ControlloEOperazioniSuFrame {
 									}else
 										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 									
-								}else
-									if(flag == 1) {
+								}else {
+									int permesso = lezioneDao.gestioneDuplicatiUpdate(connection, lezione.getData() ,lezione.getCorsoId() ,lezioneIdUpd);
+									
+									if(permesso != 0) {
 										
-										lezioneDao.updateLezione(connection,lezione, lezioneIdUpd);
+											lezioneDao.updateLezione(connection,lezione, lezioneIdUpd);
+											return 1;
+
+									}else
+										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 										
-									}
+								}
+									
 								
 							}
 						}
 						
 					}else
 						jpanelManagementCreaCorsoFrame(null, null, title, 7);
-					
+					return 0;
 				}else
 					jpanelManagementCreaCorsoFrame(null, null, title, 7);
-				
+					return 0;
 			}else
 				jpanelManagementCreaCorsoFrame(null, null, title, 7);
+			return 0;
 			
 		}else
 			jpanelManagementCreaCorsoFrame(null, null, title, 7);
+		return 0;
 		
 	}
 	

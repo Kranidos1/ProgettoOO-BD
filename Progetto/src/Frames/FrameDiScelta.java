@@ -74,22 +74,24 @@ public class FrameDiScelta extends JFrame{
 		buttonGestioneStudenti.setBounds(149, 353, 198, 53);
 		panel.add(buttonGestioneStudenti);
 		
-		JButton buttonAreaTematica = new JButton("Crea Area Tematica");
-		buttonAreaTematica.addActionListener(new ActionListener() {
+		JButton buttonGestioneTemi = new JButton("Gestione Temi");
+		buttonGestioneTemi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				controller.newTheme(panel.labelHourDate);
+				setVisible(false);
+				
+				GestioneTemiFrame frame = new GestioneTemiFrame();
 				
 			}			
 			
 		});
 		
-		buttonAreaTematica.setForeground(Color.RED);
-		buttonAreaTematica.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
-		buttonAreaTematica.setBorder(new RoundBorderBotton(10));
-		buttonAreaTematica.setBackground(Color.WHITE);
-		buttonAreaTematica.setBounds(149, 175, 198, 53);
-		panel.add(buttonAreaTematica);
+		buttonGestioneTemi.setForeground(Color.RED);
+		buttonGestioneTemi.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
+		buttonGestioneTemi.setBorder(new RoundBorderBotton(10));
+		buttonGestioneTemi.setBackground(Color.WHITE);
+		buttonGestioneTemi.setBounds(149, 175, 198, 53);
+		panel.add(buttonGestioneTemi);
 		
 		buttonGestioneCorsi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

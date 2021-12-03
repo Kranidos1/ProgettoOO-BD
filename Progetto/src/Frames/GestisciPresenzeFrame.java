@@ -188,32 +188,38 @@ public class GestisciPresenzeFrame extends JFrame {
 		stepButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				corsoSelected = listCorsi.getSelectedValue().toString();
-				primoStepPanel.setEnabled(false);
-				listCorsi.setEnabled(false);
-				stepButton.setEnabled(false);
-				
-				CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-				int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corsoSelected);
-				LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
-				
-//				modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(controller.getConnection(), corsoId));
-				
-				listaDate = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
-				int i = 0;
-				
-				while(i < Arrays.asList(listaDate).size()) {
+				if(listCorsi.getSelectedValue() != null) {
 					
-					modelListLezioni.addElement(listaDate[i].get(0).toString());
+					corsoSelected = listCorsi.getSelectedValue().toString();
 					
-					i++;
-				}
-				corsoTrovatoLabel.setText(listCorsi.getSelectedValue().toString());
+					primoStepPanel.setEnabled(false);
+					listCorsi.setEnabled(false);
+					stepButton.setEnabled(false);
+					
+					CorsoDaoImpl corsoDao = new CorsoDaoImpl();
+					int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corsoSelected);
+					LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
+					
+//					modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(controller.getConnection(), corsoId));
+					
+					listaDate = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+					int i = 0;
+					
+					while(i < Arrays.asList(listaDate).size()) {
+						
+						modelListLezioni.addElement(listaDate[i].get(0).toString());
+						
+						i++;
+					}
+					corsoTrovatoLabel.setText(listCorsi.getSelectedValue().toString());
+					
+					dateChooser.setEnabled(true);
+					btnCercaLezione.setEnabled(true);
+					buttonPresente.setEnabled(true);
+					buttonAssente.setEnabled(true);
 				
-				dateChooser.setEnabled(true);
-				btnCercaLezione.setEnabled(true);
-				buttonPresente.setEnabled(true);
-				buttonAssente.setEnabled(true);
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 				
 			}
 		});
@@ -356,7 +362,8 @@ public class GestisciPresenzeFrame extends JFrame {
 					
 					modelStudenti.removeRow(row);
 					
-				}
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 			}
 		});
 		
@@ -393,7 +400,8 @@ public class GestisciPresenzeFrame extends JFrame {
 					
 					modelStudenti.removeRow(row);
 					
-				}
+				}else
+					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 				
 			}
 		});

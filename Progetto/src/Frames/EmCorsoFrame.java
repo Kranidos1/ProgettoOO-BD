@@ -130,6 +130,7 @@ public class EmCorsoFrame extends JFrame {
 				
 				LinkedList<String> listaTemi = areaTematica.getThemes(controller.getConnection());
 				
+				//SI APRE IL FRAME PER LA MODIFICA
 				ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
 				frame.getNomeField().setText(listaValori.get(0));
 				frame.getTextAreaDescrizione().setText(listaValori.get(1));
