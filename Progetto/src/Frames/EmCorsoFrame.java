@@ -105,14 +105,18 @@ public class EmCorsoFrame extends JFrame {
 		buttonElimina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String tmp = listCorsi.getSelectedValue().toString();
-				int answer = JOptionPane.showConfirmDialog((JFrame) SwingUtilities.getRoot(buttonModifica), "are you sure you want to delete " + tmp + "?", "Confirm", JOptionPane.YES_NO_OPTION);
-				//0 true 1 false
-				if(answer == 0) {
-					//TODO QUI OVVIAMENTE PARTE ANCHE ELIMINAZIONE DAL DB
+				if(listCorsi.getSelectedValue() != null) {
 					
-					model.removeElement(tmp);
-					corso.deleteCorsoByName(controller.getConnection(), tmp);
+					String tmp = listCorsi.getSelectedValue().toString();
+					int answer = JOptionPane.showConfirmDialog((JFrame) SwingUtilities.getRoot(buttonModifica), "are you sure you want to delete " + tmp + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+					//0 true 1 false
+					if(answer == 0) {
+						//TODO QUI OVVIAMENTE PARTE ANCHE ELIMINAZIONE DAL DB
+						
+						model.removeElement(tmp);
+						corso.deleteCorsoByName(controller.getConnection(), tmp);
+					}
+					
 				}
 			}
 		});
@@ -120,33 +124,37 @@ public class EmCorsoFrame extends JFrame {
 		buttonModifica.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-//				TODO CREACORSOFRAME con valori preimpostati e messaggio per e conferma effettiva modifica nel caso
-				String tmp = listCorsi.getSelectedValue().toString();
-				//creo frame
-				List<String> listaValori = corso.getCorso(controller.getConnection(), tmp);
-				CorsoETemaDaoImpl temi = new CorsoETemaDaoImpl();
-				List<String> listaTemiCorso = temi.getAllThemeOfCorso(controller.getConnection(), listaValori.get(4));
-				AreaTematicaDaoImpl areaTematica = new AreaTematicaDaoImpl();
-				
-				LinkedList<String> listaTemi = areaTematica.getThemes(controller.getConnection());
-				
-				//SI APRE IL FRAME PER LA MODIFICA
-				ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
-				frame.getNomeField().setText(listaValori.get(0));
-				frame.getTextAreaDescrizione().setText(listaValori.get(1));
-				frame.getMaxField().setText(listaValori.get(2));
-				frame.getMinField().setText(listaValori.get(3));
-				frame.setId(listaValori.get(4));
-				
-				DefaultListModel model = (DefaultListModel) frame.getList().getModel();
-				model.addAll(listaTemiCorso);
-				
-				JComboBox<String> box = frame.getChoiceOption();
-				Iterator<String> iterator =  listaTemi.iterator();
-				
-				while(iterator.hasNext()) {
+				if(listCorsi.getSelectedValue() != null) {
 					
-					box.addItem(iterator.next());
+
+					String tmp = listCorsi.getSelectedValue().toString();
+					//creo frame
+					List<String> listaValori = corso.getCorso(controller.getConnection(), tmp);
+					CorsoETemaDaoImpl temi = new CorsoETemaDaoImpl();
+					List<String> listaTemiCorso = temi.getAllThemeOfCorso(controller.getConnection(), listaValori.get(4));
+					AreaTematicaDaoImpl areaTematica = new AreaTematicaDaoImpl();
+					
+					LinkedList<String> listaTemi = areaTematica.getThemes(controller.getConnection());
+					
+					//SI APRE IL FRAME PER LA MODIFICA
+					ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
+					frame.getNomeField().setText(listaValori.get(0));
+					frame.getTextAreaDescrizione().setText(listaValori.get(1));
+					frame.getMaxField().setText(listaValori.get(2));
+					frame.getMinField().setText(listaValori.get(3));
+					frame.setId(listaValori.get(4));
+					
+					DefaultListModel model = (DefaultListModel) frame.getList().getModel();
+					model.addAll(listaTemiCorso);
+					
+					JComboBox<String> box = frame.getChoiceOption();
+					Iterator<String> iterator =  listaTemi.iterator();
+					
+					while(iterator.hasNext()) {
+						
+						box.addItem(iterator.next());
+						
+					}
 					
 				}
 

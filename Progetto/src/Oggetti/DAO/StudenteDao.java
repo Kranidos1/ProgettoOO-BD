@@ -20,6 +20,6 @@ public interface StudenteDao {
 	public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String nome ,String data ,String cf);
 	public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,String nome ,String data ,String cognome);
 	public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,String nome ,String cf ,String cognome);
-	
+	public void deleteStudente(Connection connection ,String cf) ;
 	
 }

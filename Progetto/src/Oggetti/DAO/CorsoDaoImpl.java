@@ -75,27 +75,19 @@ public class CorsoDaoImpl implements CorsoDao{
 	}
 	public int getNextCorsoId(Connection connection) {
 		
-		String statement = "SELECT \"CorsoId\" FROM \"Corso\";";
+		String statement = "SELECT Max(\"CorsoId\") FROM \"Corso\";";
+		int code = 0;
 		
 		try {
 			
 			Statement ricerca = connection.createStatement();
-			List<String> lista = new LinkedList<>();
+			ResultSet risultato = ricerca.executeQuery(statement);
 			
-			ResultSet result = ricerca.executeQuery(statement);
-			
-			int i = 0;
-			while(result.next()) {
+			if(risultato.next()) {
 				
-				lista.add(result.getString(1));
-				i++;
+				code = Integer.parseInt(risultato.getString(1));
 				
 			}
-			
-			int size = lista.size();
-			size -= 1;
-			
-			int code = Integer.parseInt(lista.get(size));
 			
 			return code;
 			
