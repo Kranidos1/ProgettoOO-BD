@@ -167,7 +167,7 @@ public class IscrizioneDaoImpl {
 	
 	public void deleteStudente(Connection connection ,String cf ,int corsoId) {
 		
-		String delete = "DELETE FROM \"Studente\" WHERE \"Cf\" = '" + cf + "' AND \"CorsoId\" = '" + corsoId + "';";
+		String delete = "DELETE FROM \"Iscrizione\" WHERE \"Cf\" = '" + cf + "' AND \"CorsoId\" = '" + corsoId + "';";
 		
 		try {
 			
@@ -205,6 +205,22 @@ public class IscrizioneDaoImpl {
 			e.printStackTrace();
 		}
 		return numeroStud;
+	}
+	
+	public void updateStatoStudente(Connection connection ,String cf ,String valutazione) {
+		
+		String update = "UPDATE \"Iscrizione\" SET \"ExamPassed\" = '"+ valutazione + "' WHERE \"Cf\" = '" + cf + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

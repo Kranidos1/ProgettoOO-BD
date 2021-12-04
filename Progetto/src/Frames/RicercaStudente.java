@@ -172,7 +172,6 @@ public class RicercaStudente extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				
 				flagNome = controller.isEnbl(nomeField, flagNome ,null ,null);
 				
@@ -237,35 +236,47 @@ public class RicercaStudente extends JFrame {
 					String cfFormatted = cf.substring(1, cf.length()-1);
 					
 					String corso = model.getValueAt(row, 3).toString();
-					if(!corso.substring(1, corso.length()-1).equals("Empty")) {
+					int corsoId;
+					
+					CorsoDaoImpl corsoDao = new CorsoDaoImpl();
+					corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso.substring(1, corso.length()-1));
+					
+					String achieved = corsoDao.controllaStatoCorso(controller.getConnection(), corsoId);
+					
+					if(achieved.equals("truex") || achieved.equals("true")) {
 						
-						System.out.println(corso.substring(1, corso.length()-1));
-						int answer = JOptionPane.showConfirmDialog(null, "Sicuro di voler eliminare questo studente da questo corso?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-						
-						//E' SI QUINDI CANCELLA
-						if(answer == 0) {
-							
-							int corsoId;
-							CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-							corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso.substring(1, corso.length()-1));
-							
-							iscrizioneDao.deleteStudente(controller.getConnection(), cfFormatted ,corsoId);
-							JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
-							model.removeRow(row);
-							
-						}
+						JOptionPane.showMessageDialog(null, "Non puo eliminare uno studente da un corso finito o archiviato.", "ERROR", JOptionPane.ERROR_MESSAGE);			
 						
 					}else {
 						
-						int risposta = JOptionPane.showConfirmDialog(null, "Studente non iscritto a corsi.Sicuro di voler eliminare questo studente dal database?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-						
-						if(risposta == 0) {
+						if(!corso.substring(1, corso.length()-1).equals("Empty")) {
 							
-							StudenteDaoImpl studenteDao = new StudenteDaoImpl();
-							studenteDao.deleteStudente(controller.getConnection(), cfFormatted);
-							JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
+
+							int answer = JOptionPane.showConfirmDialog(null, "Sicuro di voler eliminare questo studente da questo corso?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 							
+							//E' SI QUINDI CANCELLA
+							if(answer == 0) {
+								
+								
+								iscrizioneDao.deleteStudente(controller.getConnection(), cfFormatted ,corsoId);
+								JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
+								model.removeRow(row);
+								
+							}
+							
+						}else {
+							
+							int risposta = JOptionPane.showConfirmDialog(null, "Studente non iscritto a corsi.Sicuro di voler eliminare questo studente dal database?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+							
+							if(risposta == 0) {
+								
+								StudenteDaoImpl studenteDao = new StudenteDaoImpl();
+								studenteDao.deleteStudente(controller.getConnection(), cfFormatted);
+								JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
+								
+							}
 						}
+						
 					}
 						
 				}else

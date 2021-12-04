@@ -86,5 +86,15 @@ public class GestioneStudentiFrame extends JFrame {
 				
 			}
 		});
+		
+		buttonBocciaPromuovi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new BocciaPromuoviFrame();
+				
+			}
+		});
+		
 	}
 }

@@ -21,6 +21,7 @@ import Oggetti.DAO.LezioneDaoImpl;
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +47,9 @@ public class VisualizzaLezioni extends JFrame {
 	private JTextField titoloField;
 	
 	public VisualizzaLezioni() {
+		
+		super("Project GRU");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GestisciPresenzeFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 640,639);

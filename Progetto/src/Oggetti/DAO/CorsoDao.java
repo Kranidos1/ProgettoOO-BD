@@ -21,5 +21,7 @@ public void deleteCorsoByName(Connection connection ,String nome);
 public List<String> getCorso(Connection connection ,String nome);
 public void updateCorso(Connection connection ,String id ,String nome ,String descrizione ,String maxPartecipanti ,String minPartecipazione);
 public void updateCheckCorso(Connection connection ,int corsoId);
+public List getNomeCorsiFiniti(Connection connection );
+public void updateCheckCorsoGestito(Connection connection ,int corsoId);
 
 }

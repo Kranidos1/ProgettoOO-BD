@@ -105,6 +105,9 @@ public class GeneralPanel extends JPanel {
 		statsMenuItem.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
 		gestisciStudentiMenu.add(statsMenuItem);
 		
+		JMenuItem promozioneMenuItem = new JMenuItem("Boccia/Promuovi");
+		gestisciStudentiMenu.add(promozioneMenuItem);
+		
 		JMenu GestisciCorsoMenu = new JMenu("Gestisci Corso");
 		GestisciCorsoMenu.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
 		navigaMenu.add(GestisciCorsoMenu);
@@ -116,14 +119,19 @@ public class GeneralPanel extends JPanel {
 		JMenuItem modificaMenuItem = new JMenuItem("Modifica/Elimina Corso");
 		GestisciCorsoMenu.add(modificaMenuItem);
 		
+		JMenuItem fineCorsoMenuItem = new JMenuItem("Determina fine corso");
+		fineCorsoMenuItem.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+		GestisciCorsoMenu.add(fineCorsoMenuItem);
+		
 		JMenu gestisciLezioniMenu = new JMenu("Gestisci Lezioni");
 		navigaMenu.add(gestisciLezioniMenu);
 		
 		JMenuItem gestisciPresenzeMenuItem = new JMenuItem("GestisciPresenze");
 		gestisciLezioniMenu.add(gestisciPresenzeMenuItem);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("");
-		gestisciLezioniMenu.add(mntmNewMenuItem);
+		JMenuItem visualizzaLezioniMenuItem = new JMenuItem("Visualizza lezioni");
+		visualizzaLezioniMenuItem.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+		gestisciLezioniMenu.add(visualizzaLezioniMenuItem);
 
 		
 		JLabel labelTitle = new JLabel("GRU-Solution");
@@ -292,6 +300,47 @@ public class GeneralPanel extends JPanel {
 			}
 			
 		});
+		
+		promozioneMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				new BocciaPromuoviFrame();
+				
+			}
+			
+			
+		});
+		
+		fineCorsoMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				new GestioneFineCorsiFrame();
+				
+			}
+			
+		});
+		
+		visualizzaLezioniMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				new VisualizzaLezioni();
+				
+			}
+			
+		});
+		
 	}	
 	
 	

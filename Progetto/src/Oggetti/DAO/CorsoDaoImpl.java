@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,7 +93,6 @@ public class CorsoDaoImpl implements CorsoDao{
 			return code;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -101,7 +101,7 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	public List<String> getNomiCorsi(Connection connection) {
 		
-		String statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Finito\" = false;";
+		String statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Finito\" = 'false';";
 		
 		try {
 			
@@ -385,4 +385,82 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 	}
 	
+	public LinkedList getNomeCorsiFiniti(Connection connection ) {
+		
+		String ricerca = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Finito\" = 'true';";
+		
+		int count = 0;
+		
+		try {
+			
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet result = statement.executeQuery(ricerca);
+			
+			while(result.next()) {
+				
+				count++;
+				
+			}
+			result.beforeFirst();
+			
+			LinkedList corsiTrovati = new LinkedList();
+
+			while(result.next()) {
+				
+				corsiTrovati.add(result.getString(1));
+				
+			}
+			
+			return corsiTrovati;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	public void updateCheckCorsoGestito(Connection connection ,int corsoId) {
+		
+		String update = "UPDATE \"Corso\" SET \"Finito\" = '" + "truex" + "' WHERE \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String controllaStatoCorso(Connection connection ,int corsoId) {
+		
+		String ricerca = "SELECT \"Finito\" FROM \"Corso\" WHERE \"CorsoId\" = " + corsoId + ";";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			while(risultato.next()) {
+				
+				String result = risultato.getString(1);
+				return result;
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return null;
+		
+	}
 }

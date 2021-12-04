@@ -236,6 +236,7 @@ public class LezioneDaoImpl {
 		
 		
 	}
+	
 	public int countCheckFalse(Connection connection ,int corsoId) {
 		
 		//

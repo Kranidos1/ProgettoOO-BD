@@ -1203,7 +1203,7 @@ if(list.getSelectedValue()!= null) {
 	}
 	
 	//TODOx
-	public void ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model) {
+	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model) {
 		
 		if(corso.getSelectedValue() != null) {
 			//effettua ricerca
@@ -1225,7 +1225,6 @@ if(list.getSelectedValue()!= null) {
 					fixedList[i].add(listaStudenti[i].get(2));
 					fixedList[i].add(listaStudenti[i].get(3));
 					fixedList[i].add(listaStudenti[i].get(4));
-					fixedList[i].add(listaStudenti[i].get(5));
 					model.addRow(fixedList[i]);
 					
 				}
@@ -1233,9 +1232,11 @@ if(list.getSelectedValue()!= null) {
 
 			}
 			
+			return i;
 			
 		}else
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
+		return 0;
 	}
 	
 	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {

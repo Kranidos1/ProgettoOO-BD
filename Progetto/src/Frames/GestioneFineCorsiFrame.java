@@ -74,37 +74,41 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 				//RAPPRESENTA IL SI
 				if(answer == 0) {
 					
-					String corso = listaCorsi.getSelectedValue().toString();
-					int row = listaCorsi.getSelectedIndex();
-					
-					int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso);
-					//ricordati check su numero lezioni e se tutte le lezioni sono state gestite
-					int numLezioniFalse = lezioneDao.countCheckFalse(controller.getConnection(), corsoId);
-					int numLezioni = lezioneDao.countLezioni(controller.getConnection(), corsoId);
-					
-					int pass = numLezioni - numLezioniFalse;
-					
-					if(numLezioni != 0) {
+					if(listaCorsi.getSelectedValue() != null) {
 						
-						if(numLezioni <= 6) {
+						String corso = listaCorsi.getSelectedValue().toString();
+						int row = listaCorsi.getSelectedIndex();
+						
+						int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso);
+						//ricordati check su numero lezioni e se tutte le lezioni sono state gestite
+						int numLezioniFalse = lezioneDao.countCheckFalse(controller.getConnection(), corsoId);
+						int numLezioni = lezioneDao.countLezioni(controller.getConnection(), corsoId);
+						
+						int pass = numLezioni - numLezioniFalse;
+						
+						if(numLezioni != 0) {
 							
-							if(pass == numLezioni) {
+							if(numLezioni <= 6) {
 								
-								//UPDATE CHECK
-								corsoDao.updateCheckCorso(controller.getConnection(), corsoId);
-								JOptionPane.showMessageDialog(null, "Corso terminato correttamente!");
-								model.remove(row);
-								listaCorsi.revalidate();
-								
+								if(pass == numLezioni) {
+									
+									//UPDATE CHECK
+									corsoDao.updateCheckCorso(controller.getConnection(), corsoId);
+									JOptionPane.showMessageDialog(null, "Corso terminato correttamente!");
+									model.remove(row);
+									listaCorsi.revalidate();
+									
+								}else
+									JOptionPane.showMessageDialog(null, "Mancano delle lezioni da gestire!", "ERROR", JOptionPane.ERROR_MESSAGE)
+									;
 							}else
-								JOptionPane.showMessageDialog(null, "Mancano delle lezioni da gestire!", "ERROR", JOptionPane.ERROR_MESSAGE)
-								;
+								JOptionPane.showMessageDialog(null, "Ci sono meno di 6 lezioni per questo corso.Non e' possibile terminarlo!", "ERROR", JOptionPane.ERROR_MESSAGE);
+							
 						}else
-							JOptionPane.showMessageDialog(null, "Ci sono meno di 6 lezioni per questo corso.Non e' possibile terminarlo!", "ERROR", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Non ci sono state lezioni per questo Corso.Non e' possibile terminarlo.", "ERROR", JOptionPane.ERROR_MESSAGE);
 						
 					}else
-						JOptionPane.showMessageDialog(null, "Non ci sono state lezioni per questo Corso.Non e' possibile terminarlo.", "ERROR", JOptionPane.ERROR_MESSAGE);
-					
+						controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 				} 
 			}
 		});

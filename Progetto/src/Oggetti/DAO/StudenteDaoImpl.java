@@ -32,7 +32,6 @@ public void inserimento(Connection connection ,Studente studente) {
 		
 		
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
 //		e.printStackTrace();
 		JOptionPane.showMessageDialog(null, "Studente gia' presente nei database,ma inserito comunque nel corso indicato.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		

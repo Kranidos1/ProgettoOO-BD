@@ -34,5 +34,6 @@ public interface ControlloEOperazioniSuFrame {
 	//TextField generico con controllocheckbox e ricerca
 	public int isEnbl(JTextField field ,int value ,JDateChooser date ,JList lista);
 	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model);
-	public void ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model);
+	//torna numero di studenti
+	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model);
 }

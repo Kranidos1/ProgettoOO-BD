@@ -30,7 +30,7 @@ public class Starter {
 	
 	//GESTITI DUPLICAI STUDENTE,CORSO
 	public static void main(String[] args){
-
+//
 		new FirstFrame();
 
 	}
