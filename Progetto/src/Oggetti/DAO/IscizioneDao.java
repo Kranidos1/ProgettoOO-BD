@@ -10,5 +10,6 @@ public interface IscizioneDao {
 	public List<String>[] getStudentiByCorsoName(Connection connection ,String nomeCorso);
 	public List<String>[] getStudentiByCorsoId(Connection connection ,int corsoId);
 	public void deleteStudente(Connection connection ,String cf ,int corsoId);
+	public int countStudentiIscritti(Connection connection ,int corsoId);
 	
 }

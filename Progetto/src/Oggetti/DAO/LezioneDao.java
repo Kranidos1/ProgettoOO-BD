@@ -18,5 +18,6 @@ public interface LezioneDao {
 	public int gestioneDuplicati(Connection connection ,String data ,int corsoId);
 	public int gestioneDuplicatiUpdate(Connection connection ,String data ,int corsoId);
 	public void updateLezione(Connection connection ,Lezione lezione,int lezioneId);
-	
+	public int countLezioni(Connection connection ,int corsoId);
+	public int countCheckFalse(Connection connection ,int corsoId);
 }

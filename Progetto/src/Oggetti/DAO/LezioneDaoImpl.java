@@ -210,4 +210,55 @@ public class LezioneDaoImpl {
 		
 		
 	}
+	
+	
+	public int countLezioni(Connection connection ,int corsoId) {
+		
+		//COUNT
+		String count = "SELECT COUNT(\"LezioneId\") AS \"NumberOfLessions\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId + "';";
+		
+		Statement statementLezioni;
+		try {
+			
+			statementLezioni = connection.createStatement();
+			ResultSet risultato = statementLezioni.executeQuery(count);
+			
+			if(risultato.next()) {
+				
+				return Integer.parseInt(risultato.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 99;
+		
+		
+	}
+	public int countCheckFalse(Connection connection ,int corsoId) {
+		
+		//
+		String countFalse = "SELECT COUNT(\"LezioneId\") AS \"NumberOfLessions\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId + "' AND \"Check\" = 'false';";
+		
+		try {
+			
+			
+			Statement statementLezioniFalse = connection.createStatement();
+			ResultSet result = statementLezioniFalse.executeQuery(countFalse);
+			
+			if(result.next()) {
+				
+				return Integer.parseInt(result.getString(1));
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 99;
+		
+	}
 }

@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class GestioneCorsiFrame extends JFrame {
 
@@ -32,6 +34,7 @@ public class GestioneCorsiFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		panel = new GeneralPanel();
+		panel.setLocation(0, 0);
 		getContentPane().add(panel);
 		
 		JButton creaCorsoButton = new JButton("Crea Corso");
@@ -39,7 +42,7 @@ public class GestioneCorsiFrame extends JFrame {
 		creaCorsoButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		creaCorsoButton.setBorder(new RoundBorderBotton(10));
 		creaCorsoButton.setBackground(Color.WHITE);
-		creaCorsoButton.setBounds(153, 206, 178, 41);
+		creaCorsoButton.setBounds(153, 155, 178, 41);
 		panel.add(creaCorsoButton);
 		
 		JButton visualizzaStatsButton = new JButton("Visualizza Statistiche");
@@ -47,7 +50,7 @@ public class GestioneCorsiFrame extends JFrame {
 		visualizzaStatsButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		visualizzaStatsButton.setBorder(new RoundBorderBotton(10));
 		visualizzaStatsButton.setBackground(Color.WHITE);
-		visualizzaStatsButton.setBounds(153, 279, 178, 41);
+		visualizzaStatsButton.setBounds(153, 233, 178, 41);
 		panel.add(visualizzaStatsButton);
 		
 		JButton modificaCorsiButton = new JButton("Elimina/Modifica Corsi");
@@ -55,8 +58,16 @@ public class GestioneCorsiFrame extends JFrame {
 		modificaCorsiButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		modificaCorsiButton.setBorder(new RoundBorderBotton(10));
 		modificaCorsiButton.setBackground(Color.WHITE);
-		modificaCorsiButton.setBounds(153, 358, 178, 41);
+		modificaCorsiButton.setBounds(153, 312, 178, 41);
 		panel.add(modificaCorsiButton);
+		
+		JButton buttonDeterminaFineCorso = new JButton("Determina fine corso");
+		buttonDeterminaFineCorso.setForeground(Color.RED);
+		buttonDeterminaFineCorso.setFont(new Font("Dialog", Font.PLAIN, 13));
+		buttonDeterminaFineCorso.setBorder(new RoundBorderBotton(10));
+		buttonDeterminaFineCorso.setBackground(Color.WHITE);
+		buttonDeterminaFineCorso.setBounds(153, 393, 178, 41);
+		panel.add(buttonDeterminaFineCorso);
 		
 		creaCorsoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,6 +94,14 @@ public class GestioneCorsiFrame extends JFrame {
 			}
 		});
 		
+		buttonDeterminaFineCorso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				setVisible(false);
+				new GestioneFineCorsiFrame();
+				
+			}
+		});
 		setVisible(true);
 	}
 }

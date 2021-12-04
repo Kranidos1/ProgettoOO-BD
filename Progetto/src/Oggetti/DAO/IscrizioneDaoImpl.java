@@ -182,5 +182,30 @@ public class IscrizioneDaoImpl {
 		
 	}
 	
+	public int countStudentiIscritti(Connection connection ,int corsoId) {
+		
+		String count = "SELECT COUNT(\"Cf\") FROM \"Iscrizione\" WHERE \"CorsoId\" = '" + corsoId + "';";
+		int numeroStud = 0;
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(count);
+			
+			if(risultato.next()) {
+				
+				numeroStud = Integer.parseInt(risultato.getString(1));
+				
+			}
+			
+			return numeroStud;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return numeroStud;
+	}
+	
 }
 

@@ -101,7 +101,7 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	public List<String> getNomiCorsi(Connection connection) {
 		
-		String statement = "SELECT \"Nome\" FROM \"Corso\";";
+		String statement = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Finito\" = false;";
 		
 		try {
 			
@@ -361,6 +361,22 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			Statement update = connection.createStatement();
 			update.execute(statement);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateCheckCorso(Connection connection ,int corsoId) {
+		
+		String update = "UPDATE \"Corso\" SET \"Finito\" = true WHERE \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			statement.execute(update);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

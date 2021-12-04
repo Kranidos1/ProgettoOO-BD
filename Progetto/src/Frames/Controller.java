@@ -1240,6 +1240,17 @@ if(list.getSelectedValue()!= null) {
 	
 	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
 		
+		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
+		IscrizioneDaoImpl iscrizione = new IscrizioneDaoImpl();
+		List<String> datiCorso = corsoDao.getCorso(connection, corso);
+		
+		//CONTROLLO SU NUMERI ISCRITTI
+		int corsoId = Integer.parseInt(datiCorso.get(4));
+		int minPartecipanti = Integer.parseInt(datiCorso.get(3));
+		int studentiIscritti = iscrizione.countStudentiIscritti(connection, corsoId);
+		
+		if(minPartecipanti <= studentiIscritti) {
+			
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
 			
@@ -1288,7 +1299,6 @@ if(list.getSelectedValue()!= null) {
 								
 							}else{
 								//Inserimento
-								CorsoDaoImpl corsoDao = new CorsoDaoImpl();
 								LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
 								Lezione lezione = new Lezione();
 								
@@ -1298,7 +1308,7 @@ if(list.getSelectedValue()!= null) {
 								lezione.setOraInizio(orarioInizioLezione);
 								lezione.setDurata(oreMinuti);
 								lezione.setData(format.format(dateChooser.getDate()));
-								lezione.setCorsoId(corsoDao.trovaCorsoId(connection, corso));
+								lezione.setCorsoId(corsoId);
 								
 								if(flag == 0) {
 									
@@ -1347,9 +1357,12 @@ if(list.getSelectedValue()!= null) {
 			}else
 				jpanelManagementCreaCorsoFrame(null, null, title, 7);
 			return 0;
-			
 		}else
 			jpanelManagementCreaCorsoFrame(null, null, title, 7);
+			return 0;
+			
+		}else
+			JOptionPane.showMessageDialog(null, "Pochi iscritti,non puoi creare lezioni.", "ERROR", JOptionPane.ERROR_MESSAGE);
 		return 0;
 		
 	}

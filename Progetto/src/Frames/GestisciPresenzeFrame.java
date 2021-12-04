@@ -293,9 +293,10 @@ public class GestisciPresenzeFrame extends JFrame {
 //					lezioneId = lezioneDao.getLezioneIdByData(controller.getConnection(), tmpDate);
 					int i = 0;
 					while(i < Arrays.asList(listaDate).size()) {
-						
-						if(listaDate[i].get(0) == tmpDate) {
+	
+						if(listaDate[i].get(0).equals(tmpDate)) {
 							
+							System.out.println(listaDate[i].get(0));
 							lezioneId = Integer.parseInt(listaDate[i].get(1));
 							break;
 						}
@@ -364,7 +365,8 @@ public class GestisciPresenzeFrame extends JFrame {
 						
 						buttonPresente.setEnabled(false);
 						buttonAssente.setEnabled(false);
-
+						modelListLezioni.remove(row);
+						listLezioni.revalidate();
 						
 					}
 					
@@ -402,7 +404,8 @@ public class GestisciPresenzeFrame extends JFrame {
 						
 						buttonPresente.setEnabled(false);
 						buttonAssente.setEnabled(false);
-						
+						modelListLezioni.remove(row);
+						listLezioni.revalidate();
 						
 					}
 					
@@ -425,6 +428,8 @@ public class GestisciPresenzeFrame extends JFrame {
 				primoStepPanel.setEnabled(true);
 				listCorsi.setEnabled(true);
 				stepButton.setEnabled(true);
+				modelListLezioni.clear();
+				listLezioni.revalidate();
 				
 			}
 		});
