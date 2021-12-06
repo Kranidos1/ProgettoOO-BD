@@ -13,6 +13,7 @@ import java.util.Vector;
 import Oggetti.Studente;
 
 public class IscrizioneDaoImpl {
+	
 	public void inserimento(Connection connection ,int CorsoId ,String Cf ,String data) {
 		
 		String statement = "INSERT INTO \"Iscrizione\" (\"Cf\",\"DataIscrizione\",\"CorsoId\") VALUES ('"+Cf+"','"+data+"','"+CorsoId+"');";
@@ -55,8 +56,8 @@ public class IscrizioneDaoImpl {
 	
 	public List<String>[] getStudentiByCorsoName(Connection connection ,String nomeCorso) {
 		
-		CorsoDaoImpl corsoDaoImpl = new CorsoDaoImpl();
-		int id = corsoDaoImpl.trovaCorsoId(connection, nomeCorso);
+		ConnectionDao connectionDao = new ConnectionDao();
+		int id = connectionDao.getCorsoDao().trovaCorsoId(connection, nomeCorso);
 		String qualcosa;
 		String ricerca = "SELECT \"Cf\" FROM \"Iscrizione\" WHERE \"CorsoId\" = '" + id  + "';";
 			
@@ -77,7 +78,7 @@ public class IscrizioneDaoImpl {
 			List<String>[] listaStudenti = new LinkedList[size];
 			
 			
-			StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+
 			Vector[][] valori = new Vector[1][3];
 			valori[0][0] = new Vector();
 			valori[0][1] = new Vector();
@@ -87,7 +88,7 @@ public class IscrizioneDaoImpl {
 			while(i < size) {
 				
 				//PRENDE NOME COGNOME E CF
-				valori = studenteRicerca.ricercaStudenteByCf(connection, listaCf.get(i));
+				valori = connectionDao.getStudenteDao().ricercaStudenteByCf(connection, listaCf.get(i));
 				listaStudenti[i] = new LinkedList();
 				listaStudenti[i].add(valori[0][0].toString());
 				listaStudenti[i].add(valori[0][1].toString());
@@ -132,17 +133,19 @@ public class IscrizioneDaoImpl {
 			List<String>[] listaStudenti = new LinkedList[size];
 			
 			
-			StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+
 			Vector[][] valori = new Vector[1][3];
 			valori[0][0] = new Vector();
 			valori[0][1] = new Vector();
 			valori[0][2] = new Vector();
 			
+			ConnectionDao connectionDao = new ConnectionDao();
+			
 			int i = 0;
 			while(i < size) {
 				
 				//PRENDE NOME COGNOME E CF
-				valori = studenteRicerca.ricercaStudenteByCf(connection, listaCf.get(i));
+				valori = connectionDao.getStudenteDao().ricercaStudenteByCf(connection, listaCf.get(i));
 				listaStudenti[i] = new LinkedList();
 				listaStudenti[i].add(valori[0][0].toString());
 				listaStudenti[i].add(valori[0][1].toString());
@@ -223,5 +226,31 @@ public class IscrizioneDaoImpl {
 		
 	}
 	
+	public String getPromozioneStudente(Connection connection ,String cf ,int corsoId) {
+		
+		String ricerca = "SELECT \"ExamPassed\" FROM \"Iscrizione\" WHERE \"Cf\" = '" + cf + "' AND \"CorsoId\" = '" + corsoId + "';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			if(risultato.next()) {
+				
+				return risultato.getString(1).toString();
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ricerca;
+		
+		
+	}
+	
+
 }
 

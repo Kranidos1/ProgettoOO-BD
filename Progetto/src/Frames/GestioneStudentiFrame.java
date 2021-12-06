@@ -6,15 +6,22 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Oggetti.DAO.ConnectionDao;
+
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class GestioneStudentiFrame extends JFrame {
 
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	
@@ -95,6 +102,7 @@ public class GestioneStudentiFrame extends JFrame {
 				
 			}
 		});
-		
 	}
+	
+	
 }

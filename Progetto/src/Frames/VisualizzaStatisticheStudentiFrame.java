@@ -16,6 +16,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 
 import java.awt.Color;
@@ -24,13 +25,17 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 public class VisualizzaStatisticheStudentiFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private Controller controller;
@@ -48,10 +53,10 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
 		
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		JTable tableStats = new JTable();
-		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze", "%Assenze"}){
+		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze"}){
 			public boolean isCellEditable(int row ,int column) {
 				return false;
 			}
@@ -61,7 +66,7 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
 		tableStats.getColumnModel().getColumn(3).setPreferredWidth(75);
 		tableStats.getColumnModel().getColumn(4).setPreferredWidth(75);
-		tableStats.getColumnModel().getColumn(5).setPreferredWidth(75);
+
 		
 		JScrollPane scrollPaneTable = new JScrollPane(tableStats);
 		scrollPaneTable.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -89,8 +94,8 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		scrollPane.setBounds(74, 121, 180, 83);
 		panel.add(scrollPane);
 		
-		CorsoDaoImpl riempiListaCorsi = new CorsoDaoImpl();
-		modelList.addAll(riempiListaCorsi.getNomiCorsi(controller.getConnection()));
+
+		modelList.addAll(connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection()));
 		
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,7 +108,20 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 			}
 		});
 		
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		
 		setVisible(true);
 	}

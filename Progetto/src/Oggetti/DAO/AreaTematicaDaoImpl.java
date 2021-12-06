@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 import Oggetti.AreaTematica;
 
@@ -68,7 +69,7 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		

@@ -18,10 +18,12 @@ public List<String> getNomiCorsiByKey(Connection connection ,String key);
 public LinkedList<String> getNomiById(Connection connection ,LinkedList<String> list);
 public LinkedList<String> getCorsiTramiteKeyETema(Connection connection ,String key ,String theme);
 public void deleteCorsoByName(Connection connection ,String nome);
+//\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\"
 public List<String> getCorso(Connection connection ,String nome);
 public void updateCorso(Connection connection ,String id ,String nome ,String descrizione ,String maxPartecipanti ,String minPartecipazione);
 public void updateCheckCorso(Connection connection ,int corsoId);
 public List getNomeCorsiFiniti(Connection connection );
 public void updateCheckCorsoGestito(Connection connection ,int corsoId);
+public LinkedList getNomeCorsiArchiviati(Connection connection );
 
 }

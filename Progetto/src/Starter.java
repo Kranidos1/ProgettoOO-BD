@@ -8,13 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
-
+import java.io.File;
 import Frames.Controller;
 import Frames.FirstFrame;
 import Frames.GestisciLezioniFrame;
@@ -33,20 +34,9 @@ public class Starter {
 //
 		new FirstFrame();
 
-	}
 	
-//	listCorsi.addMouseListener(new MouseAdapter() {
-//		
-//	    public void mouseClicked(MouseEvent evt) {
-//	        JList list = (JList) evt.getSource();
-//	        if (evt.getClickCount() == 2) {
-//
-//	            // Double-click detected
-//	            int index = listCorsi.locationToIndex(evt.getPoint());
-//	            //PRENDE OGGETTO CLICCATO DUE VOLTE
-//	        }
-//	    }
-//	    
-//	});
+
+
+	}
 
 }

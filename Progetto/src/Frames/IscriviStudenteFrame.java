@@ -16,6 +16,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JYearChooser;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 
 import com.toedter.calendar.JDateChooser;
@@ -34,7 +38,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 import javax.swing.JScrollPane;
 public class IscriviStudenteFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField nomeTextField;
@@ -54,9 +59,9 @@ public class IscriviStudenteFrame extends JFrame {
 		panel = new GeneralPanel();
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
-		
+		connectionDao = new ConnectionDao();
 		nomeTextField = new JTextField();
 		nomeTextField.setColumns(50);
 		nomeTextField.setBounds(160, 200, 150, 20);
@@ -101,9 +106,10 @@ public class IscriviStudenteFrame extends JFrame {
 		JList listCorso = new JList(model);
 		JScrollPane scrollPane = new JScrollPane(listCorso);
 		scrollPane.setBounds(160, 111, 150, 78);
+		
 		panel.add(scrollPane);
-		CorsoDaoImpl corsoDaoImpl = new CorsoDaoImpl();
-		List<String> listaCorsi = corsoDaoImpl.getNomiCorsi(controller.getConnection());
+	
+		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
 		model.addAll(listaCorsi);
 		
 		JDateChooser dateChooser = new JDateChooser();
@@ -164,7 +170,20 @@ public class IscriviStudenteFrame extends JFrame {
 		
 
 		
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		
 		setVisible(true);
 		

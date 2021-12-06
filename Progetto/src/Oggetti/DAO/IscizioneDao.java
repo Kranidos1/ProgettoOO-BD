@@ -12,5 +12,6 @@ public interface IscizioneDao {
 	public void deleteStudente(Connection connection ,String cf ,int corsoId);
 	public int countStudentiIscritti(Connection connection ,int corsoId);
 	public void updateStatoStudente(Connection connection ,String cf ,String valutazione);
+	public String getPromozioneStudente(Connection connection ,String cf ,int corsoId);
 	
 }

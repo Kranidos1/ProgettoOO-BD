@@ -13,17 +13,22 @@ import java.awt.*;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.IscrizioneDaoImpl;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
 public class BocciaPromuoviFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTable table;
@@ -52,7 +57,8 @@ public class BocciaPromuoviFrame extends JFrame {
 		getContentPane().add(panel);
 
 		pass = 0;
-
+		
+		connectionDao = new ConnectionDao();
 		DefaultListModel modelListCorsi = new DefaultListModel();
 		JList listCorsi = new JList(modelListCorsi);
 		JScrollPane scrollPaneCorsi = new JScrollPane(listCorsi);
@@ -96,9 +102,8 @@ public class BocciaPromuoviFrame extends JFrame {
 		buttonBoccia.setBounds(683, 423, 123, 37);
 		panel.add(buttonBoccia);
 
-		IscrizioneDaoImpl iscrizione = new IscrizioneDaoImpl();
-		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-		LinkedList corsiFiniti = corsoDao.getNomeCorsiFiniti(controller.getConnection());
+		
+		LinkedList corsiFiniti = connectionDao.getCorsoDao().getNomeCorsiFiniti(connectionDao.getConnection());
 		int size = Arrays.asList(corsiFiniti).size();
 
 		modelListCorsi.addAll(corsiFiniti);
@@ -117,7 +122,7 @@ public class BocciaPromuoviFrame extends JFrame {
 			}
 		});
 
-		IscrizioneDaoImpl iscrizioneDao = new IscrizioneDaoImpl();
+		
 
 		buttonPromuovi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -145,7 +150,7 @@ public class BocciaPromuoviFrame extends JFrame {
 						int i = 0;
 						while (i < numStudenti) {
 
-							iscrizioneDao.updateStatoStudente(controller.getConnection(),
+							connectionDao.getIscrizioneDao().updateStatoStudente(connectionDao.getConnection(),
 									studentiEPromozione[i].get(2).toString().substring(1,
 											// prendo semplicemente la stringa del cf e levo le quadre.
 											studentiEPromozione[i].get(2).toString().length() - 1),
@@ -154,8 +159,8 @@ public class BocciaPromuoviFrame extends JFrame {
 							i++;
 						}
 
-						int corsoI = corsoDao.trovaCorsoId(controller.getConnection(), nomeCorso);
-						corsoDao.updateCheckCorsoGestito(controller.getConnection(), corsoI);
+						int corsoI = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
+						connectionDao.getCorsoDao().updateCheckCorsoGestito(connectionDao.getConnection(), corsoI);
 
 						JOptionPane.showMessageDialog(null,
 								"Gestiti tutti gli studenti del corso.Il corso,con un report,potrai vederlo nella sezione \"Corsi Archiviati\".",
@@ -196,7 +201,7 @@ public class BocciaPromuoviFrame extends JFrame {
 						int i = 0;
 						while (i < numStudenti) {
 
-							iscrizioneDao.updateStatoStudente(controller.getConnection(),
+							connectionDao.getIscrizioneDao().updateStatoStudente(connectionDao.getConnection(),
 									studentiEPromozione[i].get(2).toString().substring(1,
 											// prendo semplicemente la stringa del cf e levo le quadre.
 											studentiEPromozione[i].get(2).toString().length() - 1),
@@ -205,8 +210,8 @@ public class BocciaPromuoviFrame extends JFrame {
 							i++;
 						}
 
-						int corsoI = corsoDao.trovaCorsoId(controller.getConnection(), nomeCorso);
-						corsoDao.updateCheckCorsoGestito(controller.getConnection(), corsoI);
+						int corsoI = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
+						connectionDao.getCorsoDao().updateCheckCorsoGestito(connectionDao.getConnection(), corsoI);
 
 						JOptionPane.showMessageDialog(null,
 								"Gestiti tutti gli studenti del corso.Il corso,con un report,potrai vederlo nella sezione \"Corsi Archiviati\".",
@@ -220,6 +225,21 @@ public class BocciaPromuoviFrame extends JFrame {
 
 			}
 		});
+		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+            		connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		setVisible(true);
 	}
 }

@@ -14,7 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import Frames.Controller;
 import Oggetti.Corso;
+
 
 public class CorsoDaoImpl implements CorsoDao{
 	
@@ -22,8 +24,20 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	public void inserimento(Corso corso ,Connection connection) {
 		
-		String statement = "INSERT INTO \"Corso\" (\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\") VALUES (" + "'" + corso.getNome() + "'"  + "," +  "'" + corso.getDescrizione() + "'" + ","
-		+ corso.getMaxPartecipanti() + "," + corso.getMinPartecipazione() + ");";
+		Controller controller = new Controller();
+		String descrizione = corso.getDescrizione();
+		String statement;
+		
+		if(descrizione != null) {
+			
+			 statement = "INSERT INTO \"Corso\" (\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\") VALUES (" + "'" + controller.escape(corso.getNome()) + "'"  + "," +  "'" + controller.escape(corso.getDescrizione()) + "'" + ","
+					+ corso.getMaxPartecipanti() + "," + corso.getMinPartecipazione() + ");";
+		
+		}else {
+			statement = "INSERT INTO \"Corso\" (\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\") VALUES (" + "'" + controller.escape(corso.getNome()) + "'"  + "," +  "'" + corso.getDescrizione() + "'" + ","
+					+ corso.getMaxPartecipanti() + "," + corso.getMinPartecipazione() + ");";
+		}
+		
 		
 		int procedere = controlloDuplicati(connection ,corso.getNome());
 		
@@ -34,14 +48,17 @@ public class CorsoDaoImpl implements CorsoDao{
 				Statement inserimento = connection.createStatement();
 				inserimento.execute(statement);
 				
-			} catch (SQLException e) {
+				
+				JOptionPane.showMessageDialog(null, "Corso Creato!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
 			
-		}else {
+		}else
+			if(procedere == 99){
 			
-			JOptionPane.showMessageDialog(null, "Corso gia' presente nei databas.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Corso gia' presente nei database.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 			
 		}
 		
@@ -51,7 +68,8 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	public int controlloDuplicati (Connection connection ,String nome) {
 		
-		String statement = "SELECT \"CorsoId\" FROM \"Corso\" WHERE \"Nome\" LIKE '" + nome + "';";
+		Controller controller = new Controller();
+		String statement = "SELECT \"CorsoId\" FROM \"Corso\" WHERE \"Nome\" LIKE '" + controller.escape(nome) + "';";
 		
 		Statement check;
 		try {
@@ -61,14 +79,14 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			if(risultato.absolute(1)) {
 				
-				return 0;
+				return 99;
 				
 			}else
 				return 1;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		
@@ -145,9 +163,13 @@ public class CorsoDaoImpl implements CorsoDao{
 				risu = risultato.getString(1).toString();
 				
 			}
-			
-			int corsoId = Integer.parseInt(risu);
-			return corsoId;
+			if(risu != null) {
+				
+				int corsoId = Integer.parseInt(risu);
+				return corsoId;
+				
+			}else
+				return -1;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -178,7 +200,7 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		
@@ -232,10 +254,9 @@ public class CorsoDaoImpl implements CorsoDao{
 	public LinkedList<String> getCorsiTramiteKeyETema(Connection connection ,String key ,String theme) {
 		
 		LinkedList<String> lista = new LinkedList<String>();
-		CorsoETemaDaoImpl corsoTema = new CorsoETemaDaoImpl();
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		//TROVA GLI ID TRAMITE TEMA
-		LinkedList<String> listaIdCorsi = corsoTema.ricercaCorsoByTheme(connection , theme);
+		LinkedList<String> listaIdCorsi = connectionDao.getCorsoTemaDao().ricercaCorsoByTheme(connection , theme);
 		
 		
 		int size = listaIdCorsi.size();
@@ -269,7 +290,7 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return null;
@@ -324,12 +345,12 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	public List<String> getCorso(Connection connection ,String nome) {
 		
-		List<String> result = new LinkedList();
 		
-		String statement = "SELECT \"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\" FROM \"Corso\" WHERE \"Nome\" = '"+ nome + "';";
+		String statement = "SELECT \"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\",\"Finito\" FROM \"Corso\" WHERE \"Nome\" = '"+ nome + "';";
 		
 		try {
 			
+			List<String> result = new LinkedList();
 			Statement ricerca = connection.createStatement();
 			ResultSet risultato = ricerca.executeQuery(statement);
 			
@@ -340,6 +361,7 @@ public class CorsoDaoImpl implements CorsoDao{
 				result.add(risultato.getString(3));
 				result.add(risultato.getString(4));
 				result.add(risultato.getString(5));
+				result.add(risultato.getString(6));
 				
 			}
 			
@@ -460,6 +482,42 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 		
 		
+		return null;
+		
+	}
+	
+	public LinkedList getNomeCorsiArchiviati(Connection connection ) {
+		
+		String ricerca = "SELECT \"Nome\" FROM \"Corso\" WHERE \"Finito\" = 'truex';";
+		
+		int count = 0;
+		
+		try {
+			
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet result = statement.executeQuery(ricerca);
+			
+			while(result.next()) {
+				
+				count++;
+				
+			}
+			result.beforeFirst();
+			
+			LinkedList corsiTrovati = new LinkedList();
+
+			while(result.next()) {
+				
+				corsiTrovati.add(result.getString(1));
+				
+			}
+			
+			return corsiTrovati;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 		
 	}

@@ -2,6 +2,7 @@ package Frames;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ import javax.swing.SpinnerDateModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 
@@ -35,11 +37,14 @@ import java.awt.TextArea;
 import javax.swing.JTextPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 
 public class CreaLezione extends JFrame {
 
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField titoloField;
@@ -59,6 +64,7 @@ public class CreaLezione extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
+		connectionDao = new ConnectionDao();
 		panel = new GeneralPanel();
 		panel.setLocation(0, 0);
 		getContentPane().add(panel);
@@ -162,8 +168,8 @@ public class CreaLezione extends JFrame {
 		scrollPaneCorsi.setBounds(76, 118, 181, 81);
 		panel.add(scrollPaneCorsi);
 		
-		CorsoDaoImpl corsi = new CorsoDaoImpl();
-		List<String> listaCorsi = corsi.getNomiCorsi(controller.getConnection());
+
+		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
 		modelList.addAll(listaCorsi);
 		
 		JLabel corsoLabel = new JLabel("Corsi");
@@ -187,7 +193,20 @@ public class CreaLezione extends JFrame {
 		});
 
 		
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		setVisible(true);
 	}
 }

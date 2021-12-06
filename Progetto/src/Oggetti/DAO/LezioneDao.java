@@ -20,4 +20,7 @@ public interface LezioneDao {
 	public void updateLezione(Connection connection ,Lezione lezione,int lezioneId);
 	public int countLezioni(Connection connection ,int corsoId);
 	public int countCheckFalse(Connection connection ,int corsoId);
+	public List getLezioniByCorsoId(Connection connection ,int corsoId);
+	public int countPresenti(Connection connection ,int lezioneId);
+	
 }

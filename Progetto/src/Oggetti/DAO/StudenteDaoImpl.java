@@ -20,6 +20,7 @@ import Oggetti.Studente;
 
 public class StudenteDaoImpl implements StudenteDao {
 	
+	
 public void inserimento(Connection connection ,Studente studente) {
 	
 	String statement = "INSERT INTO \"Studente\" (\"Nome\",\"Cognome\",\"DataN\",\"Cf\") VALUES ('" +studente.getNome()+"','"+studente.getCognome()+"','"
@@ -38,7 +39,7 @@ public void inserimento(Connection connection ,Studente studente) {
 	}
 }
 
-public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
+public Vector[] ricercaStudenteByName(Connection connection ,String name) {
 	
 	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + name + "%';";
 	Statement perCorso;
@@ -46,7 +47,6 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 	String corsoById;
 	String ricercaCorsoId;
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
@@ -62,31 +62,32 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 		}
 		risultato.beforeFirst();
 		
+		ConnectionDao connectionDao = new ConnectionDao();
 		
-		
-		Vector[][] vettoreStudenti = new Vector[size][7];
+		Vector[] vettoreStudenti = new Vector[size];
 		
 		int i = 0;
 		while(risultato.next()) {
 			
-			vettoreStudenti[i][0] = new Vector();
-			vettoreStudenti[i][0].add(risultato.getString(1));
-			vettoreStudenti[i][1] = new Vector();
-			vettoreStudenti[i][1].add(risultato.getString(2));
-			vettoreStudenti[i][2] = new Vector();
-			vettoreStudenti[i][2].add(risultato.getString(3));
-			vettoreStudenti[i][3] = new Vector();
+			vettoreStudenti[i] = new Vector();
+			vettoreStudenti[i].add(risultato.getString(1));
+
+			vettoreStudenti[i].add(risultato.getString(2));
+
+			vettoreStudenti[i].add(risultato.getString(3));
+
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 
+			
 			if(corsoId.next()) {
 				
-				corsoById = corso.getNomeById(connection, corsoId.getString(1));
-				vettoreStudenti[i][3].add(corsoById);
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
+				vettoreStudenti[i].add(corsoById);
 				
 			}else
-				vettoreStudenti[i][3].add("Empty");
+				vettoreStudenti[i].add("Empty");
 			
 			i++;
 		}
@@ -101,15 +102,13 @@ public Vector[][] ricercaStudenteByName(Connection connection ,String name) {
 	
 }
 
-public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome) {
+public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome) {
 	
 	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + cognome + "%';";
 	Statement perCorso;
 	ResultSet corsoId;
 	String corsoById;
 	String ricercaCorsoId;
-	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
@@ -124,31 +123,34 @@ public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome
 			
 		}
 		risultato.beforeFirst();
+		ConnectionDao connectionDao = new ConnectionDao();
 		
-		
-		Vector[][] vettoreStudenti = new Vector[size][7];
+		Vector[] vettoreStudenti = new Vector[size];
 		
 		int i = 0;
 		while(risultato.next()) {
 			
-			vettoreStudenti[i][0] = new Vector();
-			vettoreStudenti[i][0].add(risultato.getString(1));
-			vettoreStudenti[i][1] = new Vector();
-			vettoreStudenti[i][1].add(risultato.getString(2));
-			vettoreStudenti[i][2] = new Vector();
-			vettoreStudenti[i][2].add(risultato.getString(3));
-			vettoreStudenti[i][3] = new Vector();
+			vettoreStudenti[i] = new Vector();
+			
+			vettoreStudenti[i].add(risultato.getString(1));
+			
+			vettoreStudenti[i].add(risultato.getString(2));
+			
+			vettoreStudenti[i].add(risultato.getString(3));
+			
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
+			
 
+			
 			if(corsoId.next()) {
 				
-				corsoById = corso.getNomeById(connection, corsoId.getString(1));
-				vettoreStudenti[i][3].add(corsoById);
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
+				vettoreStudenti[i].add(corsoById);
 				
 			}else
-				vettoreStudenti[i][3].add("Empty");
+				vettoreStudenti[i].add("Empty");
 			
 			i++;
 		}
@@ -171,7 +173,6 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 	String corsoById;
 	String ricercaCorsoId;
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
@@ -187,7 +188,7 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 		}
 		risultato.beforeFirst();
 		
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		Vector[][] vettoreStudenti = new Vector[size][7];
 		
 		int i = 0;
@@ -200,13 +201,15 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 			vettoreStudenti[i][2] = new Vector();
 			vettoreStudenti[i][2].add(risultato.getString(3));
 			vettoreStudenti[i][3] = new Vector();
+
 			
 			ricercaCorsoId = "SELECT \"CorsoId\" FROM \"Iscrizione\" WHERE \"Cf\" LIKE '" + risultato.getString(3) + "';";
 			corsoId = perCorso.executeQuery(ricercaCorsoId);
 			
+			
 			if(corsoId.next()) {
 				
-				corsoById = corso.getNomeById(connection, corsoId.getString(1));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
 				vettoreStudenti[i][3].add(corsoById);
 				
 			}else
@@ -226,7 +229,7 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 }
 
 @Override
-public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String data) {
+public Vector[] ricercaStudenteByDataIscrizione(Connection connection ,String data) {
 	
 	String result = null;
 	String statement;
@@ -234,13 +237,13 @@ public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String 
 	//TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
 		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
+		ConnectionDao connectionDao = new ConnectionDao();
 		
 		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
 		
@@ -252,7 +255,7 @@ public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String 
 		}
 		risultatoDate.beforeFirst();
 		
-		Vector[][] vettoreStudenti = new Vector[size][4];
+		Vector[] vettoreStudenti = new Vector[size];
 		
 		while(risultatoDate.next()) {
 	
@@ -261,15 +264,16 @@ public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String 
 			
 			while(risultato.next()) {
 				
-				vettoreStudenti[i][0] = new Vector();
-				vettoreStudenti[i][0].add(risultato.getString(1));
-				vettoreStudenti[i][1] = new Vector();
-				vettoreStudenti[i][1].add(risultato.getString(2));
-				vettoreStudenti[i][2] = new Vector();
-				vettoreStudenti[i][2].add(risultato.getString(3));
-				vettoreStudenti[i][3] = new Vector();
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
-				vettoreStudenti[i][3].add(corsoById);
+				vettoreStudenti[i] = new Vector();
+				
+				vettoreStudenti[i].add(risultato.getString(1));
+				
+				vettoreStudenti[i].add(risultato.getString(2));
+				
+				vettoreStudenti[i].add(risultato.getString(3));
+				
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
+				vettoreStudenti[i].add(corsoById);
 				
 				i++;
 			}
@@ -295,8 +299,6 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 	ResultSet corsoId;
 	String corsoById;
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
-	
 	try {
 		
 		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -320,7 +322,7 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 			//vettore con al massimo quel numero di studenti 
 			List<String>[] vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
-			
+			ConnectionDao connectionDao = new ConnectionDao();
 			
 			while(risultato.next()) {
 				
@@ -333,7 +335,7 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 				
 				if(corsoId.next()) {
 					
-					corsoById = corso.getNomeById(connection, corsoId.getString(1));
+					corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
 				}else
@@ -366,7 +368,6 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 	ResultSet corsoId;
 	String corsoById;
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
@@ -392,7 +393,7 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 			//vettore con al massimo quel numero di studenti 
 			List<String>[] vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
-			
+			ConnectionDao connectionDao = new ConnectionDao();
 			
 			while(risultato.next()) {
 				
@@ -405,7 +406,7 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 				
 				if(corsoId.next()) {
 					
-					corsoById = corso.getNomeById(connection, corsoId.getString(1));
+					corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
 				}else
@@ -438,7 +439,6 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 	ResultSet corsoId;
 	String corsoById;
 	
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	
 	try {
 		
@@ -464,7 +464,7 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 			//vettore con al massimo quel numero di studenti 
 			List<String>[] vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
-			
+			ConnectionDao connectionDao = new ConnectionDao();
 			
 			while(risultato.next()) {
 
@@ -477,7 +477,7 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 				
 				if(corsoId.next()) {
 					
-					corsoById = corso.getNomeById(connection, corsoId.getString(1));
+					corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
 					vettore[i].add(corsoById);
 					
 				}else
@@ -505,7 +505,6 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
 	
 	try {
@@ -515,7 +514,7 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 		int i = 0;
 		
 		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		int size = 0;
 		while(risultatoDate.next()) {
 			
@@ -537,7 +536,7 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -563,7 +562,6 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
 	
 	try {
@@ -571,7 +569,7 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
@@ -595,7 +593,7 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -621,7 +619,6 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
 	
 	try {
@@ -639,7 +636,7 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 			
 		}
 		risultatoDate.beforeFirst();
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		List[] vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
@@ -653,7 +650,7 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -679,7 +676,6 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
 	
 	try {
@@ -689,7 +685,7 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 		int i = 0;
 		
 		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
-		
+		ConnectionDao connectionDao = new ConnectionDao();
 		int size = 0;
 		while(risultatoDate.next()) {
 			
@@ -711,7 +707,7 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -737,9 +733,8 @@ public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
-	
+	ConnectionDao connectionDao = new ConnectionDao();
 	try {
 		
 		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -769,7 +764,7 @@ public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -795,9 +790,8 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 	
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
-	
+	ConnectionDao connectionDao = new ConnectionDao();
 	try {
 		
 		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -827,7 +821,7 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 				vettoreStudenti[i].add(risultato.getString(1));
 				vettoreStudenti[i].add(risultato.getString(2));
 				vettoreStudenti[i].add(risultato.getString(3));
-				corsoById = corso.getNomeById(connection, risultatoDate.getString(2));
+				corsoById = connectionDao.getCorsoDao().getNomeById(connection, risultatoDate.getString(2));
 				vettoreStudenti[i].add(corsoById);
 				vettoreStudenti[i].add("ciao");
 				vettoreStudenti[i].add("ciao");
@@ -852,9 +846,8 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,String nome ,String cf ,String cognome) {
 	
 	String statement;
-	CorsoDaoImpl corso = new CorsoDaoImpl();
 	String corsoById;
-	
+	ConnectionDao connectionDao = new ConnectionDao();
 	try {
 		
 
@@ -894,7 +887,7 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 				if(corsoId.next()) {
 					
 					
-					corsoById = corso.getNomeById(connection, corsoId.getString(1));
+					corsoById = connectionDao.getCorsoDao().getNomeById(connection, corsoId.getString(1));
 					vettoreStudenti[i].add(corsoById);
 					
 				}else {

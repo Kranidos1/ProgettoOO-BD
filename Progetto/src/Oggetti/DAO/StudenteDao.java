@@ -9,10 +9,10 @@ import Oggetti.Studente;
 public interface StudenteDao {
 	
 	public void inserimento(Connection connection ,Studente studente);
-	public Vector[][] ricercaStudenteByName(Connection connection ,String name);
-	public Vector[][] ricercaStudenteByCognome(Connection connection ,String cognome);
+	public Vector[] ricercaStudenteByName(Connection connection ,String name);
+	public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome);
 	public Vector[][] ricercaStudenteByCf(Connection connection ,String cf);
-	public Vector[][] ricercaStudenteByDataIscrizione(Connection connection ,String data);
+	public Vector[] ricercaStudenteByDataIscrizione(Connection connection ,String data);
 	public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,String nome ,String cognome);
 	public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nome ,String cf);
 	public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String Cognome ,String cf);

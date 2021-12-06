@@ -36,6 +36,7 @@ import Oggetti.Corso;
 import Oggetti.Lezione;
 import Oggetti.Studente;
 import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 
 import Oggetti.DAO.CorsoETemaDaoImpl;
@@ -43,49 +44,13 @@ import Oggetti.DAO.IscrizioneDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 import Oggetti.DAO.PresenzaDaoImpl;
 import Oggetti.DAO.StudenteDaoImpl;
+import java.util.Iterator;
 
 public class Controller implements ControlloEOperazioniSuFrame {
 		
 	private int j = 0;
-		private Connection connection;
-		
-		public Connection getConnection() {
-			return connection;
-		}
-
-
-
-		public void setConnection(Connection connection) {
-			this.connection = connection;
-		}
-
-
-
-		public Controller() {
-			
-			String jdbcURL = "jdbc:postgresql://localhost:5432/Progetto";
-			String username = "postgres";
-			String password = "Pippo200-";
-					
-			try {
-				try {
-					Class.forName("org.postgresql.Driver");
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				connection = DriverManager.getConnection(jdbcURL,username,password);
-				//CONNESSIONE RIUSCITA!
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
+	private ConnectionDao connectionDao = new ConnectionDao();
 	
-		
 		
 	public boolean isWhatYouWant(String input, int flag) {
 		// TODO Auto-generated method stub
@@ -113,6 +78,16 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				  return true;
 	}
 
+	public String escape(String input){
+	    final String[] specialChar = {"\\","^","$","{","}","[","]","(",")",".","*","+","?","|","<",">","-","&","%"};
+
+	    for (int i = 0 ; i < specialChar.length ; i++){
+	        if(input.contains(specialChar[i])){
+	            input = input.replace(specialChar[i],"\\"+specialChar[i]);
+	        }
+	    }
+	    return input;
+	}
 	
 
 	public void newTheme(JLabel label) {
@@ -147,8 +122,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 					AreaTematica tema = new AreaTematica();
 					tema.setNome(theme);
 					//TODO INSERIMENTO EFFETTIVO NEL DB
-					AreaTematicaDaoImpl areaTematicaDaoImpl = new AreaTematicaDaoImpl();
-					areaTematicaDaoImpl.inserimento(tema ,connection);
+					
+					connectionDao.getAreaTematicaDao().inserimento(tema ,connectionDao.getConnection());
 					
 					
 				}else {
@@ -262,7 +237,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model ,int flag ,String corsoId) {
 		
 		//FLAG 0 PER INSERIMENTO DA 0 1 PER UPDATE
-		CorsoDaoImpl corsoDaoImpl = new CorsoDaoImpl();
 		String name,maxString,minString;
 		boolean a,b,c,d,v,u;
 		a = nome.getText().isEmpty();
@@ -297,6 +271,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						}
 						//EFFETTIVA AGGIUNTA TODO
 						Corso corso = new Corso();
+
 						corso.setNome(name);
 						corso.setMaxPartecipanti(Integer.parseInt(maxString));
 						corso.setMinPartecipazione(Integer.parseInt(minString));
@@ -310,12 +285,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						//INSERIMENTO EFFETTIVO DELCORSO
 						
 						if(flag == 0) {
-							corsoDaoImpl.inserimento(corso, connection);
-							
-							
-							CorsoETemaDaoImpl associazione = new CorsoETemaDaoImpl();
-
-							
+							connectionDao.getCorsoDao().inserimento(corso, connectionDao.getConnection());
+								
 							Timer timer = new Timer(1000,new ActionListener() {
 
 								@Override
@@ -324,7 +295,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 									while(j < tmp.size()) {
 										
-										associazione.inserimento(connection, corsoDaoImpl.getNextCorsoId(connection), tmp.get(j));
+										connectionDao.getCorsoTemaDao().inserimento(connectionDao.getConnection(), connectionDao.getCorsoDao().getNextCorsoId(connectionDao.getConnection()), tmp.get(j));
 										j ++;
 										
 									}
@@ -337,13 +308,13 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
 							
 							fram.setVisible(false);
-							JOptionPane.showMessageDialog(fram, "Corso Creato!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+							
 							new FrameDiScelta();
 							
 						}else
 							if(flag == 1) {
 								
-								corsoDaoImpl.updateCorso(connection, corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
+								connectionDao.getCorsoDao().updateCorso(connectionDao.getConnection(), corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
 								
 								fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
 								
@@ -389,8 +360,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				AreaTematica tema = new AreaTematica();
 				tema.setNome(theme);
 
-				AreaTematicaDaoImpl areaTematicaDaoImpl = new AreaTematicaDaoImpl();
-				areaTematicaDaoImpl.inserimento(tema ,connection);
+				
+				connectionDao.getAreaTematicaDao().inserimento(tema ,connectionDao.getConnection());
 				
 			}else {
 				
@@ -538,26 +509,25 @@ if(list.getSelectedValue()!= null) {
 										//Inserimento
 										/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
 										
-										StudenteDaoImpl stud = new StudenteDaoImpl();
 										Studente studente = new Studente();
-										CorsoDaoImpl corso = new CorsoDaoImpl();
-										
-										int corsoId = corso.trovaCorsoId(connection, tmpCorso);
-										
-										studente.setCF(cfField.getText().toString());
-										studente.setNome(tmpNome);
 
-										studente.setCognome(tmpCognome);
+										
+										int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), tmpCorso);
+										
+										studente.setCF(cfField.getText().toString().toUpperCase());
+										studente.setNome(tmpNome.toUpperCase());
+
+										studente.setCognome(tmpCognome.toUpperCase());
 										studente.setData(sdf.format(date));
 										studente.setDataIscrizione(sdf.format(dataAttuale));
-										stud.inserimento(connection, studente);
+										connectionDao.getStudenteDao().inserimento(connectionDao.getConnection(), studente);
 										
-										IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
-										int procedere = associazione.controlloDuplicati(connection, studente.getCF(), corsoId);
+										
+										int procedere = connectionDao.getIscrizioneDao().controlloDuplicati(connectionDao.getConnection(), studente.getCF(), corsoId);
 										
 										if(procedere == 1) {
 											
-											associazione.inserimento(connection, corsoId, studente.getCF() ,studente.getDataIscrizione());
+											connectionDao.getIscrizioneDao().inserimento(connectionDao.getConnection(), corsoId, studente.getCF() ,studente.getDataIscrizione());
 											
 											JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
 											nomeField.setText("");
@@ -639,12 +609,13 @@ if(list.getSelectedValue()!= null) {
 	
 	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model) {
 		
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String tmpNome = nome.getText();
 		String tmpCognome = cognome.getText();
 		String tmpCf = cf.getText();
 		//controllo per invocazione tostringgetdate
-
+		
 		String tmpDate = null;
 		if(dataDateChooser.getDate() != null) {
 			tmpDate = sdf.format(dataDateChooser.getDate());
@@ -660,16 +631,73 @@ if(list.getSelectedValue()!= null) {
 		//SOLO DATA
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 0 && flagDate == 1) {
 			
-			StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
-			Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByDataIscrizione(connection, tmpDate);
+			Vector[] listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByDataIscrizione(connectionDao.getConnection(), tmpDate);
 			
 			int sizeLista = Arrays.asList(listaStudenti).size();
 			int i = 0;
+			String presenza;
 			
 			while(i < sizeLista) {
 				
-				model.addRow(listaStudenti[i]);
-				i++;
+				String cfFormatted = listaStudenti[i].get(2).toString();
+				
+				if(listaStudenti[i].get(3).toString().equals("Empty")) {
+					listaStudenti[i].add("X");
+					listaStudenti[i].add("X");
+					model.addRow(listaStudenti[i]);
+					i++;
+				}else {
+					
+					String nomeCorso = listaStudenti[i].get(3).toString();
+					
+					Corso corsoCompleto = new Corso();
+					List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+					corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+					corsoCompleto.setDescrizione(valori.get(1));
+					corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+					corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+					corsoCompleto.setNome(valori.get(0));
+					
+					int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					
+					if(nLezioni != 0) {
+						listaStudenti[i].add(nLezioni);
+					}else
+						listaStudenti[i].add("X");
+					
+					List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+					
+					int j = 0;
+					int count = 0;
+					
+					while(j < lezioniIdList.size()) {
+						
+						presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+						
+						if(presenza.equals("Presente")) {
+							
+							count++;
+							
+						}
+						
+						j++;
+					}
+					
+					if(count != 0 && j != 0) {
+						
+						int percentualeMinima = (count * 100) / nLezioni;
+						listaStudenti[i].add(percentualeMinima+"%");
+						
+					}else {
+						listaStudenti[i].add("X");
+					}
+					
+					
+					model.addRow(listaStudenti[i]);
+					i++;
+					
+				}
+				
 				
 			}
 			
@@ -678,19 +706,83 @@ if(list.getSelectedValue()!= null) {
 		//SOLO CF
 		if(flagNome == 0 && flagCognome == 0 && flagCf == 1 && flagDate == 0) {
 			//erroreerororororororo
+			
+			
 			if(tmpCf != null) {
 					//ricerca per cf
 					
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
-					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByCf(connection, tmpCf);
+					
+					Vector[][] listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCf(connectionDao.getConnection(), tmpCf.toUpperCase());
 					
 					int sizeLista = Arrays.asList(listaStudenti).size();
 					int i = 0;
 					
+					
 					while(i < sizeLista) {
-						
-						model.addRow(listaStudenti[i]);
-						i++;
+
+						if(listaStudenti[i][3].toString().substring(1, listaStudenti[i][3].toString().length()-1).equals("Empty")) {
+							
+							
+							
+							listaStudenti[i][4] = new Vector();
+							listaStudenti[i][4].add("X");
+							listaStudenti[i][5] = new Vector();
+							listaStudenti[i][5].add("X");
+							model.addRow(listaStudenti[i]);
+							i++;
+						}else {
+							
+							String nomeCorso = listaStudenti[i][3].toString().substring(1, listaStudenti[i][3].toString().length()-1);
+							Corso corsoCompleto = new Corso();
+							
+							
+							corsoCompleto.setCorsoId(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(4)));
+							corsoCompleto.setDescrizione((connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(1)));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(3)));
+							corsoCompleto.setNome(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(0));
+							
+							listaStudenti[i][4] = new Vector();
+							listaStudenti[i][5] = new Vector();
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							if(nLezioni != 0) {
+								listaStudenti[i][4].add(nLezioni);
+							}else
+								listaStudenti[i][4].add("X");
+							
+							String presenza;
+							String cfFormatted = listaStudenti[i][2].toString().substring(1, listaStudenti[i][2].toString().length()-1);
+							
+							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+							
+							int j = 0;
+							int count = 0;
+							
+							while(j < lezioniIdList.size()) {
+								
+								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+								j++;
+							}
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								listaStudenti[i][5].add(percentualeMinima+"%");
+								
+							}else {
+								listaStudenti[i][5].add("X");
+							}
+							
+							model.addRow(listaStudenti[i]);
+							i++;
+						}
 						
 					}
 					
@@ -706,16 +798,74 @@ if(list.getSelectedValue()!= null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 					//comando ricerca
 					
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
-					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByCognome(connection, tmpCognome);
+					
+					Vector[] listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCognome(connectionDao.getConnection(), tmpCognome.toUpperCase());
 					
 					int sizeLista = Arrays.asList(listaStudenti).size();
 					int i = 0;
+					String presenza;
 					
 					while(i < sizeLista) {
 						
-						model.addRow(listaStudenti[i]);
-						i++;
+						String cfFormatted = listaStudenti[i].get(2).toString();
+						
+						if(listaStudenti[i].get(3).toString().equals("Empty")) {
+							listaStudenti[i].add("X");
+							listaStudenti[i].add("X");
+							model.addRow(listaStudenti[i]);
+							i++;
+						}else {
+							
+							String nomeCorso = listaStudenti[i].get(3).toString();
+							
+							Corso corsoCompleto = new Corso();
+							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+							corsoCompleto.setDescrizione(valori.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+							corsoCompleto.setNome(valori.get(0));
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							
+							if(nLezioni != 0) {
+								listaStudenti[i].add(nLezioni);
+							}else
+								listaStudenti[i].add("X");
+							
+							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+							
+							int j = 0;
+							int count = 0;
+							
+							while(j < lezioniIdList.size()) {
+								
+								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+								j++;
+							}
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								listaStudenti[i].add(percentualeMinima+"%");
+								
+							}else {
+								listaStudenti[i].add("X");
+							}
+					
+							
+							model.addRow(listaStudenti[i]);
+							i++;
+							
+						}
+						
 						
 					}
 					
@@ -732,16 +882,74 @@ if(list.getSelectedValue()!= null) {
 			if(tmpNome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 					//comando ricerca
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
-					Vector[][] listaStudenti = studenteRicerca.ricercaStudenteByName(connection, tmpNome);
+				
+					Vector[] listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByName(connectionDao.getConnection(), tmpNome.toUpperCase());
 					
 					int sizeLista = Arrays.asList(listaStudenti).size();
 					int i = 0;
+					String presenza;
 					
 					while(i < sizeLista) {
 						
-						model.addRow(listaStudenti[i]);
-						i++;
+						String cfFormatted = listaStudenti[i].get(2).toString();
+						
+						if(listaStudenti[i].get(3).toString().equals("Empty")) {
+							listaStudenti[i].add("X");
+							listaStudenti[i].add("X");
+							model.addRow(listaStudenti[i]);
+							i++;
+						}else {
+							
+							String nomeCorso = listaStudenti[i].get(3).toString();
+							
+							Corso corsoCompleto = new Corso();
+							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+							corsoCompleto.setDescrizione(valori.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+							corsoCompleto.setNome(valori.get(0));
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							
+							if(nLezioni != 0) {
+								listaStudenti[i].add(nLezioni);
+							}else
+								listaStudenti[i].add("X");
+							
+							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+							
+							int j = 0;
+							int count = 0;
+							
+							while(j < lezioniIdList.size()) {
+								
+								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+								j++;
+							}
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								listaStudenti[i].add(percentualeMinima+"%");
+								
+							}else {
+								listaStudenti[i].add("X");
+							}
+							
+							
+							model.addRow(listaStudenti[i]);
+							i++;
+							
+						}
+						
 						
 					}
 					
@@ -759,9 +967,9 @@ if(list.getSelectedValue()!= null) {
 			if(tmpCf != null) {
 					//ricerca per cf
 					
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+	
 					List<String>[] listaStudenti;
-					listaStudenti = studenteRicerca.ricercaStudenteByCfEData(connection, tmpCf, tmpDate);
+					listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCfEData(connectionDao.getConnection(), tmpCf.toUpperCase(), tmpDate);
 					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 					int i = 0;
 
@@ -771,15 +979,71 @@ if(list.getSelectedValue()!= null) {
 						if(!listaStudenti[i].isEmpty()) {
 							
 							fixedList[i] = new Vector();
+							//NOME COGNOME CF CORSO
 							fixedList[i].add(listaStudenti[i].get(0));
 							fixedList[i].add(listaStudenti[i].get(1));
 							fixedList[i].add(listaStudenti[i].get(2));
 							fixedList[i].add(listaStudenti[i].get(3));
-							fixedList[i].add(listaStudenti[i].get(4));
-							fixedList[i].add(listaStudenti[i].get(5));
-							fixedList[i].add(listaStudenti[i].get(6));
+							
+							if(listaStudenti[i].get(3).toString().equals("Empty")) {
+								listaStudenti[i].add("X");
+								listaStudenti[i].add("X");
+								model.addRow(fixedList[i]);
+								i++;
+							}else {
+								
+							String nomeCorso = listaStudenti[i].get(3);
+							Corso corsoCompleto = new Corso();
+							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+							corsoCompleto.setDescrizione(valori.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+							corsoCompleto.setNome(valori.get(0));
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							if(nLezioni != 0) {
+								fixedList[i].add(nLezioni);
+							}else
+								fixedList[i].add("X");
+							
+							String presenza;
+							String cfFormatted = listaStudenti[i].get(2);
+							
+							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+							
+							int j = 0;
+							int count = 0;
+							
+							while(j < lezioniIdList.size()) {
+								
+								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+								j++;
+							}
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								fixedList[i].add(percentualeMinima+"%");
+								
+							}else {
+								fixedList[i].add("X");
+							}
+							
+							//ROBA
+						
+						
+
 							model.addRow(fixedList[i]);
 							
+						}
 						}
 						i++;
 
@@ -796,9 +1060,9 @@ if(list.getSelectedValue()!= null) {
 			if(tmpCognome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					
 					List<String>[] listaStudenti;
-					listaStudenti = studenteRicerca.ricercaStudenteByCognomeEData(connection, tmpCognome, tmpDate);
+					listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCognomeEData(connectionDao.getConnection(), tmpCognome.toUpperCase(), tmpDate);
 					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 					int i = 0;
 
@@ -812,9 +1076,53 @@ if(list.getSelectedValue()!= null) {
 							fixedList[i].add(listaStudenti[i].get(1));
 							fixedList[i].add(listaStudenti[i].get(2));
 							fixedList[i].add(listaStudenti[i].get(3));
-							fixedList[i].add(listaStudenti[i].get(4));
-							fixedList[i].add(listaStudenti[i].get(5));
-							fixedList[i].add(listaStudenti[i].get(6));
+							
+							String nomeCorso = listaStudenti[i].get(3);
+							Corso corsoCompleto = new Corso();
+							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+							corsoCompleto.setDescrizione(valori.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+							corsoCompleto.setNome(valori.get(0));
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							if(nLezioni != 0) {
+								fixedList[i].add(nLezioni);
+							}else
+								fixedList[i].add("X");
+							
+							String presenza;
+							String cfFormatted = listaStudenti[i].get(2);
+							
+							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+							
+							int j = 0;
+							int count = 0;
+							
+							while(j < lezioniIdList.size()) {
+								
+								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+								j++;
+							}
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								fixedList[i].add(percentualeMinima+"%");
+								
+							}else {
+								fixedList[i].add("X");
+							}
+							
+
 							model.addRow(fixedList[i]);
 							
 						}
@@ -836,9 +1144,9 @@ if(list.getSelectedValue()!= null) {
 
 					if(tmpCf != null) {
 							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+					
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByCognomeECf(connection, tmpCognome, tmpCf);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCognomeECf(connectionDao.getConnection(), tmpCognome.toUpperCase(), tmpCf.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -850,9 +1158,51 @@ if(list.getSelectedValue()!= null) {
 								fixedList[i].add(listaStudenti[i].get(1));
 								fixedList[i].add(listaStudenti[i].get(2));
 								fixedList[i].add(listaStudenti[i].get(3));
-								fixedList[i].add(listaStudenti[i].get(4));
-								fixedList[i].add(listaStudenti[i].get(5));
-								fixedList[i].add(listaStudenti[i].get(6));
+								
+								String nomeCorso = listaStudenti[i].get(3);
+								Corso corsoCompleto = new Corso();
+								List<String> valor = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+								corsoCompleto.setCorsoId(Integer.parseInt(valor.get(valor.size()-1)));
+								corsoCompleto.setDescrizione(valor.get(1));
+								corsoCompleto.setMaxPartecipanti(Integer.parseInt(valor.get(2)));
+								corsoCompleto.setMinPartecipazione(Integer.parseInt(valor.get(3)));
+								corsoCompleto.setNome(valor.get(0));
+								
+								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+								if(nLezioni != 0) {
+									fixedList[i].add(nLezioni);
+								}else
+									fixedList[i].add("X");
+								
+								String presenza;
+								String cfFormatted = listaStudenti[i].get(2);
+								
+								List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+								
+								int j = 0;
+								int count = 0;
+								
+								while(j < lezioniIdList.size()) {
+									
+									presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+									
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
+									
+									j++;
+								}
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									fixedList[i].add(percentualeMinima+"%");
+									
+								}else {
+									fixedList[i].add("X");
+								}
 								model.addRow(fixedList[i]);
 								i++;
 
@@ -873,9 +1223,8 @@ if(list.getSelectedValue()!= null) {
 			if(tmpNome != null) {
 				if(isWhatYouWant(tmpNome ,0)) {
 					
-					StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 					List<String>[] listaStudenti;
-					listaStudenti = studenteRicerca.ricercaStudenteByNomeEData(connection, tmpNome, tmpDate);
+					listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeEData(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpDate);
 					Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 					int i = 0;
 
@@ -887,9 +1236,53 @@ if(list.getSelectedValue()!= null) {
 						fixedList[i].add(listaStudenti[i].get(1));
 						fixedList[i].add(listaStudenti[i].get(2));
 						fixedList[i].add(listaStudenti[i].get(3));
-						fixedList[i].add(listaStudenti[i].get(4));
-						fixedList[i].add(listaStudenti[i].get(5));
-						fixedList[i].add(listaStudenti[i].get(6));
+						
+						String nomeCorso = listaStudenti[i].get(3);
+						Corso corsoCompleto = new Corso();
+						List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+						corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+						corsoCompleto.setDescrizione(valori.get(1));
+						corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+						corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+						corsoCompleto.setNome(valori.get(0));
+						
+						int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+						if(nLezioni != 0) {
+							fixedList[i].add(nLezioni);
+						}else
+							fixedList[i].add("X");
+						
+						
+						String presenza;
+						String cfFormatted = listaStudenti[i].get(2);
+						
+						List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+						
+						int j = 0;
+						int count = 0;
+						
+						while(j < lezioniIdList.size()) {
+							
+							presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+							
+							if(presenza.equals("Presente")) {
+								
+								count++;
+								
+							}
+							
+							j++;
+						}
+						
+						if(count != 0 && j != 0) {
+							
+							int percentualeMinima = (count * 100) / nLezioni;
+							fixedList[i].add(percentualeMinima+"%");
+							
+						}else {
+							fixedList[i].add("X");
+						}
+						
 						model.addRow(fixedList[i]);
 						i++;
 
@@ -909,9 +1302,8 @@ if(list.getSelectedValue()!= null) {
 
 					if(tmpCf != null) {
 							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByNomeECf(connection, tmpNome, tmpCf);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeECf(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpCf.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -923,9 +1315,54 @@ if(list.getSelectedValue()!= null) {
 								fixedList[i].add(listaStudenti[i].get(1));
 								fixedList[i].add(listaStudenti[i].get(2));
 								fixedList[i].add(listaStudenti[i].get(3));
-								fixedList[i].add(listaStudenti[i].get(4));
-								fixedList[i].add(listaStudenti[i].get(5));
-								fixedList[i].add(listaStudenti[i].get(6));
+								
+								String nomeCorso = listaStudenti[i].get(3);
+								Corso corsoCompleto = new Corso();
+								
+								List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+								corsoCompleto.setCorsoId(Integer.parseInt(valori.get(valori.size()-1)));
+								corsoCompleto.setDescrizione(valori.get(1));
+								corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+								corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+								corsoCompleto.setNome(valori.get(0));
+								
+								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+								if(nLezioni != 0) {
+									fixedList[i].add(nLezioni);
+								}else
+									fixedList[i].add("X");
+								
+								
+								String presenza;
+								String cfFormatted = listaStudenti[i].get(2);
+								
+								List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+								
+								int j = 0;
+								int count = 0;
+								
+								while(j < lezioniIdList.size()) {
+									
+									presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+									
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
+									
+									j++;
+								}
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									fixedList[i].add(percentualeMinima+"%");
+									
+								}else {
+									fixedList[i].add("X");
+								}
+								
 								model.addRow(fixedList[i]);
 								i++;
 
@@ -949,9 +1386,8 @@ if(list.getSelectedValue()!= null) {
 					if(tmpCognome != null) {
 						if(isWhatYouWant(tmpNome ,0)) {
 							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByNomeECognome(connection, tmpNome, tmpCognome);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeECognome(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpCognome.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -965,9 +1401,53 @@ if(list.getSelectedValue()!= null) {
 									fixedList[i].add(listaStudenti[i].get(1));
 									fixedList[i].add(listaStudenti[i].get(2));
 									fixedList[i].add(listaStudenti[i].get(3));
-									fixedList[i].add(listaStudenti[i].get(4));
-									fixedList[i].add(listaStudenti[i].get(5));
-									fixedList[i].add(listaStudenti[i].get(6));
+									
+									String nomeCorso = listaStudenti[i].get(3);
+									Corso corsoCompleto = new Corso();
+									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+									corsoCompleto.setDescrizione(valori.get(1));
+									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+									corsoCompleto.setNome(valori.get(0));
+									
+									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+									if(nLezioni != 0) {
+										fixedList[i].add(nLezioni);
+									}else
+										fixedList[i].add("X");
+									
+									
+									String presenza;
+									String cfFormatted = listaStudenti[i].get(2);
+									
+									List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+									
+									int j = 0;
+									int count = 0;
+									
+									while(j < lezioniIdList.size()) {
+										
+										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+										
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
+										
+										j++;
+									}
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
+									
 									model.addRow(fixedList[i]);
 									
 								}
@@ -995,9 +1475,8 @@ if(list.getSelectedValue()!= null) {
 
 					if(tmpCf != null) {
 							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByCognomeDataECf(connection, tmpCognome, tmpDate ,tmpCf);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByCognomeDataECf(connectionDao.getConnection(), tmpCognome.toUpperCase(), tmpDate ,tmpCf.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -1011,9 +1490,53 @@ if(list.getSelectedValue()!= null) {
 									fixedList[i].add(listaStudenti[i].get(1));
 									fixedList[i].add(listaStudenti[i].get(2));
 									fixedList[i].add(listaStudenti[i].get(3));
-									fixedList[i].add(listaStudenti[i].get(4));
-									fixedList[i].add(listaStudenti[i].get(5));
-									fixedList[i].add(listaStudenti[i].get(6));
+									
+									String nomeCorso = listaStudenti[i].get(3);
+									Corso corsoCompleto = new Corso();
+									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+									corsoCompleto.setDescrizione(valori.get(1));
+									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+									corsoCompleto.setNome(valori.get(0));
+									
+									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+									if(nLezioni != 0) {
+										fixedList[i].add(nLezioni);
+									}else
+										fixedList[i].add("X");
+									
+									
+									String presenza;
+									String cfFormatted = listaStudenti[i].get(2);
+									
+									List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+									
+									int j = 0;
+									int count = 0;
+									
+									while(j < lezioniIdList.size()) {
+										
+										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+										
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
+										
+										j++;
+									}
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
+									
 									model.addRow(fixedList[i]);
 									
 								}
@@ -1038,10 +1561,8 @@ if(list.getSelectedValue()!= null) {
 
 					if(tmpCf != null) {
 
-							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByNomeDataECf(connection, tmpNome, tmpDate ,tmpCf);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeDataECf(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpDate ,tmpCf.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -1055,9 +1576,53 @@ if(list.getSelectedValue()!= null) {
 									fixedList[i].add(listaStudenti[i].get(1));
 									fixedList[i].add(listaStudenti[i].get(2));
 									fixedList[i].add(listaStudenti[i].get(3));
-									fixedList[i].add(listaStudenti[i].get(4));
-									fixedList[i].add(listaStudenti[i].get(5));
-									fixedList[i].add(listaStudenti[i].get(6));
+									
+									String nomeCorso = listaStudenti[i].get(3);
+									Corso corsoCompleto = new Corso();
+									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+									corsoCompleto.setDescrizione(valori.get(1));
+									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+									corsoCompleto.setNome(valori.get(0));
+									
+									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+									if(nLezioni != 0) {
+										fixedList[i].add(nLezioni);
+									}else
+										fixedList[i].add("X");
+									
+									
+									String presenza;
+									String cfFormatted = listaStudenti[i].get(2);
+									
+									List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+									
+									int j = 0;
+									int count = 0;
+									
+									while(j < lezioniIdList.size()) {
+										
+										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+										
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
+										
+										j++;
+									}
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
+									
 									model.addRow(fixedList[i]);
 									
 								}
@@ -1082,10 +1647,9 @@ if(list.getSelectedValue()!= null) {
 
 					if(tmpCognome != null) {
 						if(isWhatYouWant(tmpNome ,0)) {
-							
-							StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
+
 							List<String>[] listaStudenti;
-							listaStudenti = studenteRicerca.ricercaStudenteByNomeDataECognome(connection, tmpNome, tmpDate ,tmpCognome);
+							listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeDataECognome(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpDate ,tmpCognome.toUpperCase());
 							Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 							int i = 0;
 
@@ -1098,10 +1662,53 @@ if(list.getSelectedValue()!= null) {
 									fixedList[i].add(listaStudenti[i].get(0));
 									fixedList[i].add(listaStudenti[i].get(1));
 									fixedList[i].add(listaStudenti[i].get(2));
-									fixedList[i].add(listaStudenti[i].get(3));
-									fixedList[i].add(listaStudenti[i].get(4));
-									fixedList[i].add(listaStudenti[i].get(5));
-									fixedList[i].add(listaStudenti[i].get(6));
+									
+									String nomeCorso = listaStudenti[i].get(3);
+									Corso corsoCompleto = new Corso();
+									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+									corsoCompleto.setDescrizione(valori.get(1));
+									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+									corsoCompleto.setNome(valori.get(0));
+									
+									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+									if(nLezioni != 0) {
+										fixedList[i].add(nLezioni);
+									}else
+										fixedList[i].add("X");
+									
+									
+									String presenza;
+									String cfFormatted = listaStudenti[i].get(2);
+									
+									List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+									
+									int j = 0;
+									int count = 0;
+									
+									while(j < lezioniIdList.size()) {
+										
+										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+										
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
+										
+										j++;
+									}
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
+									
 									model.addRow(fixedList[i]);
 									
 								}
@@ -1131,9 +1738,8 @@ if(list.getSelectedValue()!= null) {
 
 							if(tmpCf != null) {
 
-									StudenteDaoImpl studenteRicerca = new StudenteDaoImpl();
 									List<String>[] listaStudenti;
-									listaStudenti = studenteRicerca.ricercaStudenteByNomeCfECognome(connection, tmpNome, tmpCf ,tmpCognome);
+									listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByNomeCfECognome(connectionDao.getConnection(), tmpNome.toUpperCase(), tmpCf.toUpperCase() ,tmpCognome.toUpperCase());
 									Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 									int i = 0;
 
@@ -1147,9 +1753,53 @@ if(list.getSelectedValue()!= null) {
 											fixedList[i].add(listaStudenti[i].get(1));
 											fixedList[i].add(listaStudenti[i].get(2));
 											fixedList[i].add(listaStudenti[i].get(3));
-											fixedList[i].add(listaStudenti[i].get(4));
-											fixedList[i].add(listaStudenti[i].get(5));
-											fixedList[i].add(listaStudenti[i].get(6));
+											
+											String nomeCorso = listaStudenti[i].get(3);
+											Corso corsoCompleto = new Corso();
+											List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+											corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
+											corsoCompleto.setDescrizione(valori.get(1));
+											corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
+											corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
+											corsoCompleto.setNome(valori.get(0));
+											
+											int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+											if(nLezioni != 0) {
+												fixedList[i].add(nLezioni);
+											}else
+												fixedList[i].add("X");
+											
+											
+											String presenza;
+											String cfFormatted = listaStudenti[i].get(2);
+											
+											List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
+											
+											int j = 0;
+											int count = 0;
+											
+											while(j < lezioniIdList.size()) {
+												
+												presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
+												
+												if(presenza.equals("Presente")) {
+													
+													count++;
+													
+												}
+												
+												j++;
+											}
+											
+											if(count != 0 && j != 0) {
+												
+												int percentualeMinima = (count * 100) / nLezioni;
+												fixedList[i].add(percentualeMinima+"%");
+												
+											}else {
+												fixedList[i].add("X");
+											}
+											
 											model.addRow(fixedList[i]);
 											
 										}
@@ -1174,30 +1824,8 @@ if(list.getSelectedValue()!= null) {
 		//TUTTO
 		if(flagNome == 1 && flagCognome == 1 && flagCf == 1 && flagDate == 1) {
 
-			if(tmpNome != null) {
-				if(isWhatYouWant(tmpNome ,0)) {
-
-					if(tmpCognome != null) {
-						if(isWhatYouWant(tmpNome ,0)) {
-
-							if(tmpCf != null) {
-
-									//ricerca per cf
-								//TODO RICERCA TUTTO
-								
-									
-							}else
-								jpanelManagementCreaCorsoFrame(null ,null ,cf ,6);
-							
-						}else
-							jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
-					}else
-						jpanelManagementCreaCorsoFrame(null ,null ,cognome ,4);
-					
-				}else
-					jpanelManagementCreaCorsoFrame(null ,null ,nome ,0);
-			}else
-				jpanelManagementCreaCorsoFrame(null ,null ,nome ,0);
+				JOptionPane.showMessageDialog(null, "Not Avaible", "ERROR", JOptionPane.ERROR_MESSAGE);
+				
 		}
 		
 	}
@@ -1207,25 +1835,72 @@ if(list.getSelectedValue()!= null) {
 		
 		if(corso.getSelectedValue() != null) {
 			//effettua ricerca
+			int nLezioni = 0;
+			int j;
+			int count;
+
 			String tmpCorso = corso.getSelectedValue().toString();
-			IscrizioneDaoImpl associazione = new IscrizioneDaoImpl();
-			List[] listaStudenti = associazione.getStudentiByCorsoName(connection, tmpCorso);
+			
+			List[] listaStudenti = connectionDao.getIscrizioneDao().getStudentiByCorsoName(connectionDao.getConnection(), tmpCorso);
+			
+			List<String> corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmpCorso);
+			Corso corsoFormattato = new Corso();
+			
+			corsoFormattato.setNome(tmpCorso);
+			corsoFormattato.setMaxPartecipanti(Integer.parseInt(corsoCompleto.get(2)));
+			corsoFormattato.setMinPartecipazione(Integer.parseInt(corsoCompleto.get(3)));
+			corsoFormattato.setDescrizione(corsoCompleto.get(1));
+			corsoFormattato.setCorsoId(Integer.parseInt(corsoCompleto.get(4)));
+			
+			
+			nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoFormattato.getCorsoId());
 			
 			Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 			int i = 0;
 
-
+			List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoFormattato.getCorsoId());
+			
+			String formattedCf;
+			
 			while(i < Arrays.asList(listaStudenti).size()) {
 				
 				if(!listaStudenti[i].isEmpty()) {
 					
 					fixedList[i] = new Vector();
+					//NOME COGNOME CF
 					fixedList[i].add(listaStudenti[i].get(0));
 					fixedList[i].add(listaStudenti[i].get(1));
 					fixedList[i].add(listaStudenti[i].get(2));
-					fixedList[i].add(listaStudenti[i].get(3));
-					fixedList[i].add(listaStudenti[i].get(4));
-					model.addRow(fixedList[i]);
+					
+					formattedCf = listaStudenti[i].get(2).toString().substring(1, listaStudenti[i].get(2).toString().length()-1);
+					//N LEZIONE TOTALI
+					if(nLezioni != 0) {
+						fixedList[i].add(nLezioni);
+					}else
+						fixedList[i].add("X");
+					
+					//N PRESENZE
+					j = 0;
+					count = 0;
+					while(j < listaIdLezioni.size()){
+
+						String presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), formattedCf, listaIdLezioni.get(j));
+
+						if(presenza.equals("Presente")) {
+							
+							count++;
+							
+						}
+						j++;
+					}
+					
+					if(nLezioni != 0 && count != 0) {
+						
+						int percentualePresenza = (count * 100) / nLezioni;
+						fixedList[i].add(percentualePresenza+"%");
+						model.addRow(fixedList[i]);
+						
+					}
 					
 				}
 				i++;
@@ -1241,14 +1916,12 @@ if(list.getSelectedValue()!= null) {
 	
 	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
 		
-		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-		IscrizioneDaoImpl iscrizione = new IscrizioneDaoImpl();
-		List<String> datiCorso = corsoDao.getCorso(connection, corso);
+		List<String> datiCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), corso);
 		
 		//CONTROLLO SU NUMERI ISCRITTI
 		int corsoId = Integer.parseInt(datiCorso.get(4));
 		int minPartecipanti = Integer.parseInt(datiCorso.get(3));
-		int studentiIscritti = iscrizione.countStudentiIscritti(connection, corsoId);
+		int studentiIscritti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoId);
 		
 		if(minPartecipanti <= studentiIscritti) {
 			
@@ -1300,7 +1973,6 @@ if(list.getSelectedValue()!= null) {
 								
 							}else{
 								//Inserimento
-								LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
 								Lezione lezione = new Lezione();
 								
 								SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -1313,16 +1985,11 @@ if(list.getSelectedValue()!= null) {
 								
 								if(flag == 0) {
 									
-									int permesso = lezioneDao.gestioneDuplicati(connection, lezione.getData(), lezione.getCorsoId());
+									int permesso = connectionDao.getLezioneDao().gestioneDuplicati(connectionDao.getConnection(), lezione.getData(), lezione.getCorsoId());
 									
 									if(permesso == 1) {
 										
-										lezioneDao.inserimentoLezione(connection, lezione);
-										int lezioneId = lezioneDao.recuperaIdUltimaInserita(connection);
-										
-										PresenzaDaoImpl presenzaDao = new PresenzaDaoImpl();
-										presenzaDao.inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
-										JOptionPane.showMessageDialog(null, "Lezione salvata!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+										connectionDao.getLezioneDao().inserimentoLezione(connectionDao.getConnection(), lezione);
 										
 										JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(dateChooser);
 										tmpFrame.setVisible(false);
@@ -1332,11 +1999,11 @@ if(list.getSelectedValue()!= null) {
 										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 									
 								}else {
-									int permesso = lezioneDao.gestioneDuplicatiUpdate(connection, lezione.getData() ,lezione.getCorsoId() ,lezioneIdUpd);
+									int permesso = connectionDao.getLezioneDao().gestioneDuplicatiUpdate(connectionDao.getConnection(), lezione.getData() ,lezione.getCorsoId() ,lezioneIdUpd);
 									
 									if(permesso != 0) {
 										
-											lezioneDao.updateLezione(connection,lezione, lezioneIdUpd);
+									     	connectionDao.getLezioneDao().updateLezione(connectionDao.getConnection(),lezione, lezioneIdUpd);
 											JOptionPane.showMessageDialog(null, "Updated!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
 											return 1;
 

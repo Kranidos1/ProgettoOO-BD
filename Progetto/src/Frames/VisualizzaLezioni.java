@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 
@@ -23,6 +24,9 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
@@ -37,7 +41,8 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 
 public class VisualizzaLezioni extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private Controller controller;
 	private String tmpCorso;
@@ -57,7 +62,7 @@ public class VisualizzaLezioni extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		
 		GeneralPanelGrande generalPanelGrande = new GeneralPanelGrande();
@@ -170,11 +175,11 @@ public class VisualizzaLezioni extends JFrame {
 		updateButton.setBounds(138, 548, 109, 22);
 		generalPanelGrande.add(updateButton);
 		
-		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-		List<String> listaCorsi = corsoDao.getNomiCorsi(controller.getConnection());
+		
+		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
 		modelList.addAll(listaCorsi);
 		
-		LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
+	
 		
 		visualizzaLezioniButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -183,9 +188,9 @@ public class VisualizzaLezioni extends JFrame {
 					
 					tmpCorso = listCorsi.getSelectedValue().toString();
 					visualizzaLezioniButton.setEnabled(false);		
-					corsoId = corsoDao.trovaCorsoId(controller.getConnection(), tmpCorso);
+					corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), tmpCorso);
 					
-					listaDateLezioni = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+					listaDateLezioni = connectionDao.getLezioneDao().getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
 //					modelLezioni.addAll(listaDateLezioni);
 					int i = 0;
 					
@@ -282,7 +287,7 @@ public class VisualizzaLezioni extends JFrame {
 				spinnerDurata.setValue(1);
 				textAreaDescrizione.setText("");
 				
-				listaDateLezioni = lezioneDao.getDateLezioniDaGestireELezione(controller.getConnection(), corsoId);
+				listaDateLezioni = connectionDao.getLezioneDao().getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
 //				modelLezioni.addAll(listaDateLezioni);
 				int i = 0;
 				
@@ -296,7 +301,20 @@ public class VisualizzaLezioni extends JFrame {
 				
 			}
 		});
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		setVisible(true);
 	}
 }

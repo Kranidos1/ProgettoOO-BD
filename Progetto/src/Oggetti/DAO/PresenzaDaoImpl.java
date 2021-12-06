@@ -13,8 +13,8 @@ public class PresenzaDaoImpl {
 	public void inserimentoAssociazioneConStudenti(Connection connection ,int corsoId ,int lezioneId) {
 		String cf;
 		String insert;
-		IscrizioneDaoImpl iscrizioneDao = new IscrizioneDaoImpl();
-		List<String>[] studenti = iscrizioneDao.getStudentiByCorsoId(connection, corsoId);
+		ConnectionDao connectionDao = new ConnectionDao();
+		List<String>[] studenti = connectionDao.getIscrizioneDao().getStudentiByCorsoId(connection, corsoId);
 		
 		try {
 			
@@ -80,6 +80,65 @@ public class PresenzaDaoImpl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public String checkPresenzaStudente(Connection connection ,String cf ,int lezioneId) {
+		
+		String ricerca = "SELECT \"Presente\" FROM \"Presenza\" WHERE \"Cf\" = '" + cf + "' AND \"LezioneId\" = " + lezioneId + ";";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			
+			while(risultato.next()) {
+				
+				return risultato.getString(1);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		
+		
+		return null;
+		
+	}
+	
+	public int countPresenti(Connection connection ,int lezioneId) {
+		
+		int numero = 0;
+		String ricerca = "SELECT COUNT(\"Cf\") FROM \"Presenza\" WHERE \"LezioneId\" = " + lezioneId + " AND \"Presente\" = 'Presente';";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			
+			while(risultato.next()) {
+				
+				numero = Integer.parseInt(risultato.getString(1));
+				
+			}
+			
+			return numero;
+			
+		} catch (SQLException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return lezioneId;
 		
 	}
 	

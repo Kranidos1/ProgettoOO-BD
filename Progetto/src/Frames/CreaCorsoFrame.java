@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +41,7 @@ import javax.swing.text.AttributeSet.ColorAttribute;
 import org.w3c.dom.events.MouseEvent;
 
 import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
 
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -45,6 +49,7 @@ import javax.swing.JScrollPane;
 
 public class CreaCorsoFrame extends JFrame{
 
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField textFieldName;
@@ -54,7 +59,6 @@ public class CreaCorsoFrame extends JFrame{
 	private JFrame fram;
 	private Controller controller;
 	public int counter = 0;
-	private AreaTematicaDaoImpl areaTematicaImpl;
 	private int j = 0;
 	
 	public CreaCorsoFrame() {
@@ -71,10 +75,11 @@ public class CreaCorsoFrame extends JFrame{
 		
 		fram = (JFrame) SwingUtilities.getRoot(panel);
 		
+		connectionDao = new ConnectionDao();
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		
-		areaTematicaImpl = new AreaTematicaDaoImpl();
+
 		
 		JLabel nomeCorsoLabel = new JLabel("Nome");
 		nomeCorsoLabel.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
@@ -284,13 +289,27 @@ public class CreaCorsoFrame extends JFrame{
 			}
 		});
 		
-		List<String> lista = areaTematicaImpl.getThemes(controller.getConnection());
+		List<String> lista = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
 		Iterator<String> listIt = lista.listIterator();
 		
 		while(listIt.hasNext()) {
 			choiceOption.addItem(listIt.next());
 		}
 
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		setVisible(true);
 	}
 }

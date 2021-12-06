@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 
 import javax.swing.border.EmptyBorder;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.CorsoETemaDaoImpl;
 
@@ -19,7 +20,8 @@ import java.util.List;
 import javax.swing.*;
 
 public class ModificaCorsoFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JTextField nomeField;
 	private JTextField maxField;
 	private JTextField minField;
@@ -44,7 +46,7 @@ public class ModificaCorsoFrame extends JFrame {
 		panel.setBackground(Color.WHITE);
 		getContentPane().add(panel);
 		panel.setLayout(null);
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		
 		nomeField = new JTextField();
@@ -182,13 +184,12 @@ public class ModificaCorsoFrame extends JFrame {
 			
 		});
 		
-		CorsoETemaDaoImpl corsoTema = new CorsoETemaDaoImpl();
 		
 		buttonCleanArea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				model.removeAllElements();
-				corsoTema.deleteCollegamento(controller.getConnection() ,id);
+				connectionDao.getCorsoTemaDao().deleteCollegamento(connectionDao.getConnection() ,id);
 				
 				if(!updateThemes.isEmpty()) {
 					
@@ -199,7 +200,6 @@ public class ModificaCorsoFrame extends JFrame {
 			}
 		});
 		
-		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
 		
 		buttonSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -210,7 +210,7 @@ public class ModificaCorsoFrame extends JFrame {
 				
 				while(iteratore.hasNext()) {
 					
-					corsoTema.inserimento(controller.getConnection(), idCorso, iteratore.next());	
+					connectionDao.getCorsoTemaDao().inserimento(connectionDao.getConnection(), idCorso, iteratore.next());	
 					
 				}
 

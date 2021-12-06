@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 
@@ -22,8 +23,12 @@ import java.awt.*
 ;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JFrame {
 
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private Controller controller;
@@ -44,6 +49,7 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		
 		DefaultListModel model = new DefaultListModel();
@@ -62,10 +68,9 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 		buttonFinito.setBounds(285, 278, 128, 33);
 		panel.add(buttonFinito);
 		
-		CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-		model.addAll(corsoDao.getNomiCorsi(controller.getConnection()));
+		model.addAll(connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection()));
 		
-		LezioneDaoImpl lezioneDao = new LezioneDaoImpl();
+		
 		buttonFinito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -79,10 +84,10 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 						String corso = listaCorsi.getSelectedValue().toString();
 						int row = listaCorsi.getSelectedIndex();
 						
-						int corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso);
+						int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), corso);
 						//ricordati check su numero lezioni e se tutte le lezioni sono state gestite
-						int numLezioniFalse = lezioneDao.countCheckFalse(controller.getConnection(), corsoId);
-						int numLezioni = lezioneDao.countLezioni(controller.getConnection(), corsoId);
+						int numLezioniFalse = connectionDao.getLezioneDao().countCheckFalse(connectionDao.getConnection(), corsoId);
+						int numLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoId);
 						
 						int pass = numLezioni - numLezioniFalse;
 						
@@ -93,7 +98,7 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 								if(pass == numLezioni) {
 									
 									//UPDATE CHECK
-									corsoDao.updateCheckCorso(controller.getConnection(), corsoId);
+									connectionDao.getCorsoDao().updateCheckCorso(connectionDao.getConnection(), corsoId);
 									JOptionPane.showMessageDialog(null, "Corso terminato correttamente!");
 									model.remove(row);
 									listaCorsi.revalidate();
@@ -112,6 +117,21 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 				} 
 			}
 		});
+		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		
 		setVisible(true);
 	}

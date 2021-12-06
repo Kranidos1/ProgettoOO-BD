@@ -19,6 +19,7 @@ public interface ControlloEOperazioniSuFrame {
 	
 	//return true
 	public boolean isWhatYouWant(String input , int flag);
+	public String escape(String input);
 	public void newTheme(JLabel label);
 	// 0 nome   1 max  2 min 3 descrizione 4 cognome 5 data 6 cf 7 generico 8 maggiorenne 9 max < min 10 nessuna selezione
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) ;

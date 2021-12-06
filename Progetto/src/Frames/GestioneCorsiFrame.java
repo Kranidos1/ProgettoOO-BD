@@ -42,7 +42,7 @@ public class GestioneCorsiFrame extends JFrame {
 		creaCorsoButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		creaCorsoButton.setBorder(new RoundBorderBotton(10));
 		creaCorsoButton.setBackground(Color.WHITE);
-		creaCorsoButton.setBounds(153, 166, 178, 41);
+		creaCorsoButton.setBounds(153, 145, 178, 41);
 		panel.add(creaCorsoButton);
 		
 		JButton visualizzaStatsButton = new JButton("Visualizza Statistiche");
@@ -50,7 +50,7 @@ public class GestioneCorsiFrame extends JFrame {
 		visualizzaStatsButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		visualizzaStatsButton.setBorder(new RoundBorderBotton(10));
 		visualizzaStatsButton.setBackground(Color.WHITE);
-		visualizzaStatsButton.setBounds(153, 231, 178, 41);
+		visualizzaStatsButton.setBounds(153, 207, 178, 41);
 		panel.add(visualizzaStatsButton);
 		
 		JButton modificaCorsiButton = new JButton("Elimina/Modifica Corsi");
@@ -58,7 +58,7 @@ public class GestioneCorsiFrame extends JFrame {
 		modificaCorsiButton.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));
 		modificaCorsiButton.setBorder(new RoundBorderBotton(10));
 		modificaCorsiButton.setBackground(Color.WHITE);
-		modificaCorsiButton.setBounds(153, 290, 178, 41);
+		modificaCorsiButton.setBounds(153, 267, 178, 41);
 		panel.add(modificaCorsiButton);
 		
 		JButton buttonDeterminaFineCorso = new JButton("Determina fine corso");
@@ -66,7 +66,7 @@ public class GestioneCorsiFrame extends JFrame {
 		buttonDeterminaFineCorso.setFont(new Font("Dialog", Font.PLAIN, 13));
 		buttonDeterminaFineCorso.setBorder(new RoundBorderBotton(10));
 		buttonDeterminaFineCorso.setBackground(Color.WHITE);
-		buttonDeterminaFineCorso.setBounds(153, 352, 178, 41);
+		buttonDeterminaFineCorso.setBounds(153, 328, 178, 41);
 		panel.add(buttonDeterminaFineCorso);
 		
 		JButton buttonCorsiArchiviati = new JButton("Corsi Archiviati");
@@ -74,7 +74,7 @@ public class GestioneCorsiFrame extends JFrame {
 		buttonCorsiArchiviati.setFont(new Font("Dialog", Font.PLAIN, 13));
 		buttonCorsiArchiviati.setBorder(new RoundBorderBotton(10));
 		buttonCorsiArchiviati.setBackground(Color.WHITE);
-		buttonCorsiArchiviati.setBounds(153, 411, 178, 41);
+		buttonCorsiArchiviati.setBounds(153, 389, 178, 41);
 		panel.add(buttonCorsiArchiviati);
 		
 		creaCorsoButton.addActionListener(new ActionListener() {
@@ -114,6 +114,8 @@ public class GestioneCorsiFrame extends JFrame {
 		buttonCorsiArchiviati.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				setVisible(false);
+				new CorsiArchiviati();
 				
 			}
 		});

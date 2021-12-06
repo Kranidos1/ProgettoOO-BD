@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
 
 import javax.swing.JScrollPane;
 import java.awt.*;
@@ -21,6 +22,9 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class VisualizzaModificaTemiFrame extends JFrame {
@@ -31,6 +35,7 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 	private JTextField textFieldTema;
 	private String tema;
 	private String newTheme;
+	private ConnectionDao connectionDao;
 	
 	public VisualizzaModificaTemiFrame() {
 		
@@ -45,7 +50,7 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		
 		DefaultListModel model = new DefaultListModel();
@@ -56,8 +61,8 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black), "Temi"));
 		scrollPane.setBounds(10, 112, 265, 340);
 		panel.add(scrollPane);
-		AreaTematicaDaoImpl temaDao = new AreaTematicaDaoImpl();
-		model.addAll(temaDao.getThemes(controller.getConnection()));
+
+		model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
 		
 		JButton buttonCerca = new JButton("Modifica!");
 
@@ -125,9 +130,9 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 				if(listTemi.getSelectedValue() != null) {
 					
 					tema = listTemi.getSelectedValue().toString();
-					temaDao.delete(controller.getConnection(), tema);
+					connectionDao.getAreaTematicaDao().delete(connectionDao.getConnection(), tema);
 					model.clear();
-					model.addAll(temaDao.getThemes(controller.getConnection()));
+					model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
 					
 				}else
 					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
@@ -141,9 +146,9 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 				//Viene applicata la modifica
 				if(!textFieldTema.getText().isEmpty()) {
 					
-					temaDao.update(controller.getConnection(), tema, textFieldTema.getText().toString());
+					connectionDao.getAreaTematicaDao().update(connectionDao.getConnection(), tema, textFieldTema.getText().toString());
 					model.clear();
-					model.addAll(temaDao.getThemes(controller.getConnection()));
+					model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
 					
 					buttonApplicaModifica.setEnabled(false);
 					textFieldTema.setText("");
@@ -157,6 +162,19 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 			}
 		});
 		
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 	}
 }

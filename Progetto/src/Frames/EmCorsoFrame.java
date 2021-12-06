@@ -1,6 +1,9 @@
 package Frames;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.border.MatteBorder;
 
 import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.CorsoETemaDaoImpl;
 
@@ -36,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 public class EmCorsoFrame extends JFrame {
 
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private Controller controller;
@@ -56,6 +61,7 @@ public class EmCorsoFrame extends JFrame {
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		DefaultListModel model = new DefaultListModel();
 		JList listCorsi = new JList(model);
@@ -64,9 +70,9 @@ public class EmCorsoFrame extends JFrame {
 		listCorsi.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.BLACK));
 		listCorsi.setBounds(10, 154, 481, 260);
 		
-		CorsoDaoImpl corso = new CorsoDaoImpl();
 		
-		List<String> corsi = corso.getNomiCorsi(controller.getConnection());
+		
+		List<String> corsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
 		model.addAll(corsi);
 		
 		//TODO
@@ -114,7 +120,7 @@ public class EmCorsoFrame extends JFrame {
 						//TODO QUI OVVIAMENTE PARTE ANCHE ELIMINAZIONE DAL DB
 						
 						model.removeElement(tmp);
-						corso.deleteCorsoByName(controller.getConnection(), tmp);
+						connectionDao.getCorsoDao().deleteCorsoByName(connectionDao.getConnection(), tmp);
 					}
 					
 				}
@@ -129,12 +135,12 @@ public class EmCorsoFrame extends JFrame {
 
 					String tmp = listCorsi.getSelectedValue().toString();
 					//creo frame
-					List<String> listaValori = corso.getCorso(controller.getConnection(), tmp);
-					CorsoETemaDaoImpl temi = new CorsoETemaDaoImpl();
-					List<String> listaTemiCorso = temi.getAllThemeOfCorso(controller.getConnection(), listaValori.get(4));
-					AreaTematicaDaoImpl areaTematica = new AreaTematicaDaoImpl();
+					List<String> listaValori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmp);
 					
-					LinkedList<String> listaTemi = areaTematica.getThemes(controller.getConnection());
+					List<String> listaTemiCorso = connectionDao.getCorsoTemaDao().getAllThemeOfCorso(connectionDao.getConnection(), listaValori.get(4));
+					
+					
+					LinkedList<String> listaTemi = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
 					
 					//SI APRE IL FRAME PER LA MODIFICA
 					ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
@@ -161,6 +167,21 @@ public class EmCorsoFrame extends JFrame {
 				
 			}
 		});
+		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		
 	}
 }

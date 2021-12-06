@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import Oggetti.Lezione;
 
 public class LezioneDaoImpl {
@@ -21,9 +23,16 @@ public class LezioneDaoImpl {
 			Statement statement = connection.createStatement();
 			statement.execute(inserimento);
 			
+			int lezioneId = recuperaIdUltimaInserita(connection);
+			
+			ConnectionDao connectionDao = new ConnectionDao();
+			connectionDao.getPresenzaDao().inserimentoAssociazioneConStudenti(connection, lezione.getCorsoId(), lezioneId);
+			
+			JOptionPane.showMessageDialog(null, "Lezione salvata!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -47,7 +56,7 @@ public class LezioneDaoImpl {
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Non puoi usare caratteri speciali nei field.", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		
@@ -58,7 +67,7 @@ public class LezioneDaoImpl {
 	
 	public List<String>[] getDateLezioniDaGestireELezione(Connection connection ,int corsoId) {
 		
-		String statement = "SELECT \"Data\",\"LezioneId\",\"CorsoId\",\"OraInizio\",\"Durata\",\"Descrizione\",\"Titolo\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId +"' AND \"Check\" = 'false';";
+		String statement = "SELECT \"Data\",\"LezioneId\",\"CorsoId\",\"OraInizio\",\"Durata\",\"Descrizione\",\"Titolo\",\"Check\" FROM \"Lezione\" WHERE \"CorsoId\" = '" + corsoId +"' AND \"Check\" = 'false';";
 		List<String>[] listaRisultato;
 		
 		int size = 0;
@@ -89,6 +98,7 @@ public class LezioneDaoImpl {
 				listaRisultato[i].add(risultato.getString(5));
 				listaRisultato[i].add(risultato.getString(6));
 				listaRisultato[i].add(risultato.getString(7));
+				listaRisultato[i].add(risultato.getString(8));
 				
 				i++;
 			}
@@ -260,6 +270,63 @@ public class LezioneDaoImpl {
 			e.printStackTrace();
 		}
 		return 99;
+		
+	}
+	
+	public List getLezioniByCorsoId(Connection connection ,int corsoId) {
+		
+		List<Integer> listaLezioniId = new LinkedList();
+		String ricerca = "SELECT \"LezioneId\" FROM \"Lezione\" WHERE \"CorsoId\" = " + corsoId + ";";
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			while(risultato.next()) {
+				
+				listaLezioniId.add(Integer.parseInt(risultato.getString(1)));
+				
+			}
+			
+			return listaLezioniId;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+		
+	}
+	
+	public int countPresenti(Connection connection ,int lezioneId) {
+		
+		String ricerca = "SELECT COUNT(\"Cf\") FROM \"Presenza\" WHERE \"LezioneId\" = "+ lezioneId +" AND \"Presente\" = 'Presente'";
+		int result = 0;
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			ResultSet risultato = statement.executeQuery(ricerca);
+			
+			if(risultato.next()) {
+				
+				result = Integer.parseInt(risultato.getString(1));
+				
+			}
+			return result;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return 0;
+		
+		
 		
 	}
 }

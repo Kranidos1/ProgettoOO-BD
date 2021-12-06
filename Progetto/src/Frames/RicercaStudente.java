@@ -4,6 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +29,7 @@ import javax.swing.JCheckBox;
 import javax.swing.Box;
 import com.toedter.calendar.JDateChooser;
 
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.IscrizioneDaoImpl;
 import Oggetti.DAO.StudenteDaoImpl;
@@ -33,7 +37,8 @@ import Oggetti.DAO.StudenteDaoImpl;
 import java.awt.Font;
 
 public class RicercaStudente extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTextField nomeField;
@@ -59,7 +64,7 @@ public class RicercaStudente extends JFrame {
 		panel = new GeneralPanelGrande();
 		panel.setBounds(0, 0, 623, 516);
 		getContentPane().add(panel);
-		
+		connectionDao = new ConnectionDao();
 		controller = new Controller();
 		JLabel nomeLabel = new JLabel("Nome");
 		nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -99,7 +104,7 @@ public class RicercaStudente extends JFrame {
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {
 		},
 		new String[] {
-			"Nome" ,"Cognome" ,"CF","Corso","N.Lezioni" ,"Presenze" ,"Assenze"
+			"Nome" ,"Cognome" ,"CF","Corso","N.Lezioni" ,"Presenze" 
 		}) {
 			public boolean isCellEditable(int row ,int column) {
 				return false;
@@ -109,14 +114,14 @@ public class RicercaStudente extends JFrame {
 		tableStats.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableStats.setModel(model);
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
-		tableStats.getColumnModel().getColumn(4).setPreferredWidth(65);
-		tableStats.getColumnModel().getColumn(5).setPreferredWidth(65);
-		tableStats.getColumnModel().getColumn(6).setPreferredWidth(75);
+		tableStats.getColumnModel().getColumn(3).setPreferredWidth(150);
+		tableStats.getColumnModel().getColumn(4).setPreferredWidth(75);
+		tableStats.getColumnModel().getColumn(5).setPreferredWidth(75);
 		
 		scrollPane = new JScrollPane(tableStats);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(20, 269, 593, 183);
+		scrollPane.setBounds(10, 269, 603, 183);
 		panel.add(scrollPane);
 		
 		buttonRicerca = new JButton("Ricerca");
@@ -223,7 +228,7 @@ public class RicercaStudente extends JFrame {
 			}
 		});
 		
-		IscrizioneDaoImpl iscrizioneDao = new IscrizioneDaoImpl();
+
 		buttonElimina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -238,52 +243,75 @@ public class RicercaStudente extends JFrame {
 					String corso = model.getValueAt(row, 3).toString();
 					int corsoId;
 					
-					CorsoDaoImpl corsoDao = new CorsoDaoImpl();
-					corsoId = corsoDao.trovaCorsoId(controller.getConnection(), corso.substring(1, corso.length()-1));
 					
-					String achieved = corsoDao.controllaStatoCorso(controller.getConnection(), corsoId);
+					corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), corso.substring(1, corso.length()-1));
 					
-					if(achieved.equals("truex") || achieved.equals("true")) {
+					String achieved;
+					achieved = "true";
+					
+					if(corsoId != -1) {
 						
-						JOptionPane.showMessageDialog(null, "Non puo eliminare uno studente da un corso finito o archiviato.", "ERROR", JOptionPane.ERROR_MESSAGE);			
+						achieved = connectionDao.getCorsoDao().controllaStatoCorso(connectionDao.getConnection(), corsoId);
 						
-					}else {
-						
-						if(!corso.substring(1, corso.length()-1).equals("Empty")) {
+						if(achieved.equals("truex") || achieved.equals("true") ) {
 							
-
-							int answer = JOptionPane.showConfirmDialog(null, "Sicuro di voler eliminare questo studente da questo corso?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-							
-							//E' SI QUINDI CANCELLA
-							if(answer == 0) {
-								
-								
-								iscrizioneDao.deleteStudente(controller.getConnection(), cfFormatted ,corsoId);
-								JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
-								model.removeRow(row);
-								
-							}
+							JOptionPane.showMessageDialog(null, "Non puo eliminare uno studente da un corso finito o archiviato.", "ERROR", JOptionPane.ERROR_MESSAGE);			
 							
 						}else {
 							
-							int risposta = JOptionPane.showConfirmDialog(null, "Studente non iscritto a corsi.Sicuro di voler eliminare questo studente dal database?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-							
-							if(risposta == 0) {
+							if(!corso.substring(1, corso.length()-1).equals("Empty")) {
 								
-								StudenteDaoImpl studenteDao = new StudenteDaoImpl();
-								studenteDao.deleteStudente(controller.getConnection(), cfFormatted);
-								JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
+
+								int answer = JOptionPane.showConfirmDialog(null, "Sicuro di voler eliminare questo studente da questo corso?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+								
+								//E' SI QUINDI CANCELLA
+								if(answer == 0) {
+									
+									
+									connectionDao.getIscrizioneDao().deleteStudente(connectionDao.getConnection(), cfFormatted ,corsoId);
+									JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
+									model.removeRow(row);
+									tableStats.revalidate();
+									
+								}
 								
 							}
+							
 						}
 						
-					}
+					}else {
 						
+						int risposta = JOptionPane.showConfirmDialog(null, "Studente non iscritto a corsi.Sicuro di voler eliminare questo studente dal database?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						
+						if(risposta == 0) {
+							
+						
+							connectionDao.getStudenteDao().deleteStudente(connectionDao.getConnection(), cfFormatted);
+							JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
+							model.removeRow(row);
+							tableStats.revalidate();
+							
+						}
+					}
+							
 				}else
 					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
 	
 			}
 		});
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 	}
 }

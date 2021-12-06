@@ -6,16 +6,23 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Oggetti.DAO.ConnectionDao;
+
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Component;
 import javax.swing.Box;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class GestisciLezioniFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private Controller controller;
@@ -30,7 +37,7 @@ public class GestisciLezioniFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
+		connectionDao = new ConnectionDao();
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		
@@ -91,6 +98,20 @@ public class GestisciLezioniFrame extends JFrame {
 			}
 		});
 		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 		setVisible(true);
 	}
 }

@@ -12,9 +12,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
+import Oggetti.Corso;
 import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 import Oggetti.DAO.CorsoETemaDaoImpl;
+import Oggetti.DAO.IscizioneDao;
+import Oggetti.DAO.IscrizioneDaoImpl;
+import Oggetti.DAO.LezioneDaoImpl;
+import Oggetti.DAO.PresenzaDaoImpl;
 
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -25,13 +31,21 @@ import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class StatisticheCorsoFrame extends JFrame {
-
+	
+	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTable table;
@@ -40,6 +54,8 @@ public class StatisticheCorsoFrame extends JFrame {
 	private int checkCat = 0;
 	private int checkK = 0;
 	private Controller controller;
+
+	
 	
 	public StatisticheCorsoFrame() {
 		
@@ -51,10 +67,11 @@ public class StatisticheCorsoFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
+		connectionDao = new ConnectionDao();
 		panel = new GeneralPanelGrande();
 		controller = new Controller();
-		String[] columns = {"NomeCorso","N.Studenti","MediaPrs","MinimoPrs","MassimoPrs","RiempimentoM"};
+		String[] columns = {"NomeCorso","N.Lezioni","N.Studenti","MediaPrs","MinimoPrs","MassimoPrs","Finito"
+				};
 		getContentPane().add(panel);
 		
 		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},columns){
@@ -107,8 +124,6 @@ public class StatisticheCorsoFrame extends JFrame {
 		checkKey.setBounds(307, 215, 21, 17);
 		panel.add(checkKey);
 		
-		AreaTematicaDaoImpl temaDao = new AreaTematicaDaoImpl();
-		
 		
 		DefaultListModel model = new DefaultListModel();
 		JList lista = new JList(model);
@@ -119,7 +134,7 @@ public class StatisticheCorsoFrame extends JFrame {
 		panel.add(scrollPane);
 		
 		LinkedList<String> temi =  new LinkedList<String>();
-		temi = temaDao.getThemes(controller.getConnection());
+		temi = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
 		model.addAll(temi);
 		
 		
@@ -147,6 +162,7 @@ public class StatisticheCorsoFrame extends JFrame {
 			
 		});
 		
+
 		
 		//funziona tutto bisogna solo aggiungere valori calcolati.
 		buttonRicerca.addActionListener(new ActionListener() {
@@ -154,8 +170,6 @@ public class StatisticheCorsoFrame extends JFrame {
 				
 				modelTable.setRowCount(0);
 				table.revalidate();
-				CorsoETemaDaoImpl corsoTema = new CorsoETemaDaoImpl();
-				CorsoDaoImpl corso = new CorsoDaoImpl();
 				
 				if(checkK == 0 && checkCat == 1) {
 					
@@ -163,30 +177,99 @@ public class StatisticheCorsoFrame extends JFrame {
 					String categoria = new String();
 					categoria = lista.getSelectedValue().toString();
 					//TROVA GLI ID TRAMITE TEMA
-					LinkedList<String> listaIdCorsi = corsoTema.ricercaCorsoByTheme(controller.getConnection() , categoria);
+					LinkedList<String> listaIdCorsi = connectionDao.getCorsoTemaDao().ricercaCorsoByTheme(connectionDao.getConnection() , categoria);
 					//TROVA CORSI TRAMITE ID
-					LinkedList<String> nomiCorsi = corso.getNomiById(controller.getConnection(), listaIdCorsi);
+					LinkedList<String> nomiCorsi = connectionDao.getCorsoDao().getNomiById(connectionDao.getConnection(), listaIdCorsi);
 					
 					//QUI AVVIENE AGGIUNTA ITERATIVA CON ANNESSI VALORI
 					
-				Vector[][] vettoreCorsi = new Vector[nomiCorsi.size()][6];
+				Vector[][] vettoreCorsi = new Vector[nomiCorsi.size()][7];
 				int i = 0;
 				
 				while(i < nomiCorsi.size()) {
 					
 					vettoreCorsi[i][0] = new Vector();
 					vettoreCorsi[i][0].add(nomiCorsi.get(i));
+					
+					List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomiCorsi.get(i));
+					
+					Corso corsoCompleto = new Corso();
+					corsoCompleto.setNome(valoriCorso.get(0));
+					corsoCompleto.setDescrizione(valoriCorso.get(1));
+					corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
+					corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
+					corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
+					corsoCompleto.setCheck(valoriCorso.get(5));
+					
+					
 					vettoreCorsi[i][1] = new Vector();
 					vettoreCorsi[i][2] = new Vector();
 					vettoreCorsi[i][3] = new Vector();
 					vettoreCorsi[i][4] = new Vector();
 					vettoreCorsi[i][5] = new Vector();
+					vettoreCorsi[i][6] = new Vector();
 					
-					vettoreCorsi[i][1].add("N.Studenti");
-					vettoreCorsi[i][2].add("Media");
-					vettoreCorsi[i][3].add("Minimo");
-					vettoreCorsi[i][4].add("Massimo");
-					vettoreCorsi[i][5].add("riempimento");
+					int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					vettoreCorsi[i][1].add(nLezioni);
+					int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					vettoreCorsi[i][2].add(nStudenti);
+					
+					List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					Integer max;
+					Integer min;
+					List<Integer> numPresenti = new LinkedList();
+					
+					if(nLezioni != 0) {
+						
+						if(nStudenti != 0) {
+							
+							int o = 0;
+							
+							int presenti = 0;
+							while(o < listaIdLezioni.size()) {
+								
+								
+								presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
+								numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
+								o++;
+							}
+							
+							if(presenti != 0) {
+								
+								DecimalFormat df = new DecimalFormat();
+								df.setMaximumFractionDigits(2);
+								
+								float presentiFloat = Float.parseFloat(Integer.toString(presenti));
+								float nStudentiFloat = Float.parseFloat(Integer.toString(nStudenti));
+								float nLezioniFloat = Float.parseFloat(Integer.toString(nLezioni));
+								
+								float media = (presentiFloat / nStudentiFloat) / nLezioniFloat;
+								
+								vettoreCorsi[i][3].add(df.format(media));
+								max = Collections.max(numPresenti);
+								min = Collections.min(numPresenti);
+								vettoreCorsi[i][4].add(min);
+								vettoreCorsi[i][5].add(max);
+								
+							}else {
+								vettoreCorsi[i][3].add("X");
+								vettoreCorsi[i][4].add("X");
+								vettoreCorsi[i][5].add("X");
+							}
+							
+						}else {
+							vettoreCorsi[i][3].add("X");
+							vettoreCorsi[i][4].add("X");
+							vettoreCorsi[i][5].add("X");
+						}
+					}else {
+						vettoreCorsi[i][3].add("X");
+						vettoreCorsi[i][4].add("X");
+						vettoreCorsi[i][5].add("X");
+					}
+					
+
+					vettoreCorsi[i][6].add(corsoCompleto.getCheck());
 					
 					modelTable.addRow(vettoreCorsi[i]);
 					
@@ -202,29 +285,101 @@ public class StatisticheCorsoFrame extends JFrame {
 				if(checkK == 1 && checkCat == 0) {
 					
 					//QUI AVVIENE AGGIUNTA ITERATIVA CON ANNESSI VALORI l'aggiunta avviene tramite vector,questo e' solo un esempio
-					LinkedList<String> listaCorsi = corso.getNomiCorsiByKey(controller.getConnection(), keyField.getText());
-					Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][6];
-					int i = 0;
-					
-					while(i < listaCorsi.size()) {
+					LinkedList<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsiByKey(connectionDao.getConnection(), keyField.getText());
+					if(listaCorsi != null) {
+						Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][7];
 						
-						vettoreCorsi[i][0] = new Vector();
-						vettoreCorsi[i][0].add(listaCorsi.get(i));
-						vettoreCorsi[i][1] = new Vector();
-						vettoreCorsi[i][2] = new Vector();
-						vettoreCorsi[i][3] = new Vector();
-						vettoreCorsi[i][4] = new Vector();
-						vettoreCorsi[i][5] = new Vector();
+						int i = 0;
 						
-						vettoreCorsi[i][1].add("N.Studenti");
-						vettoreCorsi[i][2].add("Media");
-						vettoreCorsi[i][3].add("Minimo");
-						vettoreCorsi[i][4].add("Massimo");
-						vettoreCorsi[i][5].add("riempimento");
-						
-						modelTable.addRow(vettoreCorsi[i]);
-						
-						i++;
+						while(i < listaCorsi.size()) {
+							
+							vettoreCorsi[i][0] = new Vector();
+							vettoreCorsi[i][0].add(listaCorsi.get(i));
+							
+							List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
+							
+							Corso corsoCompleto = new Corso();
+							corsoCompleto.setNome(valoriCorso.get(0));
+							corsoCompleto.setDescrizione(valoriCorso.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
+							corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
+							corsoCompleto.setCheck(valoriCorso.get(5));
+							
+							
+							vettoreCorsi[i][1] = new Vector();
+							vettoreCorsi[i][2] = new Vector();
+							vettoreCorsi[i][3] = new Vector();
+							vettoreCorsi[i][4] = new Vector();
+							vettoreCorsi[i][5] = new Vector();
+							vettoreCorsi[i][6] = new Vector();
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							vettoreCorsi[i][1].add(nLezioni);
+							int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							vettoreCorsi[i][2].add(nStudenti);
+							
+							List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),corsoCompleto.getCorsoId());
+							Integer max;
+							Integer min;
+							List<Integer> numPresenti = null;
+							
+							if(nLezioni != 0) {
+								
+								if(nStudenti != 0) {
+									
+									int o = 0;
+									
+									int presenti = 0;
+									while(o < listaIdLezioni.size()) {
+										
+										
+										presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
+										numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
+										o++;
+									}
+									
+									if(presenti != 0) {
+										
+										DecimalFormat df = new DecimalFormat();
+										df.setMaximumFractionDigits(2);
+										
+										float presentiFloat = Float.parseFloat(Integer.toString(presenti));
+										float nStudentiFloat = Float.parseFloat(Integer.toString(nStudenti));
+										float nLezioniFloat = Float.parseFloat(Integer.toString(nLezioni));
+										
+										float media = (presentiFloat / nStudentiFloat) / nLezioniFloat;
+										
+										vettoreCorsi[i][3].add(df.format(media));
+										max = Collections.max(numPresenti);
+										min = Collections.min(numPresenti);
+										vettoreCorsi[i][4].add(min);
+										vettoreCorsi[i][5].add(max);
+										
+									}else {
+										vettoreCorsi[i][3].add("X");
+										vettoreCorsi[i][4].add("X");
+										vettoreCorsi[i][5].add("X");
+									}
+									
+								}else {
+									vettoreCorsi[i][3].add("X");
+									vettoreCorsi[i][4].add("X");
+									vettoreCorsi[i][5].add("X");
+								}
+							}else {
+								vettoreCorsi[i][3].add("X");
+								vettoreCorsi[i][4].add("X");
+								vettoreCorsi[i][5].add("X");
+							}
+							
+							vettoreCorsi[i][6].add(corsoCompleto.getCheck());
+							
+							modelTable.addRow(vettoreCorsi[i]);
+							
+							i++;
+							
+						}
 						
 					}
 					
@@ -232,29 +387,109 @@ public class StatisticheCorsoFrame extends JFrame {
 				
 				if(checkK == 1 && checkCat == 1) {
 					
-					LinkedList<String> listaCorsi = corso.getCorsiTramiteKeyETema(controller.getConnection(), keyField.getText(), lista.getSelectedValue().toString());
-					Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][6];
-					int i = 0;
-					
-					while(i < listaCorsi.size()) {
+					LinkedList<String> listaCorsi = connectionDao.getCorsoDao().getCorsiTramiteKeyETema(connectionDao.getConnection(), keyField.getText(), lista.getSelectedValue().toString());
+					if(listaCorsi != null) {
+						Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][7];
 						
-						vettoreCorsi[i][0] = new Vector();
-						vettoreCorsi[i][0].add(listaCorsi.get(i));
-						vettoreCorsi[i][1] = new Vector();
-						vettoreCorsi[i][2] = new Vector();
-						vettoreCorsi[i][3] = new Vector();
-						vettoreCorsi[i][4] = new Vector();
-						vettoreCorsi[i][5] = new Vector();
+						int i = 0;
 						
-						vettoreCorsi[i][1].add("N.Studenti");
-						vettoreCorsi[i][2].add("Media");
-						vettoreCorsi[i][3].add("Minimo");
-						vettoreCorsi[i][4].add("Massimo");
-						vettoreCorsi[i][5].add("riempimento");
+						while(i < listaCorsi.size()) {
+							
+							vettoreCorsi[i][0] = new Vector();
+							vettoreCorsi[i][0].add(listaCorsi.get(i));
+							
+							List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
+							
+							Corso corsoCompleto = new Corso();
+							corsoCompleto.setNome(valoriCorso.get(0));
+							corsoCompleto.setDescrizione(valoriCorso.get(1));
+							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
+							corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
+							corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
+							corsoCompleto.setCheck(valoriCorso.get(5));
+							
+							
+							vettoreCorsi[i][1] = new Vector();
+							vettoreCorsi[i][2] = new Vector();
+							vettoreCorsi[i][3] = new Vector();
+							vettoreCorsi[i][4] = new Vector();
+							vettoreCorsi[i][5] = new Vector();
+							vettoreCorsi[i][6] = new Vector();
+							
+							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							vettoreCorsi[i][1].add(nLezioni);
+							int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							vettoreCorsi[i][2].add(nStudenti);
+							
+							List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							Integer max;
+							Integer min;
+							List<Integer> numPresenti = null;
+							
+							if(nLezioni != 0) {
+								
+								if(nStudenti != 0) {
+									
+									int o = 0;
+									
+									int presenti = 0;
+									while(o < listaIdLezioni.size()) {
+										
+										
+										presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
+										numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
+										o++;
+										
+									}
+									
+									if(presenti != 0) {
+										
+										DecimalFormat df = new DecimalFormat();
+										df.setMaximumFractionDigits(2);
+										
+										float presentiFloat = Float.parseFloat(Integer.toString(presenti));
+										float nStudentiFloat = Float.parseFloat(Integer.toString(nStudenti));
+										float nLezioniFloat = Float.parseFloat(Integer.toString(nLezioni));
+										
+										float media = (presentiFloat / nStudentiFloat) / nLezioniFloat;
+										
+										vettoreCorsi[i][3].add(df.format(media));
+										max = Collections.max(numPresenti);
+										min = Collections.min(numPresenti);
+										vettoreCorsi[i][4].add(min);
+										vettoreCorsi[i][5].add(max);
+										
+									}else {
+										vettoreCorsi[i][3].add("X");
+										vettoreCorsi[i][3].add("X");
+										vettoreCorsi[i][3].add("X");
+										vettoreCorsi[i][4].add("X");
+										vettoreCorsi[i][5].add("X");
+									}
+									
+								}else {
+									vettoreCorsi[i][3].add("X");
+									vettoreCorsi[i][3].add("X");
+									vettoreCorsi[i][3].add("X");
+									vettoreCorsi[i][4].add("X");
+									vettoreCorsi[i][5].add("X");
+								}
+							}else {
+								vettoreCorsi[i][3].add("X");
+								vettoreCorsi[i][3].add("X");
+								vettoreCorsi[i][3].add("X");
+								vettoreCorsi[i][4].add("X");
+								vettoreCorsi[i][5].add("X");
+							}
+
+							vettoreCorsi[i][6].add(corsoCompleto.getCheck());
+							
+							modelTable.addRow(vettoreCorsi[i]);
+							
+							i++;
+							
+						}
 						
-						modelTable.addRow(vettoreCorsi[i]);
-						
-						i++;
 						
 					}
 					
@@ -262,6 +497,19 @@ public class StatisticheCorsoFrame extends JFrame {
 			
 			}
 		});
-		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 }
 }

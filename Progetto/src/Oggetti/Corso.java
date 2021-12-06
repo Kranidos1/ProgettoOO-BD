@@ -7,7 +7,20 @@ public class Corso {
 	private Integer MaxPartecipanti;
 	private Integer MinPartecipazione;
 	private Integer CorsoId;
+	private String check;
 	
+	public String getCheck() {
+		return check;
+	}
+
+	public void setCheck(String check) {
+		this.check = check;
+	}
+
+	public void setCorsoId(Integer corsoId) {
+		CorsoId = corsoId;
+	}
+
 	public Corso() {
 		
 	}
