@@ -258,9 +258,16 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		d = areaDescrizione.getText().isEmpty();
 		
 		if(a == false) {
+			if(name.length() < 40) {
 			if(b == false && v == true) {
 				if(c == false && u == true) {
-		
+						
+					if(areaDescrizione.getText() != null) {
+						if(areaDescrizione.getText().length() < 1280) {
+							JOptionPane.showMessageDialog(null, "Descrizione troppo lunga", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+					}
 					if( Integer.parseInt(maxString) > Integer.parseInt(minString) ) {
 						
 						//TODO SALVATAGGIO EFFETTIVO INSERIMENTO DB ricorda di estrarre stringhe dall'area tematica e aggiungerle una a una nell'oggetto desiderato.
@@ -337,7 +344,9 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				jpanelManagementCreaCorsoFrame(fram,null,max,1);
 				
 		}else
-			jpanelManagementCreaCorsoFrame(fram,null ,nome ,0);
+			JOptionPane.showMessageDialog(fram, "Nome troppo lungo!", "Invalid input", JOptionPane.ERROR_MESSAGE);
+		}else
+			jpanelManagementCreaCorsoFrame(fram,null ,nome ,0);	
 		
 	}
 	
@@ -496,9 +505,16 @@ if(list.getSelectedValue()!= null) {
 			if(!tmpNome.isEmpty()) {
 				if(isWhatYouWant(tmpNome, 0)) {
 					
+					if(tmpNome.length() > 40) {
+						JOptionPane.showMessageDialog(null, "Nome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+					}
+					
 					if(!tmpCognome.isEmpty()) {
 						if(isWhatYouWant(tmpCognome, 0)) {
 							
+							if(tmpCognome.length() > 40) {
+								JOptionPane.showMessageDialog(null, "Cognome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+							}
 							
 							Date date;
 							String dbDate;
@@ -2258,7 +2274,15 @@ if(list.getSelectedValue()!= null) {
 			
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
-			
+			if(tmpTitle.length() < 4) {
+				
+				if(area.getText() != null) {
+					if(area.getText().length() < 1280) {
+						JOptionPane.showMessageDialog(null, "Descrizione troppo lunga", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+						return 0;
+					}
+				}
+				
 			if(dateChooser.getDate() != null) {					
 				
 				if(spinnerIn.getValue() != null) {
@@ -2271,7 +2295,7 @@ if(list.getSelectedValue()!= null) {
 						Object tmpDurata = spinnerDur.getValue();
 						String durata = tmpDurata.toString();
 						
-						//WORK
+						//WORKin
 						JSpinner.DateEditor de = new JSpinner.DateEditor(spinnerIn ,"HH:mm");
 						String orarioInizioLezione = de.getFormat().format(spinnerIn.getValue());
 						String durataLezione = spinnerDur.getValue().toString();
@@ -2356,6 +2380,8 @@ if(list.getSelectedValue()!= null) {
 			}else
 				jpanelManagementCreaCorsoFrame(null, null, title, 7);
 			return 0;
+			}else
+				JOptionPane.showMessageDialog(null, "Titolo troppo lungo!", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 		}else
 			jpanelManagementCreaCorsoFrame(null, null, title, 7);
 			return 0;
