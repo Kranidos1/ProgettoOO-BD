@@ -264,7 +264,7 @@ public class GeneralPanelGrande extends JPanel {
 				// TODO Auto-generated method stub
 				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
 				fram.setVisible(false);
-				RicercaStudente frame = new RicercaStudente();
+				RicercaStudenteFrame frame = new RicercaStudenteFrame();
 				
 			}
 			
@@ -290,7 +290,7 @@ public class GeneralPanelGrande extends JPanel {
 				// TODO Auto-generated method stub
 				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
 				fram.setVisible(false);
-				CreaLezione frame = new CreaLezione();
+				CreaLezioneFrame frame = new CreaLezioneFrame();
 				
 			}
 			
@@ -328,7 +328,7 @@ public class GeneralPanelGrande extends JPanel {
 				// TODO Auto-generated method stub
 				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
 				fram.setVisible(false);
-				new VisualizzaLezioni();
+				new VisualizzaLezioniFrame();
 				
 			}
 			

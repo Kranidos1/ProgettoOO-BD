@@ -103,7 +103,7 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 				modelTable.setRowCount(0);
 				tableStats.revalidate();
 				
-				controller.ricercaStudenti(list ,corsoLabel ,modelTable);
+				controller.ricercaStudenti(list ,corsoLabel ,modelTable ,tableStats);
 				
 			}
 		});

@@ -1,13 +1,16 @@
 package Frames;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -34,7 +37,9 @@ public interface ControlloEOperazioniSuFrame {
 	public void controlloInserimentoStudente(JTextField nomeField , JTextField cognomeField ,JList list ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField);
 	//TextField generico con controllocheckbox e ricerca
 	public int isEnbl(JTextField field ,int value ,JDateChooser date ,JList lista);
-	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model);
+	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser, JTable table,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model);
 	//torna numero di studenti
-	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model);
+	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model ,JTable table);
+	public void esporta(JFileChooser fileChooser ,String nomeCorso ,Vector[] vettoreStudenti ,DefaultTableModel model);
+	
 }

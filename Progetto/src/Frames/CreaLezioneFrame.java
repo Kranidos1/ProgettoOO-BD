@@ -42,7 +42,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 
-public class CreaLezione extends JFrame {
+public class CreaLezioneFrame extends JFrame {
 
 	private ConnectionDao connectionDao;
 	private JPanel contentPane;
@@ -51,12 +51,12 @@ public class CreaLezione extends JFrame {
 	private JTextField textField;
 	private Controller controller;
 	
-	public CreaLezione() {
+	public CreaLezioneFrame() {
 			
 		//TODO CONTROLLO SU LEZIONE GIA' ESISTENTE PER QUEL GIORNO
 		
 		super("Project GRU");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(CreaLezione.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CreaLezioneFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 517, 555);

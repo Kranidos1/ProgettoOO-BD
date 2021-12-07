@@ -1,8 +1,12 @@
 package Frames;
 
 import java.util.regex.Pattern;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,6 +18,7 @@ import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -28,6 +33,7 @@ import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -44,7 +50,6 @@ import Oggetti.DAO.IscrizioneDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 import Oggetti.DAO.PresenzaDaoImpl;
 import Oggetti.DAO.StudenteDaoImpl;
-import java.util.Iterator;
 
 public class Controller implements ControlloEOperazioniSuFrame {
 		
@@ -607,7 +612,7 @@ if(list.getSelectedValue()!= null) {
 			
 	}
 	
-	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model) {
+	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,JTable table ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model) {
 		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -660,10 +665,6 @@ if(list.getSelectedValue()!= null) {
 					
 					int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 					
-					if(nLezioni != 0) {
-						listaStudenti[i].add(nLezioni);
-					}else
-						listaStudenti[i].add("X");
 					
 					List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
 					
@@ -674,25 +675,49 @@ if(list.getSelectedValue()!= null) {
 						
 						presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 						
-						if(presenza.equals("Presente")) {
+						if(presenza != null) {
 							
-							count++;
+							if(presenza.equals("Presente")) {
+								
+								count++;
+								
+							}
 							
 						}
 						
 						j++;
 					}
 					
-					if(count != 0 && j != 0) {
+					if(nLezioni != 0) {
 						
-						int percentualeMinima = (count * 100) / nLezioni;
-						listaStudenti[i].add(percentualeMinima+"%");
+						listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
+						
+						if(count != 0 && j != 0) {
+							
+							int percentualeMinima = (count * 100) / nLezioni;
+							
+							if(percentualeMinima < 60) {
+								
+								TableColumn col = table.getColumnModel().getColumn(4);
+								col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+								
+							}else {
+								
+								TableColumn col = table.getColumnModel().getColumn(4);
+								col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+								
+							}
+							
+							listaStudenti[i].add(percentualeMinima+"%");
+							
+						}else {
+							listaStudenti[i].add("X");
+						}
 						
 					}else {
 						listaStudenti[i].add("X");
+						listaStudenti[i].add("X");
 					}
-					
-					
 					model.addRow(listaStudenti[i]);
 					i++;
 					
@@ -745,10 +770,6 @@ if(list.getSelectedValue()!= null) {
 							listaStudenti[i][4] = new Vector();
 							listaStudenti[i][5] = new Vector();
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-							if(nLezioni != 0) {
-								listaStudenti[i][4].add(nLezioni);
-							}else
-								listaStudenti[i][4].add("X");
 							
 							String presenza;
 							String cfFormatted = listaStudenti[i][2].toString().substring(1, listaStudenti[i][2].toString().length()-1);
@@ -762,24 +783,49 @@ if(list.getSelectedValue()!= null) {
 								
 								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 								
-								if(presenza.equals("Presente")) {
+								if(presenza != null) {
 									
-									count++;
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
 									
 								}
 								
 								j++;
 							}
+
 							
-							if(count != 0 && j != 0) {
+							if(nLezioni != 0) {
 								
-								int percentualeMinima = (count * 100) / nLezioni;
-								listaStudenti[i][5].add(percentualeMinima+"%");
+								
+								listaStudenti[i][4].add(Integer.toString(count) + "/" + nLezioni);
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									
+									if(percentualeMinima < 60) {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+										
+									}else {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+										
+									}
+									
+									listaStudenti[i][5].add(percentualeMinima+"%");
+									
+								}
 								
 							}else {
+								listaStudenti[i][4].add("X");
 								listaStudenti[i][5].add("X");
 							}
-							
 							model.addRow(listaStudenti[i]);
 							i++;
 						}
@@ -828,11 +874,6 @@ if(list.getSelectedValue()!= null) {
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
-							if(nLezioni != 0) {
-								listaStudenti[i].add(nLezioni);
-							}else
-								listaStudenti[i].add("X");
-							
 							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
 							
 							int j = 0;
@@ -842,24 +883,49 @@ if(list.getSelectedValue()!= null) {
 								
 								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 								
-								if(presenza.equals("Presente")) {
+								if(presenza != null) {
 									
-									count++;
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
 									
 								}
 								
 								j++;
 							}
 							
-							if(count != 0 && j != 0) {
+							if(nLezioni != 0) {
 								
-								int percentualeMinima = (count * 100) / nLezioni;
-								listaStudenti[i].add(percentualeMinima+"%");
+								listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									
+									if(percentualeMinima < 60) {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+										
+									}else {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+										
+									}
+									
+									listaStudenti[i].add(percentualeMinima+"%");
+									
+								}else {
+									listaStudenti[i].add("X");
+								}
 								
 							}else {
 								listaStudenti[i].add("X");
+								listaStudenti[i].add("X");
 							}
-					
 							
 							model.addRow(listaStudenti[i]);
 							i++;
@@ -876,20 +942,26 @@ if(list.getSelectedValue()!= null) {
 			
 		}
 		
+		
 		//SOLO NOME //FATTOTOOTTOTOTOTO
 		if(flagNome == 1 && flagCognome == 0 && flagCf == 0 && flagDate == 0) {
 			//erroreerororororororo
 			if(tmpNome != null) {
+				
 				if(isWhatYouWant(tmpNome ,0)) {
+					
+					
 					//comando ricerca
 				
 					Vector[] listaStudenti = connectionDao.getStudenteDao().ricercaStudenteByName(connectionDao.getConnection(), tmpNome.toUpperCase());
 					
 					int sizeLista = Arrays.asList(listaStudenti).size();
+					
 					int i = 0;
 					String presenza;
 					
 					while(i < sizeLista) {
+						
 						
 						String cfFormatted = listaStudenti[i].get(2).toString();
 						
@@ -899,6 +971,7 @@ if(list.getSelectedValue()!= null) {
 							model.addRow(listaStudenti[i]);
 							i++;
 						}else {
+							
 							
 							String nomeCorso = listaStudenti[i].get(3).toString();
 							
@@ -912,10 +985,7 @@ if(list.getSelectedValue()!= null) {
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
-							if(nLezioni != 0) {
-								listaStudenti[i].add(nLezioni);
-							}else
-								listaStudenti[i].add("X");
+
 							
 							List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoCompleto.getCorsoId());
 							
@@ -926,31 +996,55 @@ if(list.getSelectedValue()!= null) {
 								
 								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 								
-								if(presenza.equals("Presente")) {
+								if(presenza != null) {
 									
-									count++;
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
 									
 								}
 								
 								j++;
 							}
 							
-							if(count != 0 && j != 0) {
+							if(nLezioni != 0) {
 								
-								int percentualeMinima = (count * 100) / nLezioni;
-								listaStudenti[i].add(percentualeMinima+"%");
+								listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									
+									if(percentualeMinima < 60) {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+										
+									}else {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+										
+									}
+									
+									listaStudenti[i].add(percentualeMinima+"%");
+									
+								}else {
+									listaStudenti[i].add("X");
+								}
 								
 							}else {
 								listaStudenti[i].add("X");
+								listaStudenti[i].add("X");
 							}
 							
-							
 							model.addRow(listaStudenti[i]);
-							i++;
+							
 							
 						}
-						
-						
+						i++;
 					}
 					
 					
@@ -1002,10 +1096,6 @@ if(list.getSelectedValue()!= null) {
 							corsoCompleto.setNome(valori.get(0));
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-							if(nLezioni != 0) {
-								fixedList[i].add(nLezioni);
-							}else
-								fixedList[i].add("X");
 							
 							String presenza;
 							String cfFormatted = listaStudenti[i].get(2);
@@ -1019,25 +1109,50 @@ if(list.getSelectedValue()!= null) {
 								
 								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 								
-								if(presenza.equals("Presente")) {
+								if(presenza != null) {
 									
-									count++;
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
 									
 								}
 								
 								j++;
 							}
 							
-							if(count != 0 && j != 0) {
+							if(nLezioni != 0) {
 								
-								int percentualeMinima = (count * 100) / nLezioni;
-								fixedList[i].add(percentualeMinima+"%");
+								fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									
+									if(percentualeMinima < 60) {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+										
+									}else {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+										
+									}
+									
+									fixedList[i].add(percentualeMinima+"%");
+									
+								}else {
+									fixedList[i].add("X");
+								}
 								
 							}else {
 								fixedList[i].add("X");
+								fixedList[i].add("X");
 							}
-							
-							//ROBA
+								//ROBA
 						
 						
 
@@ -1087,10 +1202,6 @@ if(list.getSelectedValue()!= null) {
 							corsoCompleto.setNome(valori.get(0));
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-							if(nLezioni != 0) {
-								fixedList[i].add(nLezioni);
-							}else
-								fixedList[i].add("X");
 							
 							String presenza;
 							String cfFormatted = listaStudenti[i].get(2);
@@ -1104,25 +1215,50 @@ if(list.getSelectedValue()!= null) {
 								
 								presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 								
-								if(presenza.equals("Presente")) {
+								if(presenza != null) {
 									
-									count++;
+									if(presenza.equals("Presente")) {
+										
+										count++;
+										
+									}
 									
 								}
 								
 								j++;
 							}
 							
-							if(count != 0 && j != 0) {
+							if(nLezioni != 0) {
 								
-								int percentualeMinima = (count * 100) / nLezioni;
-								fixedList[i].add(percentualeMinima+"%");
+								fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+								
+								if(count != 0 && j != 0) {
+									
+									int percentualeMinima = (count * 100) / nLezioni;
+									
+									if(percentualeMinima < 60) {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+										
+									}else {
+										
+										TableColumn col = table.getColumnModel().getColumn(4);
+										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+										
+									}
+									
+									fixedList[i].add(percentualeMinima+"%");
+									
+								}else {
+									fixedList[i].add("X");
+								}
 								
 							}else {
 								fixedList[i].add("X");
+								fixedList[i].add("X");
 							}
 							
-
 							model.addRow(fixedList[i]);
 							
 						}
@@ -1169,10 +1305,6 @@ if(list.getSelectedValue()!= null) {
 								corsoCompleto.setNome(valor.get(0));
 								
 								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-								if(nLezioni != 0) {
-									fixedList[i].add(nLezioni);
-								}else
-									fixedList[i].add("X");
 								
 								String presenza;
 								String cfFormatted = listaStudenti[i].get(2);
@@ -1186,23 +1318,50 @@ if(list.getSelectedValue()!= null) {
 									
 									presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 									
-									if(presenza.equals("Presente")) {
+									if(presenza != null) {
 										
-										count++;
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
 										
 									}
 									
 									j++;
 								}
-								
-								if(count != 0 && j != 0) {
+
+								if(nLezioni != 0) {
 									
-									int percentualeMinima = (count * 100) / nLezioni;
-									fixedList[i].add(percentualeMinima+"%");
+									fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										
+										if(percentualeMinima < 60) {
+											
+											TableColumn col = table.getColumnModel().getColumn(4);
+											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+											
+										}else {
+											
+											TableColumn col = table.getColumnModel().getColumn(4);
+											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+											
+										}
+										
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
 									
 								}else {
 									fixedList[i].add("X");
+									fixedList[i].add("X");
 								}
+								
 								model.addRow(fixedList[i]);
 								i++;
 
@@ -1247,10 +1406,6 @@ if(list.getSelectedValue()!= null) {
 						corsoCompleto.setNome(valori.get(0));
 						
 						int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-						if(nLezioni != 0) {
-							fixedList[i].add(nLezioni);
-						}else
-							fixedList[i].add("X");
 						
 						
 						String presenza;
@@ -1265,21 +1420,47 @@ if(list.getSelectedValue()!= null) {
 							
 							presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 							
-							if(presenza.equals("Presente")) {
+							if(presenza != null) {
 								
-								count++;
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
 								
 							}
 							
 							j++;
 						}
 						
-						if(count != 0 && j != 0) {
+						if(nLezioni != 0) {
 							
-							int percentualeMinima = (count * 100) / nLezioni;
-							fixedList[i].add(percentualeMinima+"%");
+							fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+							
+							if(count != 0 && j != 0) {
+								
+								int percentualeMinima = (count * 100) / nLezioni;
+								
+								if(percentualeMinima < 60) {
+									
+									TableColumn col = table.getColumnModel().getColumn(4);
+									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+									
+								}else {
+									
+									TableColumn col = table.getColumnModel().getColumn(4);
+									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+									
+								}
+								
+								fixedList[i].add(percentualeMinima+"%");
+								
+							}else {
+								fixedList[i].add("X");
+							}
 							
 						}else {
+							fixedList[i].add("X");
 							fixedList[i].add("X");
 						}
 						
@@ -1327,10 +1508,6 @@ if(list.getSelectedValue()!= null) {
 								corsoCompleto.setNome(valori.get(0));
 								
 								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-								if(nLezioni != 0) {
-									fixedList[i].add(nLezioni);
-								}else
-									fixedList[i].add("X");
 								
 								
 								String presenza;
@@ -1345,21 +1522,47 @@ if(list.getSelectedValue()!= null) {
 									
 									presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 									
-									if(presenza.equals("Presente")) {
+									if(presenza != null) {
 										
-										count++;
+										if(presenza.equals("Presente")) {
+											
+											count++;
+											
+										}
 										
 									}
 									
 									j++;
 								}
 								
-								if(count != 0 && j != 0) {
+								if(nLezioni != 0) {
 									
-									int percentualeMinima = (count * 100) / nLezioni;
-									fixedList[i].add(percentualeMinima+"%");
+									fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+									
+									if(count != 0 && j != 0) {
+										
+										int percentualeMinima = (count * 100) / nLezioni;
+										
+										if(percentualeMinima < 60) {
+											
+											TableColumn col = table.getColumnModel().getColumn(4);
+											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+											
+										}else {
+											
+											TableColumn col = table.getColumnModel().getColumn(4);
+											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+											
+										}
+										
+										fixedList[i].add(percentualeMinima+"%");
+										
+									}else {
+										fixedList[i].add("X");
+									}
 									
 								}else {
+									fixedList[i].add("X");
 									fixedList[i].add("X");
 								}
 								
@@ -1412,10 +1615,6 @@ if(list.getSelectedValue()!= null) {
 									corsoCompleto.setNome(valori.get(0));
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-									if(nLezioni != 0) {
-										fixedList[i].add(nLezioni);
-									}else
-										fixedList[i].add("X");
 									
 									
 									String presenza;
@@ -1430,21 +1629,47 @@ if(list.getSelectedValue()!= null) {
 										
 										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 										
-										if(presenza.equals("Presente")) {
+										if(presenza != null) {
 											
-											count++;
+											if(presenza.equals("Presente")) {
+												
+												count++;
+												
+											}
 											
 										}
 										
 										j++;
 									}
 									
-									if(count != 0 && j != 0) {
+									if(nLezioni != 0) {
 										
-										int percentualeMinima = (count * 100) / nLezioni;
-										fixedList[i].add(percentualeMinima+"%");
+										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+										
+										if(count != 0 && j != 0) {
+											
+											int percentualeMinima = (count * 100) / nLezioni;
+											
+											if(percentualeMinima < 60) {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+												
+											}else {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+												
+											}
+											
+											fixedList[i].add(percentualeMinima+"%");
+											
+										}else {
+											fixedList[i].add("X");
+										}
 										
 									}else {
+										fixedList[i].add("X");
 										fixedList[i].add("X");
 									}
 									
@@ -1501,10 +1726,6 @@ if(list.getSelectedValue()!= null) {
 									corsoCompleto.setNome(valori.get(0));
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-									if(nLezioni != 0) {
-										fixedList[i].add(nLezioni);
-									}else
-										fixedList[i].add("X");
 									
 									
 									String presenza;
@@ -1519,21 +1740,47 @@ if(list.getSelectedValue()!= null) {
 										
 										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 										
-										if(presenza.equals("Presente")) {
+										if(presenza != null) {
 											
-											count++;
+											if(presenza.equals("Presente")) {
+												
+												count++;
+												
+											}
 											
 										}
 										
 										j++;
 									}
 									
-									if(count != 0 && j != 0) {
+									if(nLezioni != 0) {
 										
-										int percentualeMinima = (count * 100) / nLezioni;
-										fixedList[i].add(percentualeMinima+"%");
+										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+										
+										if(count != 0 && j != 0) {
+											
+											int percentualeMinima = (count * 100) / nLezioni;
+											
+											if(percentualeMinima < 60) {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+												
+											}else {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+												
+											}
+											
+											fixedList[i].add(percentualeMinima+"%");
+											
+										}else {
+											fixedList[i].add("X");
+										}
 										
 									}else {
+										fixedList[i].add("X");
 										fixedList[i].add("X");
 									}
 									
@@ -1587,10 +1834,6 @@ if(list.getSelectedValue()!= null) {
 									corsoCompleto.setNome(valori.get(0));
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-									if(nLezioni != 0) {
-										fixedList[i].add(nLezioni);
-									}else
-										fixedList[i].add("X");
 									
 									
 									String presenza;
@@ -1605,21 +1848,47 @@ if(list.getSelectedValue()!= null) {
 										
 										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 										
-										if(presenza.equals("Presente")) {
+										if(presenza != null) {
 											
-											count++;
+											if(presenza.equals("Presente")) {
+												
+												count++;
+												
+											}
 											
 										}
 										
 										j++;
 									}
 									
-									if(count != 0 && j != 0) {
+									if(nLezioni != 0) {
 										
-										int percentualeMinima = (count * 100) / nLezioni;
-										fixedList[i].add(percentualeMinima+"%");
+										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+										
+										if(count != 0 && j != 0) {
+											
+											int percentualeMinima = (count * 100) / nLezioni;
+											
+											if(percentualeMinima < 60) {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+												
+											}else {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+												
+											}
+											
+											fixedList[i].add(percentualeMinima+"%");
+											
+										}else {
+											fixedList[i].add("X");
+										}
 										
 									}else {
+										fixedList[i].add("X");
 										fixedList[i].add("X");
 									}
 									
@@ -1673,10 +1942,6 @@ if(list.getSelectedValue()!= null) {
 									corsoCompleto.setNome(valori.get(0));
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-									if(nLezioni != 0) {
-										fixedList[i].add(nLezioni);
-									}else
-										fixedList[i].add("X");
 									
 									
 									String presenza;
@@ -1691,21 +1956,47 @@ if(list.getSelectedValue()!= null) {
 										
 										presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 										
-										if(presenza.equals("Presente")) {
+										if(presenza != null) {
 											
-											count++;
+											if(presenza.equals("Presente")) {
+												
+												count++;
+												
+											}
 											
 										}
 										
 										j++;
 									}
 									
-									if(count != 0 && j != 0) {
+									if(nLezioni != 0) {
 										
-										int percentualeMinima = (count * 100) / nLezioni;
-										fixedList[i].add(percentualeMinima+"%");
+										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+										
+										if(count != 0 && j != 0) {
+											
+											int percentualeMinima = (count * 100) / nLezioni;
+											
+											if(percentualeMinima < 60) {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+												
+											}else {
+												
+												TableColumn col = table.getColumnModel().getColumn(4);
+												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+												
+											}
+											
+											fixedList[i].add(percentualeMinima+"%");
+											
+										}else {
+											fixedList[i].add("X");
+										}
 										
 									}else {
+										fixedList[i].add("X");
 										fixedList[i].add("X");
 									}
 									
@@ -1764,11 +2055,6 @@ if(list.getSelectedValue()!= null) {
 											corsoCompleto.setNome(valori.get(0));
 											
 											int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
-											if(nLezioni != 0) {
-												fixedList[i].add(nLezioni);
-											}else
-												fixedList[i].add("X");
-											
 											
 											String presenza;
 											String cfFormatted = listaStudenti[i].get(2);
@@ -1782,21 +2068,47 @@ if(list.getSelectedValue()!= null) {
 												
 												presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(j));
 												
-												if(presenza.equals("Presente")) {
+												if(presenza != null) {
 													
-													count++;
+													if(presenza.equals("Presente")) {
+														
+														count++;
+														
+													}
 													
 												}
 												
 												j++;
 											}
 											
-											if(count != 0 && j != 0) {
+											if(nLezioni != 0) {
 												
-												int percentualeMinima = (count * 100) / nLezioni;
-												fixedList[i].add(percentualeMinima+"%");
+												fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+												
+												if(count != 0 && j != 0) {
+													
+													int percentualeMinima = (count * 100) / nLezioni;
+													
+													if(percentualeMinima < 60) {
+														
+														TableColumn col = table.getColumnModel().getColumn(4);
+														col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+														
+													}else {
+														
+														TableColumn col = table.getColumnModel().getColumn(4);
+														col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+														
+													}
+													
+													fixedList[i].add(percentualeMinima+"%");
+													
+												}else {
+													fixedList[i].add("X");
+												}
 												
 											}else {
+												fixedList[i].add("X");
 												fixedList[i].add("X");
 											}
 											
@@ -1831,7 +2143,7 @@ if(list.getSelectedValue()!= null) {
 	}
 	
 	//TODOx
-	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model) {
+	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model ,JTable table) {
 		
 		if(corso.getSelectedValue() != null) {
 			//effettua ricerca
@@ -1874,10 +2186,7 @@ if(list.getSelectedValue()!= null) {
 					
 					formattedCf = listaStudenti[i].get(2).toString().substring(1, listaStudenti[i].get(2).toString().length()-1);
 					//N LEZIONE TOTALI
-					if(nLezioni != 0) {
-						fixedList[i].add(nLezioni);
-					}else
-						fixedList[i].add("X");
+
 					
 					//N PRESENZE
 					j = 0;
@@ -1886,9 +2195,13 @@ if(list.getSelectedValue()!= null) {
 
 						String presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), formattedCf, listaIdLezioni.get(j));
 
-						if(presenza.equals("Presente")) {
+						if(presenza != null) {
 							
-							count++;
+							if(presenza.equals("Presente")) {
+								
+								count++;
+								
+							}
 							
 						}
 						j++;
@@ -1897,6 +2210,24 @@ if(list.getSelectedValue()!= null) {
 					if(nLezioni != 0 && count != 0) {
 						
 						int percentualePresenza = (count * 100) / nLezioni;
+						
+						if(percentualePresenza < 60) {
+							
+							TableColumn col = table.getColumnModel().getColumn(4);
+							col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+							
+						}else {
+							
+							TableColumn col = table.getColumnModel().getColumn(4);
+							col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+							
+						}
+						
+						if(nLezioni != 0) {
+							fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+						}else
+							fixedList[i].add("X");
+						
 						fixedList[i].add(percentualePresenza+"%");
 						model.addRow(fixedList[i]);
 						
@@ -2035,5 +2366,355 @@ if(list.getSelectedValue()!= null) {
 		
 	}
 	
+	public void esporta(JFileChooser fileChooser ,String nomeCorso ,Vector[] vettoreStudenti ,DefaultTableModel model) {
+		
+		
+		if(nomeCorso != null) {
+			if(vettoreStudenti.length != 0) {
+				
+		int risposta = fileChooser.showSaveDialog(null);
+		if(risposta == 0) {
+			
+			
+			
+		File file = fileChooser.getSelectedFile();
+		
+		//ANCHE LA LISTA DIVERSA DA NULL DA METTERE!!!!!
+			
+			File fileCorso = new File(file.toString() + "\\" + nomeCorso + "ListReport.txt");
+			
+			if(fileCorso.exists()) {
+				
+				int answer = JOptionPane.showConfirmDialog(null, "Il file esiste già.Sovrascrivere?", "Question", JOptionPane.OK_CANCEL_OPTION);
+				
+				if(answer == 0) {
+					
+					fileCorso.delete();
+					fileCorso = new File(file.toString() + "\\" + nomeCorso + "ListReport.txt");
+					
+				try {
+						
+						FileWriter fileWrit = new FileWriter(fileCorso,true);
+						 		 
+						String cornice = "+---------------------------------+---------------------------------+-------------------------+-----------------+------------+";
+
+						fileWrit.write(cornice);
+						fileWrit.write("\n|Nome                             |Cognome                          |Cf                       |Promosso         |%Presenze   |\n");
+						fileWrit.write(cornice);
+						fileWrit.write("\n");
+						
+						//29 cognome e nome    25cf 17 promosso  12 presenza
+						int i = 0;
+						int j;
+						
+						//30
+						//60
+						char[] tmpNome = new char[200];
+						tmpNome[0] = '|';
+						
+						tmpNome[67] = '|';
+						
+						String nome,cognome,cf,promozione,presenza;
+						int lengthNome;
+						int lengthCognome;
+
+						
+						while(i < vettoreStudenti.length) {
+							
+							nome = vettoreStudenti[i].get(0).toString().substring(1,vettoreStudenti[i].get(0).toString().length()-1);
+							cognome = vettoreStudenti[i].get(1).toString().substring(1,vettoreStudenti[i].get(1).toString().length()-1);
+							cf = vettoreStudenti[i].get(2).toString().substring(1,vettoreStudenti[i].get(2).toString().length()-1);
+							
+						
+							promozione = model.getValueAt(i, 3).toString();
+							presenza = model.getValueAt(i, 4).toString();
+
+							j = 1;
+							int t = 0;
+							
+							while(t < nome.length()) {
+								
+								tmpNome[j] = nome.charAt(t);
+								
+								j++;
+								t++;
+							}
+							while(j < 34) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[34] = '|';
+							
+							j++;
+							t = 0;
+							
+							while(t < cognome.length()) {
+								
+								tmpNome[j] = cognome.charAt(t);
+								
+								j++;
+								t++;
+							}
+							while(j < 68) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[68] = '|';
+							j++;
+							t = 0;
+							
+							while(t < cf.length()) {
+								
+								tmpNome[j] = cf.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 94) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[94] = '|';
+							j++;
+							t = 0;
+							
+							while(t < promozione.length()) {
+								
+								tmpNome[j] = promozione.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 112) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[112] = '|';
+							j++;
+							t = 0;
+							
+							
+							while(t < presenza.length()) {
+								
+								tmpNome[j] = presenza.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 125) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[125] = '|';
+							
+
+							fileWrit.write(tmpNome);
+							fileWrit.write("\n");
+							fileWrit.write(cornice);
+							
+							i++;
+						}
+						
+						fileWrit.close();
+						
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}else {
+					
+				}
+				
+				
+			}else {
+
+					try {
+						
+						FileWriter fileWrit = new FileWriter(fileCorso,true);
+						 		 
+						String cornice = "+---------------------------------+---------------------------------+-------------------------+-----------------+------------+";
+
+						fileWrit.write(cornice);
+						fileWrit.write("\n|Nome                             |Cognome                          |Cf                       |Promosso         |%Presenze   |\n");
+						fileWrit.write(cornice);
+						fileWrit.write("\n");
+						//29 cognome e nome    25cf 17 promosso  12 presenza
+						int i = 0;
+						int j;
+						
+						//30
+						//60
+						char[] tmpNome = new char[200];
+						tmpNome[0] = '|';
+						
+						tmpNome[67] = '|';
+						
+						String nome,cognome,cf,promozione,presenza;
+						int lengthNome;
+						int lengthCognome;
+
+						
+						while(i < vettoreStudenti.length) {
+							
+							nome = vettoreStudenti[i].get(0).toString().substring(1,vettoreStudenti[i].get(0).toString().length()-1);
+							cognome = vettoreStudenti[i].get(1).toString().substring(1,vettoreStudenti[i].get(1).toString().length()-1);
+							cf = vettoreStudenti[i].get(2).toString().substring(1,vettoreStudenti[i].get(2).toString().length()-1);
+						
+							
+							
+							
+							promozione = model.getValueAt(i, 3).toString();
+							presenza = model.getValueAt(i, 4).toString();
+
+							j = 1;
+							int t = 0;
+							
+							while(t < nome.length()) {
+								
+								tmpNome[j] = nome.charAt(t);
+								
+								j++;
+								t++;
+							}
+							while(j < 34) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[34] = '|';
+							
+							j++;
+							t = 0;
+							
+							while(t < cognome.length()) {
+								
+								tmpNome[j] = cognome.charAt(t);
+								
+								j++;
+								t++;
+							}
+							while(j < 68) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[68] = '|';
+							j++;
+							t = 0;
+							
+							while(t < cf.length()) {
+								
+								tmpNome[j] = cf.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 94) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[94] = '|';
+							j++;
+							t = 0;
+							
+							while(t < promozione.length()) {
+								
+								tmpNome[j] = promozione.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 112) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[112] = '|';
+							j++;
+							t = 0;
+							
+							
+							while(t < presenza.length()) {
+								
+								tmpNome[j] = presenza.charAt(t);
+								
+								j++;
+								t++;
+							}
+							
+							while(j < 125) {
+								
+								tmpNome[j] = ' ';
+								
+								j++;
+								
+							}
+							
+							tmpNome[125] = '|';
+
+							fileWrit.write(tmpNome);
+							fileWrit.write("\n");
+							fileWrit.write(cornice);
+							
+							i++;
+						}
+						
+						fileWrit.close();
+						
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+
+			}
+			}else
+				JOptionPane.showMessageDialog(null, "Non sono presenti studenti.", "ERROR", JOptionPane.ERROR_MESSAGE);
+		
+		}else
+			JOptionPane.showMessageDialog(null, "Non hai selezionato nessun corso.", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
+
 }
 

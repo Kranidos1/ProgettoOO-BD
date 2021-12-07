@@ -36,7 +36,7 @@ import Oggetti.DAO.StudenteDaoImpl;
 
 import java.awt.Font;
 
-public class RicercaStudente extends JFrame {
+public class RicercaStudenteFrame extends JFrame {
 	
 	private ConnectionDao connectionDao;
 	private JPanel contentPane;
@@ -52,9 +52,9 @@ public class RicercaStudente extends JFrame {
 	int flagDate = 0;
 	private Controller controller;
 	
-	public RicercaStudente() {
+	public RicercaStudenteFrame() {
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RicercaStudente.class.getResource("/imgs/lastin.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RicercaStudenteFrame.class.getResource("/imgs/lastin.png")));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 639, 555);
@@ -223,7 +223,7 @@ public class RicercaStudente extends JFrame {
 				
 				model.setRowCount(0);
 				tableStats.revalidate();
-				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser ,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel ,model);
+				controller.ricercaStudente(nomeField ,cognomeField ,cfField ,dateChooser, tableStats,flagNome ,flagCognome ,flagCf ,flagDate ,cfLabel ,model);
 				
 			}
 		});

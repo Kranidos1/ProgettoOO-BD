@@ -114,7 +114,7 @@ public class BocciaPromuoviFrame extends JFrame {
 				if (listCorsi.getSelectedValue() != null) {
 
 					nomeCorso = listCorsi.getSelectedValue().toString();
-					numStudenti = controller.ricercaStudenti(listCorsi, null, modelTable);
+					numStudenti = controller.ricercaStudenti(listCorsi, null, modelTable ,table);
 					studentiEPromozione = new List[numStudenti];
 
 				}

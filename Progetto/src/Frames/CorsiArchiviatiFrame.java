@@ -4,6 +4,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -14,28 +15,37 @@ import Oggetti.DAO.IscrizioneDaoImpl;
 import javax.swing.JScrollPane;
 import java.awt.*;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
-public class CorsiArchiviati extends JFrame {
+public class CorsiArchiviatiFrame extends JFrame {
 
 	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private Controller controller;
-
 	private JTable table;
-
+	private JFileChooser fileChooser;
+	private String nomeCorso;
+	private Vector[] vettoreStudenti;
 	
-	public CorsiArchiviati() {
+	public CorsiArchiviatiFrame() {
 		
 		super("Project GRU");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GestisciPresenzeFrame.class.getResource("/imgs/lastin.png")));
@@ -82,10 +92,20 @@ public class CorsiArchiviati extends JFrame {
 		ricercaButton.setBounds(46, 343, 132, 29);
 		panel.add(ricercaButton);
 		
+		JButton btnEsporta = new JButton("Esporta");
+		btnEsporta.setForeground(Color.RED);
+		btnEsporta.setBorder(new RoundBorderBotton(10));
+		btnEsporta.setBackground(Color.WHITE);
+		btnEsporta.setBounds(458, 447, 132, 29);
+		panel.add(btnEsporta);
 		//AGGIUNGO CORSI ARCHIVIATI ALLA LISTA
 		modelList.addAll(connectionDao.getCorsoDao().getNomeCorsiArchiviati(connectionDao.getConnection()));
 		
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
 		ricercaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -94,11 +114,11 @@ public class CorsiArchiviati extends JFrame {
 				
 				if(listCorsi.getSelectedValue() != null) {
 					
-					String nomeCorso = listCorsi.getSelectedValue().toString();
+					nomeCorso = listCorsi.getSelectedValue().toString();
 					int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
 					LinkedList[] studentiList = (LinkedList[]) connectionDao.getIscrizioneDao().getStudentiByCorsoId(connectionDao.getConnection(), corsoId);
 					
-					Vector[] vettoreStudenti = new Vector[Arrays.asList(studentiList).size()];
+					vettoreStudenti = new Vector[Arrays.asList(studentiList).size()];
 					
 					int i = 0;
 					
@@ -109,6 +129,7 @@ public class CorsiArchiviati extends JFrame {
 						vettoreStudenti[i].add(studentiList[i].get(1).toString());
 						vettoreStudenti[i].add(studentiList[i].get(2).toString());
 						
+						String percentualePresenza;
 						String cfFormatted = studentiList[i].get(2).toString().substring(1, studentiList[i].get(2).toString().length()-1);
 						String promozione = connectionDao.getIscrizioneDao().getPromozioneStudente(connectionDao.getConnection(), cfFormatted, corsoId);
 						
@@ -117,16 +138,81 @@ public class CorsiArchiviati extends JFrame {
 						}else {
 							vettoreStudenti[i].add("No");
 						}
+						
+						int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoId);
+						
+						String presenza;
+						
+						List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoId);
+						
+						int p = 0;
+						int count = 0;
+						
+						while(p < lezioniIdList.size()) {
 							
-						vettoreStudenti[i].add(studentiList[i].get(4).toString());
+
+							presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(p));
+							
+							if(presenza != null) {
+								
+								if(presenza.equals("Presente")) {
+									
+									count++;
+									
+								}
+								
+							}
+							
+							p++;
+						}
+						
+						
+						if(nLezioni != 0) {
+
+							if(count != 0) {
+								
+								
+								int percentuale = (count * 100) / nLezioni;
+								percentualePresenza = Integer.toString(percentuale);
+		
+								if(percentuale < 60) {
+									
+									TableColumn col = table.getColumnModel().getColumn(4);
+									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
+									
+								}else {
+									
+									TableColumn col = table.getColumnModel().getColumn(4);
+									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
+									
+								}
+								vettoreStudenti[i].add(percentualePresenza + "%");
+								
+							}else
+								vettoreStudenti[i].add("X");
+						}else
+							vettoreStudenti[i].add("X");
+							
+						
+							
 						
 						model.addRow(vettoreStudenti[i]);
+						
+					
 						
 						i++;
 					}
 					
 					
 				}
+				
+			}
+		});
+		
+		btnEsporta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				controller.esporta(fileChooser, nomeCorso, vettoreStudenti, model);
 				
 			}
 		});

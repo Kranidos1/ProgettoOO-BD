@@ -115,7 +115,7 @@ public class GestioneCorsiFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);
-				new CorsiArchiviati();
+				new CorsiArchiviatiFrame();
 				
 			}
 		});

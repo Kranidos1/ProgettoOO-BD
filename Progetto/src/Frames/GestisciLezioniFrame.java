@@ -75,7 +75,7 @@ public class GestisciLezioniFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);
-				new CreaLezione();
+				new CreaLezioneFrame();
 				
 			}
 		});
@@ -93,7 +93,7 @@ public class GestisciLezioniFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);
-				new VisualizzaLezioni();
+				new VisualizzaLezioniFrame();
 				
 			}
 		});

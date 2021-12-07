@@ -80,7 +80,7 @@ public class GestioneStudentiFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setVisible(false);
-				new RicercaStudente();
+				new RicercaStudenteFrame();
 				
 			}
 		});
