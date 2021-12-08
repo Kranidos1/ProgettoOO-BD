@@ -8,7 +8,7 @@ import Oggetti.Corso;
 
 public interface CorsoDao {
 	
-public void inserimento(Corso corso ,Connection connection);
+public int inserimento(Corso corso ,Connection connection);
 public int controlloDuplicati (Connection connection ,String nome);
 public int getNextCorsoId(Connection connection);
 public String getNomeById(Connection connection ,String id);
@@ -19,8 +19,8 @@ public LinkedList<String> getNomiById(Connection connection ,LinkedList<String> 
 public LinkedList<String> getCorsiTramiteKeyETema(Connection connection ,String key ,String theme);
 public void deleteCorsoByName(Connection connection ,String nome);
 //\"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\"
-public List<String> getCorso(Connection connection ,String nome);
-public void updateCorso(Connection connection ,String id ,String nome ,String descrizione ,String maxPartecipanti ,String minPartecipazione);
+public Corso getCorso(Connection connection ,String nome);
+public void updateCorso(Connection connection ,Corso corso);
 public void updateCheckCorso(Connection connection ,int corsoId);
 public List getNomeCorsiFiniti(Connection connection );
 public void updateCheckCorsoGestito(Connection connection ,int corsoId);

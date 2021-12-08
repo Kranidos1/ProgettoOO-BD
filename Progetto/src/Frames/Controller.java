@@ -1,5 +1,10 @@
 package Frames;
 
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import java.util.regex.Pattern;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -34,6 +39,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -50,9 +56,10 @@ import Oggetti.DAO.IscrizioneDaoImpl;
 import Oggetti.DAO.LezioneDaoImpl;
 import Oggetti.DAO.PresenzaDaoImpl;
 import Oggetti.DAO.StudenteDaoImpl;
-
+import java.awt.Component;
 public class Controller implements ControlloEOperazioniSuFrame {
 		
+	private static final char[] corsoFormattato = null;
 	private int j = 0;
 	private ConnectionDao connectionDao = new ConnectionDao();
 	
@@ -263,7 +270,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 				if(c == false && u == true) {
 						
 					if(areaDescrizione.getText() != null) {
-						if(areaDescrizione.getText().length() < 1280) {
+						if(areaDescrizione.getText().length() > 1280) {
 							JOptionPane.showMessageDialog(null, "Descrizione troppo lunga", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
@@ -297,25 +304,29 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						//INSERIMENTO EFFETTIVO DELCORSO
 						
 						if(flag == 0) {
-							connectionDao.getCorsoDao().inserimento(corso, connectionDao.getConnection());
+							int process = connectionDao.getCorsoDao().inserimento(corso, connectionDao.getConnection());
 								
-							Timer timer = new Timer(1000,new ActionListener() {
+							if(process == 1) {
+								
+								Timer timer = new Timer(1000,new ActionListener() {
 
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									// TODO Auto-generated method stub
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										// TODO Auto-generated method stub
 
-									while(j < tmp.size()) {
+										while(j < tmp.size()) {
+											
+											connectionDao.getCorsoTemaDao().inserimento(connectionDao.getConnection(), connectionDao.getCorsoDao().getNextCorsoId(connectionDao.getConnection()), tmp.get(j));
+											j ++;
+											
+										}
 										
-										connectionDao.getCorsoTemaDao().inserimento(connectionDao.getConnection(), connectionDao.getCorsoDao().getNextCorsoId(connectionDao.getConnection()), tmp.get(j));
-										j ++;
-										
-									}
-									
-								}		
-							});	
-							timer.setRepeats(false);
-							timer.start();
+									}		
+								});	
+								timer.setRepeats(false);
+								timer.start();
+								
+							}
 							
 							fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
 							
@@ -326,7 +337,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 						}else
 							if(flag == 1) {
 								
-								connectionDao.getCorsoDao().updateCorso(connectionDao.getConnection(), corsoId, corso.getNome(), corso.getDescrizione(), Integer.toString(corso.getMaxPartecipanti()), Integer.toString(corso.getMinPartecipazione()));
+								connectionDao.getCorsoDao().updateCorso(connectionDao.getConnection(), corso);
 								
 								fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
 								
@@ -541,22 +552,27 @@ if(list.getSelectedValue()!= null) {
 										studente.setCognome(tmpCognome.toUpperCase());
 										studente.setData(sdf.format(date));
 										studente.setDataIscrizione(sdf.format(dataAttuale));
-										connectionDao.getStudenteDao().inserimento(connectionDao.getConnection(), studente);
 										
+										int process = connectionDao.getStudenteDao().inserimento(connectionDao.getConnection(), studente);
 										
-										int procedere = connectionDao.getIscrizioneDao().controlloDuplicati(connectionDao.getConnection(), studente.getCF(), corsoId);
-										
-										if(procedere == 1) {
+										if(process == 1) {
 											
-											connectionDao.getIscrizioneDao().inserimento(connectionDao.getConnection(), corsoId, studente.getCF() ,studente.getDataIscrizione());
 											
-											JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
-											nomeField.setText("");
-											cognomeField.setText("");
-											cfField.setText("");
+											int procedere = connectionDao.getIscrizioneDao().controlloDuplicati(connectionDao.getConnection(), studente.getCF(), corsoId);
 											
-										}else
-											JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+											if(procedere == 1) {
+												
+												connectionDao.getIscrizioneDao().inserimento(connectionDao.getConnection(), corsoId, studente.getCF() ,studente.getDataIscrizione());
+												
+												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+												nomeField.setText("");
+												cognomeField.setText("");
+												cfField.setText("");
+												
+											}else
+												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+											
+										}
 										
 
 										
@@ -672,12 +688,7 @@ if(list.getSelectedValue()!= null) {
 					String nomeCorso = listaStudenti[i].get(3).toString();
 					
 					Corso corsoCompleto = new Corso();
-					List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-					corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-					corsoCompleto.setDescrizione(valori.get(1));
-					corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-					corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-					corsoCompleto.setNome(valori.get(0));
+					corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 					
 					int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 					
@@ -708,26 +719,17 @@ if(list.getSelectedValue()!= null) {
 						
 						listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
 						
-						if(count != 0 && j != 0) {
+						if(count != 0) {
 							
 							int percentualeMinima = (count * 100) / nLezioni;
 							
-							if(percentualeMinima < 60) {
-								
-								TableColumn col = table.getColumnModel().getColumn(4);
-								col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-								
-							}else {
-								
-								TableColumn col = table.getColumnModel().getColumn(4);
-								col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-								
-							}
 							
 							listaStudenti[i].add(percentualeMinima+"%");
 							
 						}else {
-							listaStudenti[i].add("X");
+							
+							listaStudenti[i].add("0");
+							
 						}
 						
 					}else {
@@ -776,12 +778,8 @@ if(list.getSelectedValue()!= null) {
 							String nomeCorso = listaStudenti[i][3].toString().substring(1, listaStudenti[i][3].toString().length()-1);
 							Corso corsoCompleto = new Corso();
 							
-							
-							corsoCompleto.setCorsoId(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(4)));
-							corsoCompleto.setDescrizione((connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(1)));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(3)));
-							corsoCompleto.setNome(connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso).get(0));
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+
 							
 							listaStudenti[i][4] = new Vector();
 							listaStudenti[i][5] = new Vector();
@@ -818,23 +816,17 @@ if(list.getSelectedValue()!= null) {
 								
 								listaStudenti[i][4].add(Integer.toString(count) + "/" + nLezioni);
 								
-								if(count != 0 && j != 0) {
+								if(count != 0) {
 									
 									int percentualeMinima = (count * 100) / nLezioni;
 									
-									if(percentualeMinima < 60) {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-										
-									}else {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-										
-									}
 									
 									listaStudenti[i][5].add(percentualeMinima+"%");
+									
+								}else {
+									
+									
+									listaStudenti[i][5].add("0");
 									
 								}
 								
@@ -881,12 +873,8 @@ if(list.getSelectedValue()!= null) {
 							String nomeCorso = listaStudenti[i].get(3).toString();
 							
 							Corso corsoCompleto = new Corso();
-							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-							corsoCompleto.setDescrizione(valori.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-							corsoCompleto.setNome(valori.get(0));
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
+
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
@@ -916,26 +904,17 @@ if(list.getSelectedValue()!= null) {
 								
 								listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
 								
-								if(count != 0 && j != 0) {
+								if(count != 0) {
 									
 									int percentualeMinima = (count * 100) / nLezioni;
 									
-									if(percentualeMinima < 60) {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-										
-									}else {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-										
-									}
 									
 									listaStudenti[i].add(percentualeMinima+"%");
 									
 								}else {
-									listaStudenti[i].add("X");
+									
+									listaStudenti[i].add("0");
+									
 								}
 								
 							}else {
@@ -992,12 +971,7 @@ if(list.getSelectedValue()!= null) {
 							String nomeCorso = listaStudenti[i].get(3).toString();
 							
 							Corso corsoCompleto = new Corso();
-							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-							corsoCompleto.setDescrizione(valori.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-							corsoCompleto.setNome(valori.get(0));
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
@@ -1029,26 +1003,17 @@ if(list.getSelectedValue()!= null) {
 								
 								listaStudenti[i].add(Integer.toString(count) + "/" + nLezioni);
 								
-								if(count != 0 && j != 0) {
+								if(count != 0) {
 									
 									int percentualeMinima = (count * 100) / nLezioni;
 									
-									if(percentualeMinima < 60) {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-										
-									}else {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-										
-									}
 									
 									listaStudenti[i].add(percentualeMinima+"%");
 									
 								}else {
-									listaStudenti[i].add("X");
+									
+									listaStudenti[i].add("0");
+									
 								}
 								
 							}else {
@@ -1104,12 +1069,7 @@ if(list.getSelectedValue()!= null) {
 								
 							String nomeCorso = listaStudenti[i].get(3);
 							Corso corsoCompleto = new Corso();
-							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-							corsoCompleto.setDescrizione(valori.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-							corsoCompleto.setNome(valori.get(0));
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
@@ -1142,26 +1102,16 @@ if(list.getSelectedValue()!= null) {
 								
 								fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 								
-								if(count != 0 && j != 0) {
+								if(count != 0) {
 									
 									int percentualeMinima = (count * 100) / nLezioni;
-									
-									if(percentualeMinima < 60) {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-										
-									}else {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-										
-									}
 									
 									fixedList[i].add(percentualeMinima+"%");
 									
 								}else {
-									fixedList[i].add("X");
+									
+									fixedList[i].add("0");
+									
 								}
 								
 							}else {
@@ -1210,12 +1160,7 @@ if(list.getSelectedValue()!= null) {
 							
 							String nomeCorso = listaStudenti[i].get(3);
 							Corso corsoCompleto = new Corso();
-							List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-							corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-							corsoCompleto.setDescrizione(valori.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-							corsoCompleto.setNome(valori.get(0));
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 							
 							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 							
@@ -1248,26 +1193,17 @@ if(list.getSelectedValue()!= null) {
 								
 								fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 								
-								if(count != 0 && j != 0) {
+								if(count != 0) {
 									
 									int percentualeMinima = (count * 100) / nLezioni;
 									
-									if(percentualeMinima < 60) {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-										
-									}else {
-										
-										TableColumn col = table.getColumnModel().getColumn(4);
-										col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-										
-									}
 									
 									fixedList[i].add(percentualeMinima+"%");
 									
 								}else {
-									fixedList[i].add("X");
+									
+									fixedList[i].add("0");
+									
 								}
 								
 							}else {
@@ -1313,12 +1249,7 @@ if(list.getSelectedValue()!= null) {
 								
 								String nomeCorso = listaStudenti[i].get(3);
 								Corso corsoCompleto = new Corso();
-								List<String> valor = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-								corsoCompleto.setCorsoId(Integer.parseInt(valor.get(valor.size()-1)));
-								corsoCompleto.setDescrizione(valor.get(1));
-								corsoCompleto.setMaxPartecipanti(Integer.parseInt(valor.get(2)));
-								corsoCompleto.setMinPartecipazione(Integer.parseInt(valor.get(3)));
-								corsoCompleto.setNome(valor.get(0));
+								corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 								
 								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 								
@@ -1351,26 +1282,16 @@ if(list.getSelectedValue()!= null) {
 									
 									fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 									
-									if(count != 0 && j != 0) {
+									if(count != 0) {
 										
 										int percentualeMinima = (count * 100) / nLezioni;
-										
-										if(percentualeMinima < 60) {
-											
-											TableColumn col = table.getColumnModel().getColumn(4);
-											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-											
-										}else {
-											
-											TableColumn col = table.getColumnModel().getColumn(4);
-											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-											
-										}
 										
 										fixedList[i].add(percentualeMinima+"%");
 										
 									}else {
-										fixedList[i].add("X");
+
+										fixedList[i].add("0");
+										
 									}
 									
 								}else {
@@ -1414,12 +1335,7 @@ if(list.getSelectedValue()!= null) {
 						
 						String nomeCorso = listaStudenti[i].get(3);
 						Corso corsoCompleto = new Corso();
-						List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-						corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-						corsoCompleto.setDescrizione(valori.get(1));
-						corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-						corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-						corsoCompleto.setNome(valori.get(0));
+						corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 						
 						int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 						
@@ -1453,26 +1369,17 @@ if(list.getSelectedValue()!= null) {
 							
 							fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 							
-							if(count != 0 && j != 0) {
+							if(count != 0) {
 								
 								int percentualeMinima = (count * 100) / nLezioni;
 								
-								if(percentualeMinima < 60) {
-									
-									TableColumn col = table.getColumnModel().getColumn(4);
-									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-									
-								}else {
-									
-									TableColumn col = table.getColumnModel().getColumn(4);
-									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-									
-								}
 								
 								fixedList[i].add(percentualeMinima+"%");
 								
 							}else {
-								fixedList[i].add("X");
+								
+								fixedList[i].add("0");
+								
 							}
 							
 						}else {
@@ -1516,12 +1423,7 @@ if(list.getSelectedValue()!= null) {
 								String nomeCorso = listaStudenti[i].get(3);
 								Corso corsoCompleto = new Corso();
 								
-								List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-								corsoCompleto.setCorsoId(Integer.parseInt(valori.get(valori.size()-1)));
-								corsoCompleto.setDescrizione(valori.get(1));
-								corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-								corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-								corsoCompleto.setNome(valori.get(0));
+								corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 								
 								int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 								
@@ -1555,26 +1457,17 @@ if(list.getSelectedValue()!= null) {
 									
 									fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 									
-									if(count != 0 && j != 0) {
+									if(count != 0) {
 										
 										int percentualeMinima = (count * 100) / nLezioni;
 										
-										if(percentualeMinima < 60) {
-											
-											TableColumn col = table.getColumnModel().getColumn(4);
-											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-											
-										}else {
-											
-											TableColumn col = table.getColumnModel().getColumn(4);
-											col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-											
-										}
 										
 										fixedList[i].add(percentualeMinima+"%");
 										
 									}else {
-										fixedList[i].add("X");
+										
+										fixedList[i].add("0");
+										
 									}
 									
 								}else {
@@ -1623,12 +1516,7 @@ if(list.getSelectedValue()!= null) {
 									
 									String nomeCorso = listaStudenti[i].get(3);
 									Corso corsoCompleto = new Corso();
-									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-									corsoCompleto.setDescrizione(valori.get(1));
-									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-									corsoCompleto.setNome(valori.get(0));
+									corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 									
@@ -1662,26 +1550,17 @@ if(list.getSelectedValue()!= null) {
 										
 										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 										
-										if(count != 0 && j != 0) {
+										if(count != 0) {
 											
 											int percentualeMinima = (count * 100) / nLezioni;
 											
-											if(percentualeMinima < 60) {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-												
-											}else {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-												
-											}
 											
 											fixedList[i].add(percentualeMinima+"%");
 											
 										}else {
-											fixedList[i].add("X");
+											
+											fixedList[i].add("0");
+											
 										}
 										
 									}else {
@@ -1734,12 +1613,7 @@ if(list.getSelectedValue()!= null) {
 									
 									String nomeCorso = listaStudenti[i].get(3);
 									Corso corsoCompleto = new Corso();
-									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-									corsoCompleto.setDescrizione(valori.get(1));
-									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-									corsoCompleto.setNome(valori.get(0));
+									corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 									
@@ -1773,26 +1647,16 @@ if(list.getSelectedValue()!= null) {
 										
 										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 										
-										if(count != 0 && j != 0) {
+										if(count != 0) {
 											
 											int percentualeMinima = (count * 100) / nLezioni;
-											
-											if(percentualeMinima < 60) {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-												
-											}else {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-												
-											}
 											
 											fixedList[i].add(percentualeMinima+"%");
 											
 										}else {
-											fixedList[i].add("X");
+											
+											fixedList[i].add("0");
+											
 										}
 										
 									}else {
@@ -1842,12 +1706,7 @@ if(list.getSelectedValue()!= null) {
 									
 									String nomeCorso = listaStudenti[i].get(3);
 									Corso corsoCompleto = new Corso();
-									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-									corsoCompleto.setDescrizione(valori.get(1));
-									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-									corsoCompleto.setNome(valori.get(0));
+									corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 									
@@ -1881,26 +1740,17 @@ if(list.getSelectedValue()!= null) {
 										
 										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 										
-										if(count != 0 && j != 0) {
+										if(count != 0) {
 											
 											int percentualeMinima = (count * 100) / nLezioni;
-											
-											if(percentualeMinima < 60) {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-												
-											}else {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-												
-											}
 											
 											fixedList[i].add(percentualeMinima+"%");
 											
 										}else {
-											fixedList[i].add("X");
+											
+
+											fixedList[i].add("0");
+											
 										}
 										
 									}else {
@@ -1950,12 +1800,7 @@ if(list.getSelectedValue()!= null) {
 									
 									String nomeCorso = listaStudenti[i].get(3);
 									Corso corsoCompleto = new Corso();
-									List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-									corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-									corsoCompleto.setDescrizione(valori.get(1));
-									corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-									corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-									corsoCompleto.setNome(valori.get(0));
+									corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 									
 									int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 									
@@ -1989,26 +1834,16 @@ if(list.getSelectedValue()!= null) {
 										
 										fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 										
-										if(count != 0 && j != 0) {
+										if(count != 0) {
 											
 											int percentualeMinima = (count * 100) / nLezioni;
-											
-											if(percentualeMinima < 60) {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-												
-											}else {
-												
-												TableColumn col = table.getColumnModel().getColumn(4);
-												col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-												
-											}
 											
 											fixedList[i].add(percentualeMinima+"%");
 											
 										}else {
-											fixedList[i].add("X");
+											
+											fixedList[i].add("0");
+											
 										}
 										
 									}else {
@@ -2063,12 +1898,7 @@ if(list.getSelectedValue()!= null) {
 											
 											String nomeCorso = listaStudenti[i].get(3);
 											Corso corsoCompleto = new Corso();
-											List<String> valori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
-											corsoCompleto.setCorsoId(Integer.parseInt(valori.get(4)));
-											corsoCompleto.setDescrizione(valori.get(1));
-											corsoCompleto.setMaxPartecipanti(Integer.parseInt(valori.get(2)));
-											corsoCompleto.setMinPartecipazione(Integer.parseInt(valori.get(3)));
-											corsoCompleto.setNome(valori.get(0));
+											corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomeCorso);
 											
 											int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
 											
@@ -2101,26 +1931,17 @@ if(list.getSelectedValue()!= null) {
 												
 												fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
 												
-												if(count != 0 && j != 0) {
+												if(count != 0) {
 													
 													int percentualeMinima = (count * 100) / nLezioni;
 													
-													if(percentualeMinima < 60) {
-														
-														TableColumn col = table.getColumnModel().getColumn(4);
-														col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-														
-													}else {
-														
-														TableColumn col = table.getColumnModel().getColumn(4);
-														col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-														
-													}
 													
 													fixedList[i].add(percentualeMinima+"%");
 													
 												}else {
-													fixedList[i].add("X");
+													
+													fixedList[i].add("0");
+													
 												}
 												
 											}else {
@@ -2171,22 +1992,17 @@ if(list.getSelectedValue()!= null) {
 			
 			List[] listaStudenti = connectionDao.getIscrizioneDao().getStudentiByCorsoName(connectionDao.getConnection(), tmpCorso);
 			
-			List<String> corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmpCorso);
-			Corso corsoFormattato = new Corso();
-			
-			corsoFormattato.setNome(tmpCorso);
-			corsoFormattato.setMaxPartecipanti(Integer.parseInt(corsoCompleto.get(2)));
-			corsoFormattato.setMinPartecipazione(Integer.parseInt(corsoCompleto.get(3)));
-			corsoFormattato.setDescrizione(corsoCompleto.get(1));
-			corsoFormattato.setCorsoId(Integer.parseInt(corsoCompleto.get(4)));
+			Corso corsoFormattato = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmpCorso);	
 			
 			
 			nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoFormattato.getCorsoId());
+			
 			
 			Vector[] fixedList = new Vector[Arrays.asList(listaStudenti).size()];
 			int i = 0;
 
 			List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoFormattato.getCorsoId());
+			
 			
 			String formattedCf;
 			
@@ -2227,17 +2043,6 @@ if(list.getSelectedValue()!= null) {
 						
 						int percentualePresenza = (count * 100) / nLezioni;
 						
-						if(percentualePresenza < 60) {
-							
-							TableColumn col = table.getColumnModel().getColumn(4);
-							col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-							
-						}else {
-							
-							TableColumn col = table.getColumnModel().getColumn(4);
-							col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-							
-						}
 						
 						if(nLezioni != 0) {
 							fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
@@ -2247,6 +2052,21 @@ if(list.getSelectedValue()!= null) {
 						fixedList[i].add(percentualePresenza+"%");
 						model.addRow(fixedList[i]);
 						
+					}else {
+						
+						if(nLezioni != 0) {
+							
+							fixedList[i].add(Integer.toString(count) + "/" + nLezioni);
+							fixedList[i].add("0");
+							
+						}else {
+							
+							fixedList[i].add("X");
+							fixedList[i].add("X");
+							
+						}
+							
+						model.addRow(fixedList[i]);
 					}
 					
 				}
@@ -2263,21 +2083,21 @@ if(list.getSelectedValue()!= null) {
 	
 	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
 		
-		List<String> datiCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), corso);
+		Corso corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), corso);
 		
 		//CONTROLLO SU NUMERI ISCRITTI
-		int corsoId = Integer.parseInt(datiCorso.get(4));
-		int minPartecipanti = Integer.parseInt(datiCorso.get(3));
+		int corsoId = corsoCompleto.getCorsoId();
+		int minPartecipanti = corsoCompleto.getMinPartecipazione();
 		int studentiIscritti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoId);
 		
 		if(minPartecipanti <= studentiIscritti) {
 			
 		String tmpTitle = title.getText();
 		if(!tmpTitle.isEmpty()) {
-			if(tmpTitle.length() < 4) {
+			if(tmpTitle.length() < 40) {
 				
 				if(area.getText() != null) {
-					if(area.getText().length() < 1280) {
+					if(area.getText().length() > 1280) {
 						JOptionPane.showMessageDialog(null, "Descrizione troppo lunga", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 						return 0;
 					}

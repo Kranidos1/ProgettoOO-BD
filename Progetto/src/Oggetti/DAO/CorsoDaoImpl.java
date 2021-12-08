@@ -22,7 +22,7 @@ public class CorsoDaoImpl implements CorsoDao{
 	
 	//TODO MAX > MIN ALTRIMENTI ERRORE
 	
-	public void inserimento(Corso corso ,Connection connection) {
+	public int inserimento(Corso corso ,Connection connection) {
 		
 		Controller controller = new Controller();
 		String descrizione = corso.getDescrizione();
@@ -48,19 +48,21 @@ public class CorsoDaoImpl implements CorsoDao{
 				Statement inserimento = connection.createStatement();
 				inserimento.execute(statement);
 				
-				
 				JOptionPane.showMessageDialog(null, "Corso Creato!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+				return 1;
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				
+				return 0 ;
 			}
 			
 		}else
 			if(procedere == 99){
 			
 			JOptionPane.showMessageDialog(null, "Corso gia' presente nei database.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
-			
+			return 0;
 		}
+		return 0;
 		
 		
 	}
@@ -343,10 +345,11 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 	}
 	
-	public List<String> getCorso(Connection connection ,String nome) {
+	public Corso getCorso(Connection connection ,String nome) {
 		
 		
 		String statement = "SELECT \"Nome\",\"Descrizione\",\"MaxPartecipanti\",\"MinPartecipazione\",\"CorsoId\",\"Finito\" FROM \"Corso\" WHERE \"Nome\" = '"+ nome + "';";
+		Corso corso = new Corso();
 		
 		try {
 			
@@ -356,16 +359,16 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			while(risultato.next()) {
 				
-				result.add(risultato.getString(1));
-				result.add(risultato.getString(2));
-				result.add(risultato.getString(3));
-				result.add(risultato.getString(4));
-				result.add(risultato.getString(5));
-				result.add(risultato.getString(6));
+				corso.setNome(risultato.getString(1));
+				corso.setDescrizione(risultato.getString(2));
+				corso.setMaxPartecipanti(Integer.parseInt(risultato.getString(3)));
+				corso.setMinPartecipazione(Integer.parseInt(risultato.getString(4)));
+				corso.setCorsoId(Integer.parseInt(risultato.getString(5)));
+				corso.setCheck(risultato.getString(6));
 				
 			}
 			
-			return result;
+			return corso;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -375,9 +378,10 @@ public class CorsoDaoImpl implements CorsoDao{
 		return null;
 	}
 	
-	public void updateCorso(Connection connection ,String id ,String nome ,String descrizione ,String maxPartecipanti ,String minPartecipazione) {
+	public void updateCorso(Connection connection ,Corso corso) {
 		
-		String statement = "UPDATE \"Corso\" SET \"Nome\" = '" + nome + "', \"Descrizione\" = '" + descrizione + "', \"MaxPartecipanti\" = '"+ maxPartecipanti + "', \"MinPartecipazione\" = '" + minPartecipazione + "' WHERE \"CorsoId\" = " + id + ";" ;
+		String statement = "UPDATE \"Corso\" SET \"Nome\" = '" + corso.getNome() + "', \"Descrizione\" = '" + corso.getDescrizione() + "', \"MaxPartecipanti\" = '"+ corso.getMaxPartecipanti().toString() + 
+				"', \"MinPartecipazione\" = '" + corso.getMinPartecipazione().toString() + "' WHERE \"CorsoId\" = " + corso.getCorsoId().toString() + ";" ;
 		
 		try {
 			

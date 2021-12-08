@@ -24,6 +24,7 @@ import javax.swing.BorderFactory;
 import java.awt.Color;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.Box;
@@ -98,9 +99,6 @@ public class RicercaStudenteFrame extends JFrame {
 		cfLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		cfLabel.setBounds(52, 198, 46, 20);
 		panel.add(cfLabel);
-		
-		JTable tableStats = new JTable();
-		tableStats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		DefaultTableModel model = new DefaultTableModel(new Object[][] {
 		},
 		new String[] {
@@ -110,9 +108,90 @@ public class RicercaStudenteFrame extends JFrame {
 				return false;
 			}
 		};
+		
+		JTable tableStats = new JTable(model) {
+			
+			@Override
+			public Component prepareRenderer(TableCellRenderer r,int row , int column) {
+				
+				Component c = super.prepareRenderer(r, row, column);
+				
+				if(model.getValueAt(row, 5).toString().charAt(0) == '[') {
+					
+					int value = 0;
+					
+					if(model.getValueAt(row, 5).toString().length() == 4){
+						
+						value = 1;
+						
+					}
+					
+					if(model.getValueAt(row, 5).toString().length() == 5){
+						
+						value = Integer.parseInt(model.getValueAt(row, 5).toString().substring(1, 3));
+						
+					}
+					
+					if(model.getValueAt(row, 5).toString().length() == 6){
+						
+						value = Integer.parseInt(model.getValueAt(row, 5).toString().substring(1, 4));
+						
+					}
+					
+					
+					
+					
+					if( value < 60) {
+						
+						c.setBackground(Color.RED);
+						
+					}else
+						c.setBackground(Color.green);
+					
+					return c;
+					
+					
+				}else {
+					
+					int value = 0;
+					
+					if(model.getValueAt(row, 5).toString().length() == 2){
+						
+						value = 1;
+						
+					}
+					
+					if(model.getValueAt(row, 5).toString().length() == 3){
+						
+						value = Integer.parseInt(model.getValueAt(row, 5).toString().substring(0, 2));
+						
+					}
+					
+					if(model.getValueAt(row, 5).toString().length() == 4){
+						
+						value = Integer.parseInt(model.getValueAt(row, 5).toString().substring(0, 3));
+						
+					}
+					
+					
+					
+					
+					if( value < 60) {
+						
+						c.setBackground(Color.RED);
+						
+					}else
+						c.setBackground(Color.green);
+					
+					return c;
+					
+				}
+
+			}
+		};
+		tableStats.setFont(new Font("Tahoma", Font.PLAIN, 11));
 	
 		tableStats.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableStats.setModel(model);
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
 		tableStats.getColumnModel().getColumn(3).setPreferredWidth(150);
 		tableStats.getColumnModel().getColumn(4).setPreferredWidth(75);

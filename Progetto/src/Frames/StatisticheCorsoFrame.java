@@ -191,16 +191,8 @@ public class StatisticheCorsoFrame extends JFrame {
 					vettoreCorsi[i][0] = new Vector();
 					vettoreCorsi[i][0].add(nomiCorsi.get(i));
 					
-					List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomiCorsi.get(i));
-					
 					Corso corsoCompleto = new Corso();
-					corsoCompleto.setNome(valoriCorso.get(0));
-					corsoCompleto.setDescrizione(valoriCorso.get(1));
-					corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
-					corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
-					corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
-					corsoCompleto.setCheck(valoriCorso.get(5));
-					
+					corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomiCorsi.get(i));		
 					
 					vettoreCorsi[i][1] = new Vector();
 					vettoreCorsi[i][2] = new Vector();
@@ -296,16 +288,8 @@ public class StatisticheCorsoFrame extends JFrame {
 							vettoreCorsi[i][0] = new Vector();
 							vettoreCorsi[i][0].add(listaCorsi.get(i));
 							
-							List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
-							
 							Corso corsoCompleto = new Corso();
-							corsoCompleto.setNome(valoriCorso.get(0));
-							corsoCompleto.setDescrizione(valoriCorso.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
-							corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
-							corsoCompleto.setCheck(valoriCorso.get(5));
-							
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
 							
 							vettoreCorsi[i][1] = new Vector();
 							vettoreCorsi[i][2] = new Vector();
@@ -398,16 +382,9 @@ public class StatisticheCorsoFrame extends JFrame {
 							vettoreCorsi[i][0] = new Vector();
 							vettoreCorsi[i][0].add(listaCorsi.get(i));
 							
-							List<String> valoriCorso = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
 							
 							Corso corsoCompleto = new Corso();
-							corsoCompleto.setNome(valoriCorso.get(0));
-							corsoCompleto.setDescrizione(valoriCorso.get(1));
-							corsoCompleto.setMaxPartecipanti(Integer.parseInt(valoriCorso.get(2)));
-							corsoCompleto.setMinPartecipazione(Integer.parseInt(valoriCorso.get(3)));
-							corsoCompleto.setCorsoId(Integer.parseInt(valoriCorso.get(4)));
-							corsoCompleto.setCheck(valoriCorso.get(5));
-							
+							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));	
 							
 							vettoreCorsi[i][1] = new Vector();
 							vettoreCorsi[i][2] = new Vector();

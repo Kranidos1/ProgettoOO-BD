@@ -8,7 +8,7 @@ import Oggetti.Studente;
 
 public interface StudenteDao {
 	
-	public void inserimento(Connection connection ,Studente studente);
+	public int inserimento(Connection connection ,Studente studente);
 	public Vector[] ricercaStudenteByName(Connection connection ,String name);
 	public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome);
 	public Vector[][] ricercaStudenteByCf(Connection connection ,String cf);

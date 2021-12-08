@@ -74,12 +74,30 @@ public class CorsiArchiviatiFrame extends JFrame {
 		scrollPane.setBounds(10, 121, 197, 211);
 		panel.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] {},new String[] {"Nome","Cognome","Cf","Promosso","%Presenze"}){
+		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome","Cognome","Cf","Promosso","%Presenze"}){
 			public boolean isCellEditable(int row ,int column) {
 				return false;
 			}
-		});
+		};
+		table = new JTable(modelTable) {
+			
+			@Override
+			public Component prepareRenderer(TableCellRenderer r,int row , int column) {
+				
+				Component c = super.prepareRenderer(r, row, column);
+				
+				if(modelTable.getValueAt(row, 3).toString().equals("Si")) {
+					
+					c.setBackground(Color.green);
+				}else
+					c.setBackground(Color.red);
+				
+				return c;
+				
+			}
+			
+		};
+		
 		JScrollPane scrollPaneStats = new JScrollPane(table);
 		table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		scrollPaneStats.setBounds(217, 156, 617, 280);
@@ -174,18 +192,6 @@ public class CorsiArchiviatiFrame extends JFrame {
 								
 								int percentuale = (count * 100) / nLezioni;
 								percentualePresenza = Integer.toString(percentuale);
-		
-								if(percentuale < 60) {
-									
-									TableColumn col = table.getColumnModel().getColumn(4);
-									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.red));
-									
-								}else {
-									
-									TableColumn col = table.getColumnModel().getColumn(4);
-									col.setCellRenderer(new ColumnColorRenderer(Color.white, Color.green));
-									
-								}
 								vettoreStudenti[i].add(percentualePresenza + "%");
 								
 							}else

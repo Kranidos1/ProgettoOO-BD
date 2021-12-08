@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.border.MatteBorder;
 
+import Oggetti.Corso;
 import Oggetti.DAO.AreaTematicaDaoImpl;
 import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
@@ -135,20 +136,20 @@ public class EmCorsoFrame extends JFrame {
 
 					String tmp = listCorsi.getSelectedValue().toString();
 					//creo frame
-					List<String> listaValori = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmp);
+					Corso corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), tmp);
 					
-					List<String> listaTemiCorso = connectionDao.getCorsoTemaDao().getAllThemeOfCorso(connectionDao.getConnection(), listaValori.get(4));
+					List<String> listaTemiCorso = connectionDao.getCorsoTemaDao().getAllThemeOfCorso(connectionDao.getConnection(), corsoCompleto.getCorsoId().toString());
 					
 					
 					LinkedList<String> listaTemi = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
 					
 					//SI APRE IL FRAME PER LA MODIFICA
 					ModificaCorsoFrame frame = new ModificaCorsoFrame((JFrame) SwingUtilities.getRoot(buttonModifica));
-					frame.getNomeField().setText(listaValori.get(0));
-					frame.getTextAreaDescrizione().setText(listaValori.get(1));
-					frame.getMaxField().setText(listaValori.get(2));
-					frame.getMinField().setText(listaValori.get(3));
-					frame.setId(listaValori.get(4));
+					frame.getNomeField().setText(corsoCompleto.getNome());
+					frame.getTextAreaDescrizione().setText(corsoCompleto.getDescrizione());
+					frame.getMaxField().setText(corsoCompleto.getMaxPartecipanti().toString());
+					frame.getMinField().setText(corsoCompleto.getMinPartecipazione().toString());
+					frame.setId(corsoCompleto.getCorsoId().toString());
 					
 					DefaultListModel model = (DefaultListModel) frame.getList().getModel();
 					model.addAll(listaTemiCorso);

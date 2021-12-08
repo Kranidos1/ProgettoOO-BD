@@ -1,6 +1,65 @@
 package Frames;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.util.regex.Pattern;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JSpinner.DateEditor;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+
+import com.toedter.calendar.JDateChooser;
+
+import Oggetti.AreaTematica;
+import Oggetti.Corso;
+import Oggetti.Lezione;
+import Oggetti.Studente;
+import Oggetti.DAO.AreaTematicaDaoImpl;
+import Oggetti.DAO.ConnectionDao;
+import Oggetti.DAO.CorsoDaoImpl;
+
+import Oggetti.DAO.CorsoETemaDaoImpl;
+import Oggetti.DAO.IscrizioneDaoImpl;
+import Oggetti.DAO.LezioneDaoImpl;
+import Oggetti.DAO.PresenzaDaoImpl;
+import Oggetti.DAO.StudenteDaoImpl;
+import java.awt.Component;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -33,6 +92,7 @@ import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
+
 public class VisualizzaStatisticheStudentiFrame extends JFrame {
 	
 	private ConnectionDao connectionDao;
@@ -55,14 +115,52 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		
 		connectionDao = new ConnectionDao();
 		controller = new Controller();
-		JTable tableStats = new JTable();
 		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze"}){
 			public boolean isCellEditable(int row ,int column) {
 				return false;
 			}
 		};
 		
-		tableStats.setModel(modelTable);
+		JTable tableStats = new JTable(modelTable) {
+			
+			@Override
+			public Component prepareRenderer(TableCellRenderer r,int row , int column) {
+				
+				int value = 0;
+				
+				if(modelTable.getValueAt(row, 4).toString().length() == 2){
+					
+					value = 1;
+					
+				}
+				
+				if(modelTable.getValueAt(row, 4).toString().length() == 3){
+					
+					value = Integer.parseInt(modelTable.getValueAt(row, 4).toString().substring(0, 2));
+					
+				}
+				
+				if(modelTable.getValueAt(row, 4).toString().length() == 4){
+					
+					value = Integer.parseInt(modelTable.getValueAt(row, 4).toString().substring(0, 3));
+					
+				}
+				
+				
+				Component c = super.prepareRenderer(r, row, column);
+				
+				if( value < 60) {
+					
+					c.setBackground(Color.RED);
+					
+				}else
+					c.setBackground(Color.green);
+				
+				return c;
+				
+			}
+		};
+		
 		tableStats.getColumnModel().getColumn(2).setPreferredWidth(150);
 		tableStats.getColumnModel().getColumn(3).setPreferredWidth(75);
 		tableStats.getColumnModel().getColumn(4).setPreferredWidth(75);

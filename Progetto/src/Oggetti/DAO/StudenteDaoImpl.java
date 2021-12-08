@@ -21,7 +21,7 @@ import Oggetti.Studente;
 public class StudenteDaoImpl implements StudenteDao {
 	
 	
-public void inserimento(Connection connection ,Studente studente) {
+public int inserimento(Connection connection ,Studente studente) {
 	
 	String statement = "INSERT INTO \"Studente\" (\"Nome\",\"Cognome\",\"DataN\",\"Cf\") VALUES ('" +studente.getNome()+"','"+studente.getCognome()+"','"
 	+studente.getData()+"','"+studente.getCF()+"');";
@@ -30,12 +30,13 @@ public void inserimento(Connection connection ,Studente studente) {
 		
 		Statement inserimento = connection.createStatement();
 		inserimento.execute(statement);
-		
+		return 1;
 		
 	} catch (SQLException e) {
 //		e.printStackTrace();
-		JOptionPane.showMessageDialog(null, "Studente gia' presente nei database,ma inserito comunque nel corso indicato.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		
+		return 0 ;
 	}
 }
 
