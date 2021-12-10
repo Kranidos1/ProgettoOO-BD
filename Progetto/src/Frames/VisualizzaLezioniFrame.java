@@ -62,7 +62,10 @@ public class VisualizzaLezioniFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 
 		GeneralPanelGrande generalPanelGrande = new GeneralPanelGrande();
@@ -307,6 +310,7 @@ public class VisualizzaLezioniFrame extends JFrame {
 
 			}
 		});
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -320,6 +324,7 @@ public class VisualizzaLezioniFrame extends JFrame {
 
 			}
 		});
+		
 		setVisible(true);
 	}
 }

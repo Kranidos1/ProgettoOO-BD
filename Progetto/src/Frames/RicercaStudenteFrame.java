@@ -65,7 +65,10 @@ public class RicercaStudenteFrame extends JFrame {
 		panel = new GeneralPanelGrande();
 		panel.setBounds(0, 0, 623, 516);
 		getContentPane().add(panel);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		JLabel nomeLabel = new JLabel("Nome");
 		nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -378,6 +381,7 @@ public class RicercaStudenteFrame extends JFrame {
 	
 			}
 		});
+		
 		addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -392,5 +396,6 @@ public class RicercaStudenteFrame extends JFrame {
             	
             }
         });
+		
 	}
 }

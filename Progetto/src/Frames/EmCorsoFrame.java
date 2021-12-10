@@ -63,6 +63,8 @@ public class EmCorsoFrame extends JFrame {
 		getContentPane().add(panel);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		DefaultListModel model = new DefaultListModel();
 		JList listCorsi = new JList(model);

@@ -27,6 +27,7 @@ public class CorsoDaoImpl implements CorsoDao{
 		Controller controller = new Controller();
 		String descrizione = corso.getDescrizione();
 		String statement;
+		Statement inserimento = null;
 		
 		if(descrizione != null) {
 			
@@ -45,16 +46,28 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			try {
 				
-				Statement inserimento = connection.createStatement();
+				inserimento = connection.createStatement();
 				inserimento.execute(statement);
 				
 				JOptionPane.showMessageDialog(null, "Corso Creato!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
-				return 1;
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				return 0 ;
 			}
+				finally{
+					
+					if(inserimento != null) {
+						try {
+							inserimento.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					return 1;
+				}
 			
 		}else
 			if(procedere == 99){
@@ -73,18 +86,29 @@ public class CorsoDaoImpl implements CorsoDao{
 		Controller controller = new Controller();
 		String statement = "SELECT \"CorsoId\" FROM \"Corso\" WHERE \"Nome\" LIKE '" + controller.escape(nome) + "';";
 		
-		Statement check;
+		Statement check = null;
+		ResultSet risultato = null;
+		
 		try {
 			
 			check = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			ResultSet risultato = check.executeQuery(statement);
+			risultato = check.executeQuery(statement);
 			
 			if(risultato.absolute(1)) {
 				
+				if(risultato != null) {
+					risultato.close();
+				}
 				return 99;
 				
-			}else
+			}else {
+				
+				if(risultato != null) {
+					risultato.close();
+				}
 				return 1;
+				
+			}		
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -98,16 +122,26 @@ public class CorsoDaoImpl implements CorsoDao{
 		
 		String statement = "SELECT Max(\"CorsoId\") FROM \"Corso\";";
 		int code = 0;
+		Statement ricerca = null;
+		ResultSet risultato = null;
 		
 		try {
 			
-			Statement ricerca = connection.createStatement();
-			ResultSet risultato = ricerca.executeQuery(statement);
+			ricerca = connection.createStatement();
+			risultato = ricerca.executeQuery(statement);
 			
 			if(risultato.next()) {
 				
 				code = Integer.parseInt(risultato.getString(1));
 				
+			}
+			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(risultato != null) {
+				risultato.close();
 			}
 			
 			return code;
@@ -137,7 +171,13 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
 			
+			if(result != null) {
+				result.close();
+			}
 			
 			return lista;
 			
@@ -168,10 +208,26 @@ public class CorsoDaoImpl implements CorsoDao{
 			if(risu != null) {
 				
 				int corsoId = Integer.parseInt(risu);
+				if(ricerca != null) {
+					ricerca.close();
+				}
+				
+				if(risultato != null) {
+					risultato.close();
+				}
 				return corsoId;
 				
-			}else
+			}else {
+				if(ricerca != null) {
+					ricerca.close();
+				}
+				
+				if(risultato != null) {
+					risultato.close();
+				}
 				return -1;
+			}
+				
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -198,6 +254,14 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return lista;
 			
 		} catch (SQLException e) {
@@ -220,7 +284,7 @@ public class CorsoDaoImpl implements CorsoDao{
 		try {
 			
 			Statement ricerca = connection.createStatement();
-			ResultSet risultato;
+			ResultSet risultato = null;
 			
 			int i = 0;
 			
@@ -241,6 +305,13 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(risultato != null) {
+				risultato.close();
+			}
 			
 			return tmpNomi;
 			
@@ -266,7 +337,7 @@ public class CorsoDaoImpl implements CorsoDao{
 		try {
 			
 			Statement ricerca = connection.createStatement();
-			ResultSet risultato;
+			ResultSet risultato = null;
 			String statementCorso;
 			
 			int i = 0;
@@ -286,6 +357,14 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 				i++;
 				
+			}
+			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(risultato != null) {
+				risultato.close();
 			}
 			
 			return lista;
@@ -310,6 +389,15 @@ public class CorsoDaoImpl implements CorsoDao{
 			ResultSet risultato = ricerca.executeQuery(statement);
 			if(risultato.next()) {
 				String result = risultato.getString(1);
+				
+				if(ricerca != null) {
+					ricerca.close();
+				}
+				
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return result;
 			}
 			
@@ -334,7 +422,9 @@ public class CorsoDaoImpl implements CorsoDao{
 			if(delete.execute(statement)) {
 				
 				JOptionPane.showMessageDialog(null ,"Corso cancellato correttamente", "PSQL", JOptionPane.INFORMATION_MESSAGE);
-				
+				if(delete != null) {
+					delete.close();
+				}
 			}
 				
 			
@@ -368,6 +458,14 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return corso;
 			
 		} catch (SQLException e) {
@@ -388,6 +486,12 @@ public class CorsoDaoImpl implements CorsoDao{
 			Statement update = connection.createStatement();
 			update.execute(statement);
 			
+			if(update != null) {
+				
+				update.close();
+				
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -403,6 +507,12 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			Statement statement = connection.createStatement();
 			statement.execute(update);
+			
+			if(statement != null) {
+				
+				statement.close();;
+				
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -437,6 +547,14 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 			}
 			
+			if(statement != null) {
+				statement.close();
+			}
+			
+			if(result != null) {
+				result.close();
+			}
+			
 			return corsiTrovati;
 			
 		} catch (SQLException e) {
@@ -455,6 +573,10 @@ public class CorsoDaoImpl implements CorsoDao{
 			
 			Statement statement = connection.createStatement();
 			statement.execute(update);
+			
+			if(statement != null) {
+				statement.close();
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -475,6 +597,15 @@ public class CorsoDaoImpl implements CorsoDao{
 			while(risultato.next()) {
 				
 				String result = risultato.getString(1);
+				
+				if(statement != null) {
+					statement.close();
+				}
+				
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return result;
 				
 			}
@@ -514,6 +645,14 @@ public class CorsoDaoImpl implements CorsoDao{
 				
 				corsiTrovati.add(result.getString(1));
 				
+			}
+			
+			if(statement != null) {
+				statement.close();
+			}
+			
+			if(result != null) {
+				result.close();
 			}
 			
 			return corsiTrovati;

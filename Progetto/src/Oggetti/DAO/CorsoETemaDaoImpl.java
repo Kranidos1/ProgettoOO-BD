@@ -16,6 +16,9 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 			
 			Statement inserimento = connection.createStatement();
 			inserimento.execute(statement);
+			if(inserimento != null) {
+				inserimento.close();
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -40,6 +43,13 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(result != null) {
+				result.close();
+			}
 			
 			return lista;
 			
@@ -69,6 +79,14 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 				
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			
+			if(result != null) {
+				result.close();
+			}
+			
 			return risultato;
 			
 		} catch (SQLException e) {
@@ -87,6 +105,9 @@ public class CorsoETemaDaoImpl implements CorsoETemaDao {
 			
 			Statement delete = connection.createStatement();
 			delete.execute(statement);
+			if(delete != null) {
+				delete.close();
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

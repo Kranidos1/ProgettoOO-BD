@@ -25,34 +25,50 @@ public int inserimento(Connection connection ,Studente studente) {
 	
 	String statement = "INSERT INTO \"Studente\" (\"Nome\",\"Cognome\",\"DataN\",\"Cf\") VALUES ('" +studente.getNome()+"','"+studente.getCognome()+"','"
 	+studente.getData()+"','"+studente.getCF()+"');";
+	Statement inserimento = null;
 	
 	try {
 		
-		Statement inserimento = connection.createStatement();
+		inserimento = connection.createStatement();
 		inserimento.execute(statement);
-		return 1;
 		
 	} catch (SQLException e) {
 //		e.printStackTrace();
 		JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		
 		return 0 ;
+	}finally {
+		
+		if(inserimento != null) {
+			
+			try {
+				inserimento.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return 1;
+		}
 	}
+	return 0;
 }
 
 public Vector[] ricercaStudenteByName(Connection connection ,String name) {
 	
 	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + name + "%';";
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;;
 	String corsoById;
 	String ricercaCorsoId;
-	
+	Statement ricerca = null;
+	ResultSet risultato = null;
+	Vector[] vettoreStudenti = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato = ricerca.executeQuery(statement);
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		risultato = ricerca.executeQuery(statement);
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int size = 0;
@@ -65,7 +81,7 @@ public Vector[] ricercaStudenteByName(Connection connection ,String name) {
 		
 		ConnectionDao connectionDao = new ConnectionDao();
 		
-		Vector[] vettoreStudenti = new Vector[size];
+		vettoreStudenti = new Vector[size];
 		
 		int i = 0;
 		while(risultato.next()) {
@@ -93,28 +109,73 @@ public Vector[] ricercaStudenteByName(Connection connection ,String name) {
 			i++;
 		}
 		
-		return vettoreStudenti;
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
 	}
-	return null;
 	
 }
 
 public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome) {
 	
 	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + cognome + "%';";
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
 	String corsoById;
 	String ricercaCorsoId;
+	Statement ricerca = null;
+	ResultSet risultato = null;
+	Vector[] vettoreStudenti = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato = ricerca.executeQuery(statement);
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		risultato = ricerca.executeQuery(statement);
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int size = 0;
@@ -126,7 +187,7 @@ public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome) 
 		risultato.beforeFirst();
 		ConnectionDao connectionDao = new ConnectionDao();
 		
-		Vector[] vettoreStudenti = new Vector[size];
+		vettoreStudenti = new Vector[size];
 		
 		int i = 0;
 		while(risultato.next()) {
@@ -156,29 +217,72 @@ public Vector[] ricercaStudenteByCognome(Connection connection ,String cognome) 
 			i++;
 		}
 		
-		return vettoreStudenti;
-		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
 	}
-	return null;
 	
 }
 
 public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 	
 	String statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cf\" LIKE '%" + cf + "%';";
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
 	String corsoById;
 	String ricercaCorsoId;
-	
+	Statement ricerca = null;
+	ResultSet risultato = null;
+	Vector[][] vettoreStudenti = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato = ricerca.executeQuery(statement);
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		risultato = ricerca.executeQuery(statement);
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int size = 0;
@@ -190,7 +294,7 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 		risultato.beforeFirst();
 		
 		ConnectionDao connectionDao = new ConnectionDao();
-		Vector[][] vettoreStudenti = new Vector[size][7];
+		vettoreStudenti = new Vector[size][7];
 		
 		int i = 0;
 		while(risultato.next()) {
@@ -219,13 +323,54 @@ public Vector[][] ricercaStudenteByCf(Connection connection ,String cf) {
 			i++;
 		}
 		
-		return vettoreStudenti;
-		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
 	}
-	return null;
 	
 }
 
@@ -237,16 +382,19 @@ public Vector[] ricercaStudenteByDataIscrizione(Connection connection ,String da
 	String corsoById;
 	//TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
-	
-	
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
+	ResultSet risultato = null;
+	Vector[] vettoreStudenti = null;
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		ConnectionDao connectionDao = new ConnectionDao();
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
+		risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
 		while(risultatoDate.next()) {
@@ -256,12 +404,12 @@ public Vector[] ricercaStudenteByDataIscrizione(Connection connection ,String da
 		}
 		risultatoDate.beforeFirst();
 		
-		Vector[] vettoreStudenti = new Vector[size];
+		vettoreStudenti = new Vector[size];
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cf\" LIKE '" + risultatoDate.getString(3) + "';" ;
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -281,14 +429,56 @@ public Vector[] ricercaStudenteByDataIscrizione(Connection connection ,String da
 
 			
 		}
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		if(ricercaStudente != null) {
+			
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		if(risultatoDate != null) {
+			
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return vettoreStudenti;
 	}
-	return null;
+
 	
 }
 
@@ -296,14 +486,16 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 	
 	String statement;
 	String ricercaCorsoId;
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
 	String corsoById;
+	Statement ricerca = null;
+	ResultSet risultato = null;
+	List<String>[] vettore = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato;
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int i = 0;
@@ -321,7 +513,7 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 			}
 			
 			//vettore con al massimo quel numero di studenti 
-			List<String>[] vettore = new List[size];
+			vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
 			ConnectionDao connectionDao = new ConnectionDao();
 			
@@ -348,15 +540,56 @@ public List<String>[] ricercaStudenteByNomeECognome(Connection connection ,Strin
 				i++;
 				
 			}
-
-		return vettore;
 		
 	} catch (SQLException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettore;
 	}
-	
-	return null;
+
 	
 }
 
@@ -365,15 +598,16 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 	String statement;
 	
 	String ricercaCorsoId;
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
 	String corsoById;
-	
+	Statement ricerca = null;
+	ResultSet risultato = null;
+	List<String>[] vettore = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato;
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int i = 0;
@@ -392,7 +626,7 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 			}
 			
 			//vettore con al massimo quel numero di studenti 
-			List<String>[] vettore = new List[size];
+			vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
 			ConnectionDao connectionDao = new ConnectionDao();
 			
@@ -420,14 +654,56 @@ public List<String>[] ricercaStudenteByNomeECf(Connection connection ,String nom
 				
 			}
 
-		return vettore;
 		
 	} catch (SQLException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettore;
 	}
 	
-	return null;
 	
 }
 
@@ -436,15 +712,17 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 	String statement;
 
 	String ricercaCorsoId;
-	Statement perCorso;
-	ResultSet corsoId;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
 	String corsoById;
-	
+	ResultSet risultato = null;
+	Statement ricerca = null;
+	List<String>[] vettore = null;
 	
 	try {
 		
-		Statement ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet risultato;
+		ricerca = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
 		perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		int i = 0;
@@ -463,7 +741,7 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 			}
 			
 			//vettore con al massimo quel numero di studenti 
-			List<String>[] vettore = new List[size];
+			vettore = new List[size];
 			Arrays.setAll(vettore, ArrayList :: new);
 			ConnectionDao connectionDao = new ConnectionDao();
 			
@@ -491,14 +769,56 @@ public List<String>[] ricercaStudenteByCognomeECf(Connection connection ,String 
 				
 			}
 
-		return vettore;
 		
 	} catch (SQLException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
+	}finally {
+		
+		if(perCorso != null) {
+			
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(corsoId != null) {
+			
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(ricerca != null) {
+			
+			try {
+				ricerca.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		if(risultato != null) {
+			
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettore;
 	}
 	
-	return null;
 	
 }
 
@@ -507,15 +827,20 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
-	
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
+	ConnectionDao connectionDao = null;
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
-		ConnectionDao connectionDao = new ConnectionDao();
+		risultatoDate = ricercaData.executeQuery(statementData);
+		connectionDao = new ConnectionDao();
 		int size = 0;
 		while(risultatoDate.next()) {
 			
@@ -524,13 +849,13 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 		}
 		risultatoDate.beforeFirst();
 		
-		List[] vettoreStudenti = new List[size];
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + nome + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -548,14 +873,49 @@ public List<String>[] ricercaStudenteByNomeEData(Connection connection ,String n
 
 			
 		}
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
 
 }
 
@@ -564,14 +924,20 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
+	ConnectionDao connectionDao = null;
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
 	
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
-		ConnectionDao connectionDao = new ConnectionDao();
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
+		connectionDao = new ConnectionDao();
+		 risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
 		while(risultatoDate.next()) {
@@ -581,13 +947,13 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 		}
 		risultatoDate.beforeFirst();
 		
-		List[] vettoreStudenti = new List[size];
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cf\" LIKE '%" + cf + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -605,14 +971,51 @@ public List<String>[] ricercaStudenteByCfEData(Connection connection ,String cf 
 
 			
 		}
-		return vettoreStudenti;
+		
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
+
 
 }
 
@@ -621,14 +1024,20 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
+	ConnectionDao connectionDao = null;
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
 	
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
+		risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
 		while(risultatoDate.next()) {
@@ -637,14 +1046,14 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 			
 		}
 		risultatoDate.beforeFirst();
-		ConnectionDao connectionDao = new ConnectionDao();
-		List[] vettoreStudenti = new List[size];
+		connectionDao = new ConnectionDao();
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + cognome + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -662,14 +1071,50 @@ public List<String>[] ricercaStudenteByCognomeEData(Connection connection ,Strin
 
 			
 		}
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
+
 
 }
 
@@ -678,15 +1123,21 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
+	ConnectionDao connectionDao = null;
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
 	
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
-		ConnectionDao connectionDao = new ConnectionDao();
+		risultatoDate = ricercaData.executeQuery(statementData);
+		connectionDao = new ConnectionDao();
 		int size = 0;
 		while(risultatoDate.next()) {
 			
@@ -695,13 +1146,13 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 		}
 		risultatoDate.beforeFirst();
 		
-		List[] vettoreStudenti = new List[size];
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Cognome\" LIKE '%" + cognome + "%' AND \"Cf\" = '%" + cf + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -719,14 +1170,50 @@ public List<String>[] ricercaStudenteByCognomeDataECf(Connection connection ,Str
 
 			
 		}
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
+	
 
 }
 
@@ -735,14 +1222,20 @@ public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
 	ConnectionDao connectionDao = new ConnectionDao();
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
+	
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
+		risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
 		while(risultatoDate.next()) {
@@ -752,13 +1245,13 @@ public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String
 		}
 		risultatoDate.beforeFirst();
 		
-		List[] vettoreStudenti = new List[size];
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + nome + "%' AND \"Cf\" LIKE '%" + cf + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -776,14 +1269,49 @@ public List<String>[] ricercaStudenteByNomeDataECf(Connection connection ,String
 
 			
 		}
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
 
 }
 
@@ -792,14 +1320,20 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 	String statement;
 	String statementData = "SELECT \"DataIscrizione\",\"CorsoId\",\"Cf\" FROM \"Iscrizione\" WHERE TO_CHAR(\"DataIscrizione\" :: DATE,'YYYY-MM-DD') = TO_CHAR('" + data + "' :: DATE,'YYYY-MM-DD');";
 	String corsoById;
+	Statement ricercaData = null;
+	Statement ricercaStudente = null;
+	ResultSet risultatoDate = null;
 	ConnectionDao connectionDao = new ConnectionDao();
+	List[] vettoreStudenti = null;
+	ResultSet risultato = null;
+	
 	try {
 		
-		Statement ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaData = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		int i = 0;
 		
-		ResultSet risultatoDate = ricercaData.executeQuery(statementData);
+		risultatoDate = ricercaData.executeQuery(statementData);
 		
 		int size = 0;
 		while(risultatoDate.next()) {
@@ -809,13 +1343,13 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 		}
 		risultatoDate.beforeFirst();
 		
-		List[] vettoreStudenti = new List[size];
+		vettoreStudenti = new List[size];
 		Arrays.setAll(vettoreStudenti, ArrayList :: new);
 		
 		while(risultatoDate.next()) {
 	
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + nome + "%' AND \"Cognome\" LIKE '%" + cognome + "%' AND \"Cf\" = '" + risultatoDate.getString(3) + "';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			while(risultato.next()) {
 				
@@ -833,14 +1367,49 @@ public List<String>[] ricercaStudenteByNomeDataECognome(Connection connection ,S
 
 			
 		}
-		return vettoreStudenti;
-		
+	
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(ricercaData != null) {
+			try {
+				ricercaData.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultatoDate != null) {
+			try {
+				risultatoDate.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
+		
 	}
-	return null;
 
 }
 
@@ -849,18 +1418,24 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 	String statement;
 	String corsoById;
 	ConnectionDao connectionDao = new ConnectionDao();
+	ResultSet risultato = null;
+	Statement ricercaStudente = null;
+	Statement perCorso = null;
+	ResultSet corsoId = null;
+	List[] vettoreStudenti = null;
+	
 	try {
 		
 
-		Statement ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ricercaStudente = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			statement = "SELECT \"Nome\",\"Cognome\",\"Cf\" FROM \"Studente\" WHERE \"Nome\" LIKE '%" + nome + "%' AND \"Cognome\" LIKE '%" + cognome + "%' AND \"Cf\" LIKE '%" + cf + "%';";
-			ResultSet risultato = ricercaStudente.executeQuery(statement);
+			risultato = ricercaStudente.executeQuery(statement);
 			
 			String qualcosa = null;
 			String statementCorso;
-			Statement perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			ResultSet corsoId;
+			perCorso = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			
 			int i = 0;
 			int size = 0;
@@ -871,7 +1446,7 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 			}
 			risultato.beforeFirst();
 			
-			List[] vettoreStudenti = new List[size];
+			vettoreStudenti = new List[size];
 			Arrays.setAll(vettoreStudenti, ArrayList :: new);
 			
 			while(risultato.next()) {
@@ -902,31 +1477,74 @@ public List<String>[] ricercaStudenteByNomeCfECognome(Connection connection ,Str
 				i++;
 			}
 
-			
-		
-		return vettoreStudenti;
 		
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	}finally {
+		
+		if(risultato != null) {
+			try {
+				risultato.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(ricercaStudente != null) {
+			try {
+				ricercaStudente.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(perCorso != null) {
+			try {
+				perCorso.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(corsoId != null) {
+			try {
+				corsoId.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vettoreStudenti;
 	}
-	return null;
 
 }
 
 public void deleteStudente(Connection connection ,String cf) {
 
 String delete = "DELETE FROM \"Studente\" WHERE \"Cf\" = '" + cf + "';";
+Statement statement = null;
 
 try {
 	
-	Statement statement = connection.createStatement();
+	statement = connection.createStatement();
 	statement.execute(delete);
 	
 } catch (SQLException e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();
+}finally {
+	
+	if(statement != null) {
+		try {
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
 }
 

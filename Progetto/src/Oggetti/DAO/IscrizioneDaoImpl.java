@@ -25,6 +25,10 @@ public class IscrizioneDaoImpl {
 			Statement inserimento = connection.createStatement();
 			inserimento.execute(statement);
 			
+			if(inserimento != null) {
+				inserimento.close();
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,9 +46,26 @@ public class IscrizioneDaoImpl {
 			ResultSet risultato = statement.executeQuery(statementControllo);
 			
 			if(risultato.next()) {
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 0;
-			}else
+			}else {
+				
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 1;
+				
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -100,6 +121,13 @@ public class IscrizioneDaoImpl {
 				listaStudenti[i].add("ciao");
 				
 				i++;
+			}
+			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
 			}
 			
 			return listaStudenti;
@@ -159,6 +187,13 @@ public class IscrizioneDaoImpl {
 				i++;
 			}
 			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return listaStudenti;
 			
 		} catch (SQLException e) {
@@ -178,6 +213,10 @@ public class IscrizioneDaoImpl {
 			
 			Statement statement = connection.createStatement();
 			statement.execute(delete);
+			
+			if(statement != null) {
+				statement.close();
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -203,6 +242,13 @@ public class IscrizioneDaoImpl {
 				
 			}
 			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return numeroStud;
 			
 		} catch (SQLException e) {
@@ -220,6 +266,10 @@ public class IscrizioneDaoImpl {
 			
 			Statement statement = connection.createStatement();
 			statement.execute(update);
+			
+			if(statement != null) {
+				statement.close();
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -239,7 +289,15 @@ public class IscrizioneDaoImpl {
 			
 			if(risultato.next()) {
 				
-				return risultato.getString(1).toString();
+				String result = risultato.getString(1).toString();
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
+				return result;
 				
 			}
 			

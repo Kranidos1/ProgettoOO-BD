@@ -76,6 +76,8 @@ public class CreaCorsoFrame extends JFrame{
 		fram = (JFrame) SwingUtilities.getRoot(panel);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		

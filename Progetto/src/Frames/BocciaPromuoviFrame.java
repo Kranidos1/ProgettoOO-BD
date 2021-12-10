@@ -60,6 +60,8 @@ public class BocciaPromuoviFrame extends JFrame {
 		pass = 0;
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		DefaultListModel modelListCorsi = new DefaultListModel();
 		JList listCorsi = new JList(modelListCorsi);
 		JScrollPane scrollPaneCorsi = new JScrollPane(listCorsi);

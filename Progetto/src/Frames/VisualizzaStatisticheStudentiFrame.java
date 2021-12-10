@@ -114,6 +114,8 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		getContentPane().add(panel);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze"}){
 			public boolean isCellEditable(int row ,int column) {

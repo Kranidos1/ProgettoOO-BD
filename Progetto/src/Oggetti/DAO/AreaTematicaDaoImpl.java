@@ -18,15 +18,28 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 	public void inserimento(AreaTematica tema ,Connection connection) {
 		
 		String statement = "INSERT INTO \"AreaTematica\" VALUES (" + "'" + tema.getNome() + "'" + ");";
+		Statement inserimento = null;
 		
 		try {
 			
-			Statement inserimento = connection.createStatement();
+			inserimento = connection.createStatement();
 			inserimento.execute(statement);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(inserimento != null) {
+				
+				try {
+					inserimento.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 		}
 		
 	}
@@ -35,11 +48,13 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 		
 		String statement = "SELECT * FROM \"AreaTematica\";";
 		LinkedList<String> lista = new LinkedList<>();
+		Statement inserimento = null;
+		ResultSet result = null;
 		
 		try {
 			
-			Statement inserimento = connection.createStatement();
-			ResultSet result = inserimento.executeQuery(statement);
+			inserimento = connection.createStatement();
+			result = inserimento.executeQuery(statement);
 			
 			while(result.next()) {
 				
@@ -47,29 +62,66 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 				
 			}
 			
-			return lista;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(inserimento != null) {
+				
+				try {
+					inserimento.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(result != null) {
+				
+				try {
+					result.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+			
+			
+			return lista;
 		}
 		
-		return null;
 		
 	}
 	
 	public void update(Connection connection ,String oldTheme ,String newTheme) {
 		
 		String update = "UPDATE \"AreaTematica\" SET \"Nome\" = '" + newTheme + "' WHERE \"Nome\" = '" + oldTheme + "';";
+		Statement statement = null;
 		
 		try {
 			
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			statement.execute(update);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+		}finally {
+			
+			if(statement != null) {
+						
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 		}
 		
 		
@@ -79,7 +131,7 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 		
 		String delete = "DELETE FROM \"AreaTematica\" WHERE \"Nome\" = '" + nome + "';";
 		
-		Statement statement;
+		Statement statement = null;
 		try {
 			
 			statement = connection.createStatement();
@@ -88,6 +140,18 @@ public class AreaTematicaDaoImpl implements AreaTematicaDao{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(statement != null) {
+				
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 		}
 		
 	}

@@ -15,10 +15,11 @@ public class PresenzaDaoImpl {
 		String insert;
 		ConnectionDao connectionDao = new ConnectionDao();
 		List<String>[] studenti = connectionDao.getIscrizioneDao().getStudentiByCorsoId(connection, corsoId);
+		Statement statement = null;
 		
 		try {
 			
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			int  i = 0;
 			
 			while(i < Arrays.asList(studenti).size()) {
@@ -35,6 +36,15 @@ public class PresenzaDaoImpl {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}
@@ -44,11 +54,13 @@ public class PresenzaDaoImpl {
 		List<String> result = new LinkedList();
 		String ricerca = "SELECT \"Cf\" FROM \"Presenza\" WHERE \"LezioneId\" = '" + lezioneId + "';";
 		
-		Statement statement;
+		Statement statement = null;
+		ResultSet risultato = null;
+		
 		try {
 			
 			statement = connection.createStatement();
-			ResultSet risultato = statement.executeQuery(ricerca);
+			risultato = statement.executeQuery(ricerca);
 			
 			while(risultato.next()) {
 				
@@ -56,29 +68,56 @@ public class PresenzaDaoImpl {
 				
 			}
 			
-			return result;
+			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(risultato != null) {
+				try {
+					risultato.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return result;
 		}
-		
-		return null;
 	}
 	
 	public void updatePresenzaStudente(Connection connection ,int lezioneId ,String cf ,String presenza) {
 		
 
 		String update = "UPDATE \"Presenza\" SET \"Presente\" = '" + presenza + "' WHERE \"Cf\" = '" + cf + "' AND \"LezioneId\" = '" + lezioneId + "';";
+		Statement statement = null;
 		
 		try {
 			
-			Statement statement  = connection.createStatement();
+			statement  = connection.createStatement();
 			statement.execute(update);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}
@@ -86,16 +125,19 @@ public class PresenzaDaoImpl {
 	public String checkPresenzaStudente(Connection connection ,String cf ,int lezioneId) {
 		
 		String ricerca = "SELECT \"Presente\" FROM \"Presenza\" WHERE \"Cf\" = '" + cf + "' AND \"LezioneId\" = " + lezioneId + ";";
+		Statement statement = null;
+		ResultSet risultato = null;
+		String result = null;
 		
 		try {
 			
-			Statement statement = connection.createStatement();
-			ResultSet risultato = statement.executeQuery(ricerca);
+			statement = connection.createStatement();
+			risultato = statement.executeQuery(ricerca);
 			
 			
 			while(risultato.next()) {
 				
-				return risultato.getString(1);
+				result = risultato.getString(1);
 				
 			}
 			
@@ -103,11 +145,27 @@ public class PresenzaDaoImpl {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(risultato != null) {
+				try {
+					risultato.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return result;
 		}
 				
-		
-		
-		return null;
 		
 	}
 	
@@ -115,11 +173,13 @@ public class PresenzaDaoImpl {
 		
 		int numero = 0;
 		String ricerca = "SELECT COUNT(\"Cf\") FROM \"Presenza\" WHERE \"LezioneId\" = " + lezioneId + " AND \"Presente\" = 'Presente';";
+		Statement statement = null;
+		ResultSet risultato = null;
 		
 		try {
 			
-			Statement statement = connection.createStatement();
-			ResultSet risultato = statement.executeQuery(ricerca);
+			statement = connection.createStatement();
+			risultato = statement.executeQuery(ricerca);
 			
 			
 			while(risultato.next()) {
@@ -127,18 +187,32 @@ public class PresenzaDaoImpl {
 				numero = Integer.parseInt(risultato.getString(1));
 				
 			}
-			
-			return numero;
+
 			
 		} catch (SQLException e) {
 			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(risultato != null) {
+				try {
+					risultato.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return numero;
 		}
-		
-		
-		
-		return lezioneId;
 		
 	}
 	

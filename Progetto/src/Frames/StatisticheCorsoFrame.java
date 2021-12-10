@@ -67,7 +67,10 @@ public class StatisticheCorsoFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		panel = new GeneralPanelGrande();
 		controller = new Controller();
 		String[] columns = {"NomeCorso","N.Lezioni","N.Studenti","MediaPrs","MinimoPrs","MassimoPrs","Finito"
@@ -474,6 +477,7 @@ public class StatisticheCorsoFrame extends JFrame {
 			
 			}
 		});
+		
 		addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -488,5 +492,6 @@ public class StatisticheCorsoFrame extends JFrame {
             	
             }
         });
+		
 }
 }

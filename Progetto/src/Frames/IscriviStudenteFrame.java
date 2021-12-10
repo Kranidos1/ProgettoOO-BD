@@ -59,7 +59,10 @@ public class IscriviStudenteFrame extends JFrame {
 		panel = new GeneralPanel();
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		connectionDao = new ConnectionDao();
 		nomeTextField = new JTextField();

@@ -37,7 +37,10 @@ public class GestisciLezioniFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		

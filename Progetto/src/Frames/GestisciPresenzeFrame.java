@@ -74,6 +74,8 @@ public class GestisciPresenzeFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		panel = new GeneralPanelGrande();
 		panel.menuBar.setBounds(0,0,906,22);
 		panel.labelHourDate.setLocation(641, 548);

@@ -30,6 +30,10 @@ public class LezioneDaoImpl {
 			
 			JOptionPane.showMessageDialog(null, "Lezione salvata!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
 			
+			if(statement != null) {
+				statement.close();
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
@@ -50,6 +54,13 @@ public class LezioneDaoImpl {
 				
 				id = Integer.parseInt(risultato.getString(1));
 				
+			}
+			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
 			}
 			
 			return id;
@@ -103,6 +114,12 @@ public class LezioneDaoImpl {
 				i++;
 			}
 			
+			if(ricerca != null) {
+				ricerca.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
 			
 			return listaRisultato;
 			
@@ -130,6 +147,13 @@ public class LezioneDaoImpl {
 				
 			}
 			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return idLezione;
 			
 		} catch (SQLException e) {
@@ -148,6 +172,10 @@ public class LezioneDaoImpl {
 			Statement statement = connection.createStatement();
 			statement.execute(update);
 			
+			if(statement != null) {
+				statement.close();
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,9 +193,27 @@ public class LezioneDaoImpl {
 			ResultSet risultato = statement.executeQuery(ricerca);
 			
 			if(risultato.next()) {
+				
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 0;
-			}else
+			}else {
+				
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 1;
+				
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -189,10 +235,27 @@ public class LezioneDaoImpl {
 			
 			if(risultato.next()) {
 				
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 0;
 				
-			}else
+			}else {
+				
+				if(statement != null) {
+					statement.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
+				
 				return 1;
+				
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -212,6 +275,11 @@ public class LezioneDaoImpl {
 			
 			Statement statement = connection.createStatement();
 			statement.execute(update);
+			if(statement != null) {
+				
+				statement.close();
+				
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -234,8 +302,15 @@ public class LezioneDaoImpl {
 			ResultSet risultato = statementLezioni.executeQuery(count);
 			
 			if(risultato.next()) {
+				String result = risultato.getString(1);
+				if(statementLezioni != null) {
+					statementLezioni.close();
+				}
+				if(risultato != null) {
+					risultato.close();
+				}
 				
-				return Integer.parseInt(risultato.getString(1));
+				return Integer.parseInt(result);
 			}
 			
 		} catch (SQLException e) {
@@ -260,6 +335,12 @@ public class LezioneDaoImpl {
 			
 			if(result.next()) {
 				
+				if(statementLezioniFalse != null) {
+					statementLezioniFalse.close();
+				}
+				if(result != null) {
+					result.close();
+				}
 				return Integer.parseInt(result.getString(1));
 				
 			}
@@ -289,6 +370,13 @@ public class LezioneDaoImpl {
 				
 			}
 			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return listaLezioniId;
 			
 		} catch (SQLException e) {
@@ -316,6 +404,14 @@ public class LezioneDaoImpl {
 				result = Integer.parseInt(risultato.getString(1));
 				
 			}
+			
+			if(statement != null) {
+				statement.close();
+			}
+			if(risultato != null) {
+				risultato.close();
+			}
+			
 			return result;
 			
 			

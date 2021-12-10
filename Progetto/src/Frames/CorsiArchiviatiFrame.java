@@ -57,6 +57,8 @@ public class CorsiArchiviatiFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 
 		

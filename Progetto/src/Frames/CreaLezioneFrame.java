@@ -65,6 +65,8 @@ public class CreaLezioneFrame extends JFrame {
 		setLocationRelativeTo(null);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		panel = new GeneralPanel();
 		panel.setLocation(0, 0);
 		getContentPane().add(panel);

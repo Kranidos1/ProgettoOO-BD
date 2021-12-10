@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +47,10 @@ public class ModificaCorsoFrame extends JFrame {
 		panel.setBackground(Color.WHITE);
 		getContentPane().add(panel);
 		panel.setLayout(null);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		
 		nomeField = new JTextField();
@@ -225,6 +229,20 @@ public class ModificaCorsoFrame extends JFrame {
 			}
 		});
 		
+		addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	try {
+					connectionDao.getConnection().close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            }
+        });
 	}
 
 	
@@ -287,6 +305,7 @@ public class ModificaCorsoFrame extends JFrame {
 	public void setList(JList<String> list) {
 		this.list = list;
 	}
+	
 	
 
 }

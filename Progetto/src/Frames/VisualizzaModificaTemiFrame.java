@@ -50,7 +50,10 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
+		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		
 		DefaultListModel model = new DefaultListModel();

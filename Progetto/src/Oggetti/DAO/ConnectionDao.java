@@ -75,6 +75,12 @@ public class ConnectionDao {
 	
 	public ConnectionDao() {
 		
+
+		
+	}
+
+	public Connection createConnection() {
+		
 		corsoDao = new CorsoDaoImpl();
 		iscrizioneDao = new IscrizioneDaoImpl();
 		lezioneDao = new LezioneDaoImpl();
@@ -96,13 +102,14 @@ public class ConnectionDao {
 			}
 			
 			connection = DriverManager.getConnection(jdbcURL,username,password);
+			return connection;
 			//CONNESSIONE RIUSCITA!
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return connection;
 		
 	}
-
 }

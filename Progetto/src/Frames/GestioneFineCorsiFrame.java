@@ -50,6 +50,8 @@ import java.awt.event.ActionEvent;public class GestioneFineCorsiFrame extends JF
 		panel.setLayout(null);
 		
 		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
 		controller = new Controller();
 		
 		DefaultListModel model = new DefaultListModel();
