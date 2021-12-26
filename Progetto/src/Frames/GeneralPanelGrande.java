@@ -56,6 +56,9 @@ public class GeneralPanelGrande extends JPanel {
 		fileMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.black));
 		menuBar.add(fileMenu);
 		
+		JMenuItem esportaMenuItem = new JMenuItem("Esporta");
+		fileMenu.add(esportaMenuItem);
+		
 		JMenuItem exitMenu = new JMenuItem("Exit");
 		fileMenu.add(exitMenu);
 		
@@ -329,6 +332,20 @@ public class GeneralPanelGrande extends JPanel {
 				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
 				fram.setVisible(false);
 				new VisualizzaLezioniFrame();
+				
+			}
+			
+		});
+		
+		esportaMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				fram = (JFrame) SwingUtilities.getRoot(labelHourDate);
+				fram.setVisible(false);
+				new CorsiArchiviatiFrame();
 				
 			}
 			
