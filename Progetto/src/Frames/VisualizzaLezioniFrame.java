@@ -36,6 +36,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.JTextPane;
@@ -164,6 +166,8 @@ public class VisualizzaLezioniFrame extends JFrame {
 		panelModificaCorso.add(titoloLabel);
 
 		JDateChooser dateChooser = new JDateChooser();
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		editor.setEditable(false);
 		dateChooser.setEnabled(false);
 		dateChooser.setBounds(112, 71, 191, 20);
 		panelModificaCorso.add(dateChooser);

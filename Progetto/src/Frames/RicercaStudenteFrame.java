@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.Box;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
@@ -346,6 +347,8 @@ public class RicercaStudenteFrame extends JFrame {
 		panel.add(buttonElimina);
 		
 		JDateChooser dateChooser = new JDateChooser();
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		editor.setEditable(false);
 		dateChooser.setEnabled(false);
 		dateChooser.setBounds(108, 238, 137, 20);
 		panel.add(dateChooser);

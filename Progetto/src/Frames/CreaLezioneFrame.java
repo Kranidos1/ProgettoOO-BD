@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
@@ -124,6 +125,8 @@ public class CreaLezioneFrame extends JFrame {
 		panel.add(dataLabel);
 		
 		JDateChooser dateChooser = new JDateChooser();
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		editor.setEditable(false);
 		dateChooser.setBounds(76, 241, 201, 20);
 		
 		Date dataAttuale = new Date();

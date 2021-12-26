@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Font;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
@@ -108,6 +109,8 @@ public class GestisciPresenzeFrame extends JFrame {
 		secondoStepPanel.setLayout(null);
 		
 		JDateChooser dateChooser = new JDateChooser();
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		editor.setEditable(false);
 		dateChooser.setEnabled(false);
 		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy.MM.dd");
 		Date dataAttuale = new Date();

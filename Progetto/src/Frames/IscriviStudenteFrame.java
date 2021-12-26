@@ -34,6 +34,8 @@ import Oggetti.DAO.ConnectionDao;
 import Oggetti.DAO.CorsoDaoImpl;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
 import java.time.*;
 import javax.swing.JList;
 import javax.swing.JSpinner;
@@ -224,6 +226,8 @@ public class IscriviStudenteFrame extends JFrame {
 		model.addAll(listaCorsi);
 		
 		JDateChooser dateChooser = new JDateChooser();
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		editor.setEditable(false);
 		dateChooser.setBounds(160, 306, 170, 20);
 		
 		Date dataAttuale = new Date();
