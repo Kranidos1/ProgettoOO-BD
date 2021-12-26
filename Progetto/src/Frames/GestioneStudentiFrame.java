@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 
 public class GestioneStudentiFrame extends JFrame {
 
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	

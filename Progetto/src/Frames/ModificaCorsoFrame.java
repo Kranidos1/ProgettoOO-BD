@@ -22,7 +22,6 @@ import javax.swing.*;
 
 public class ModificaCorsoFrame extends JFrame {
 	
-	private ConnectionDao connectionDao;
 	private JTextField nomeField;
 	private JTextField maxField;
 	private JTextField minField;
@@ -48,8 +47,6 @@ public class ModificaCorsoFrame extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		controller = new Controller();
 		
@@ -146,19 +143,6 @@ public class ModificaCorsoFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setAlwaysOnTop (true);
 		
-		addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-            	
-            	frame.setEnabled(true);
-            	
-            	
-            }
-            @Override
-            public void windowOpened(WindowEvent e) {
-                frame.setEnabled(false);
-            }
-        });
 		
 		
 		setVisible(true);
@@ -193,7 +177,7 @@ public class ModificaCorsoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				model.removeAllElements();
-				connectionDao.getCorsoTemaDao().deleteCollegamento(connectionDao.getConnection() ,id);
+				controller.getConnectionDao().getCorsoTemaDao().deleteCollegamento(controller.getConnectionDao().getConnection() ,id);
 				
 				if(!updateThemes.isEmpty()) {
 					
@@ -214,7 +198,7 @@ public class ModificaCorsoFrame extends JFrame {
 				
 				while(iteratore.hasNext()) {
 					
-					connectionDao.getCorsoTemaDao().inserimento(connectionDao.getConnection(), idCorso, iteratore.next());	
+					controller.getConnectionDao().getCorsoTemaDao().inserimento(controller.getConnectionDao().getConnection(), idCorso, iteratore.next());	
 					
 				}
 
@@ -231,18 +215,20 @@ public class ModificaCorsoFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
+		
 	}
 
 	

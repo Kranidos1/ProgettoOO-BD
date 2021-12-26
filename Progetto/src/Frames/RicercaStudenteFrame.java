@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -38,8 +40,7 @@ import Oggetti.DAO.StudenteDaoImpl;
 import java.awt.Font;
 
 public class RicercaStudenteFrame extends JFrame {
-	
-	private ConnectionDao connectionDao;
+
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTextField nomeField;
@@ -66,8 +67,6 @@ public class RicercaStudenteFrame extends JFrame {
 		panel.setBounds(0, 0, 623, 516);
 		getContentPane().add(panel);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		controller = new Controller();
 		JLabel nomeLabel = new JLabel("Nome");
@@ -78,6 +77,42 @@ public class RicercaStudenteFrame extends JFrame {
 		nomeField = new JTextField();
 		nomeField.setEnabled(false);
 		nomeField.setBounds(108, 112, 137, 20);
+		
+		nomeField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == nomeField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						nomeField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(nomeField);
 		nomeField.setColumns(10);
 		
@@ -85,6 +120,42 @@ public class RicercaStudenteFrame extends JFrame {
 		cognomeField.setEnabled(false);
 		cognomeField.setColumns(10);
 		cognomeField.setBounds(108, 157, 137, 20);
+		
+		cognomeField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == cognomeField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						cognomeField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(cognomeField);
 		
 		JLabel cognomeLabel = new JLabel("Cognome");
@@ -96,6 +167,42 @@ public class RicercaStudenteFrame extends JFrame {
 		cfField.setEnabled(false);
 		cfField.setColumns(10);
 		cfField.setBounds(108, 198, 137, 20);
+		
+		cfField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == cfField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						cfField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(cfField);
 		
 		JLabel cfLabel = new JLabel("CF");
@@ -326,14 +433,14 @@ public class RicercaStudenteFrame extends JFrame {
 					int corsoId;
 					
 					
-					corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), corso.substring(1, corso.length()-1));
+					corsoId = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), corso.substring(1, corso.length()-1));
 					
 					String achieved;
 					achieved = "true";
 					
 					if(corsoId != -1) {
 						
-						achieved = connectionDao.getCorsoDao().controllaStatoCorso(connectionDao.getConnection(), corsoId);
+						achieved = controller.getConnectionDao().getCorsoDao().controllaStatoCorso(controller.getConnectionDao().getConnection(), corsoId);
 						
 						if(achieved.equals("truex") || achieved.equals("true") ) {
 							
@@ -350,7 +457,7 @@ public class RicercaStudenteFrame extends JFrame {
 								if(answer == 0) {
 									
 									
-									connectionDao.getIscrizioneDao().deleteStudente(connectionDao.getConnection(), cfFormatted ,corsoId);
+									controller.getConnectionDao().getIscrizioneDao().deleteStudente(controller.getConnectionDao().getConnection(), cfFormatted ,corsoId);
 									JOptionPane.showMessageDialog(null, "Studente Cancellato", "Deleted", JOptionPane.INFORMATION_MESSAGE);
 									model.removeRow(row);
 									tableStats.revalidate();
@@ -368,7 +475,7 @@ public class RicercaStudenteFrame extends JFrame {
 						if(risposta == 0) {
 							
 						
-							connectionDao.getStudenteDao().deleteStudente(connectionDao.getConnection(), cfFormatted);
+							controller.getConnectionDao().getStudenteDao().deleteStudente(controller.getConnectionDao().getConnection(), cfFormatted);
 							JOptionPane.showMessageDialog(null, "Studente eliminato dal db", "Ok", JOptionPane.INFORMATION_MESSAGE);
 							model.removeRow(row);
 							tableStats.revalidate();
@@ -384,15 +491,16 @@ public class RicercaStudenteFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });

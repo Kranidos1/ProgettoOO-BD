@@ -35,7 +35,7 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 	private JTextField textFieldTema;
 	private String tema;
 	private String newTheme;
-	private ConnectionDao connectionDao;
+
 	
 	public VisualizzaModificaTemiFrame() {
 		
@@ -51,8 +51,7 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
+
 		
 		controller = new Controller();
 		
@@ -65,7 +64,7 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		scrollPane.setBounds(10, 112, 265, 340);
 		panel.add(scrollPane);
 
-		model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
+		model.addAll(controller.getConnectionDao().getAreaTematicaDao().getThemes(controller.getConnectionDao().getConnection()));
 		
 		JButton buttonCerca = new JButton("Modifica!");
 
@@ -133,9 +132,9 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 				if(listTemi.getSelectedValue() != null) {
 					
 					tema = listTemi.getSelectedValue().toString();
-					connectionDao.getAreaTematicaDao().delete(connectionDao.getConnection(), tema);
+					controller.getConnectionDao().getAreaTematicaDao().delete(controller.getConnectionDao().getConnection(), tema);
 					model.clear();
-					model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
+					model.addAll(controller.getConnectionDao().getAreaTematicaDao().getThemes(controller.getConnectionDao().getConnection()));
 					
 				}else
 					controller.jpanelManagementCreaCorsoFrame(null, null, null, 10);
@@ -149,9 +148,9 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 				//Viene applicata la modifica
 				if(!textFieldTema.getText().isEmpty()) {
 					
-					connectionDao.getAreaTematicaDao().update(connectionDao.getConnection(), tema, textFieldTema.getText().toString());
+					controller.getConnectionDao().getAreaTematicaDao().update(controller.getConnectionDao().getConnection(), tema, textFieldTema.getText().toString());
 					model.clear();
-					model.addAll(connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection()));
+					model.addAll(controller.getConnectionDao().getAreaTematicaDao().getThemes(controller.getConnectionDao().getConnection()));
 					
 					buttonApplicaModifica.setEnabled(false);
 					textFieldTema.setText("");
@@ -167,17 +166,19 @@ public class VisualizzaModificaTemiFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
+		
 	}
 }

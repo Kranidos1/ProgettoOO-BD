@@ -47,7 +47,6 @@ import javax.swing.JCheckBox;
 
 public class GestisciPresenzeFrame extends JFrame {
 
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private Controller controller;
 	private JTable table;
@@ -72,9 +71,6 @@ public class GestisciPresenzeFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		panel = new GeneralPanelGrande();
 		panel.menuBar.setBounds(0,0,906,22);
@@ -197,7 +193,7 @@ public class GestisciPresenzeFrame extends JFrame {
 		panel.add(buttonReset);
 		
 
-		model.addAll(connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection()));
+		model.addAll(controller.getConnectionDao().getCorsoDao().getNomiCorsi(controller.getConnectionDao().getConnection()));
 		
 		stepButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -211,12 +207,12 @@ public class GestisciPresenzeFrame extends JFrame {
 					stepButton.setEnabled(false);
 					
 					
-					int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), corsoSelected);
+					int corsoId = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), corsoSelected);
 					
 					
 //					modelListLezioni.addAll(lezioneDao.getDateLezioniDaGestire(connectionDao.getConnection(), corsoId));
 					
-					listaDate = connectionDao.getLezioneDao().getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
+					listaDate = controller.getConnectionDao().getLezioneDao().getDateLezioniDaGestireELezione(controller.getConnectionDao().getConnection(), corsoId);
 					int i = 0;
 					
 					while(i < Arrays.asList(listaDate).size()) {
@@ -255,10 +251,10 @@ public class GestisciPresenzeFrame extends JFrame {
 					stepButton.setEnabled(false);
 					
 					
-					int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), corsoSelected);
+					int corsoId = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), corsoSelected);
 
 					
-					listaDate = connectionDao.getLezioneDao().getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
+					listaDate = controller.getConnectionDao().getLezioneDao().getDateLezioniDaGestireELezione(controller.getConnectionDao().getConnection(), corsoId);
 					int i = 0;
 					
 					while(i < Arrays.asList(listaDate).size()) {
@@ -311,7 +307,7 @@ public class GestisciPresenzeFrame extends JFrame {
 					if(lezioneId != 0) {
 						
 						
-						List<String> studentiList = connectionDao.getPresenzaDao().getStudentiCfByLezioneId(connectionDao.getConnection(), lezioneId);
+						List<String> studentiList = controller.getConnectionDao().getPresenzaDao().getStudentiCfByLezioneId(controller.getConnectionDao().getConnection(), lezioneId);
 						
 						Iterator iteratore = studentiList.listIterator();
 						
@@ -319,7 +315,7 @@ public class GestisciPresenzeFrame extends JFrame {
 						
 						while(iteratore.hasNext()) {
 							
-							studenti = connectionDao.getStudenteDao().ricercaStudenteByCf(connectionDao.getConnection(), iteratore.next().toString());
+							studenti = controller.getConnectionDao().getStudenteDao().ricercaStudenteByCf(controller.getConnectionDao().getConnection(), iteratore.next().toString());
 							studenti[0][3].clear();
 							
 							modelStudenti.addRow(studenti[0]);
@@ -361,11 +357,11 @@ public class GestisciPresenzeFrame extends JFrame {
 						
 						while(u < contatore) {
 							
-							connectionDao.getPresenzaDao().updatePresenzaStudente(connectionDao.getConnection(), lezioneId, studentiCfEPresenza[u].get(0).toString(), studentiCfEPresenza[u].get(1).toString());
+							controller.getConnectionDao().getPresenzaDao().updatePresenzaStudente(controller.getConnectionDao().getConnection(), lezioneId, studentiCfEPresenza[u].get(0).toString(), studentiCfEPresenza[u].get(1).toString());
 							
 							u++;
 						}
-						connectionDao.getLezioneDao().updateCheck(connectionDao.getConnection(), lezioneId);
+						controller.getConnectionDao().getLezioneDao().updateCheck(controller.getConnectionDao().getConnection(), lezioneId);
 						
 						int i = 0;
 						
@@ -416,12 +412,12 @@ public class GestisciPresenzeFrame extends JFrame {
 
 						while(u < contatore) {
 							
-							connectionDao.getPresenzaDao().updatePresenzaStudente(connectionDao.getConnection(), lezioneId, studentiCfEPresenza[u].get(0).toString(), studentiCfEPresenza[u].get(1).toString());
+							controller.getConnectionDao().getPresenzaDao().updatePresenzaStudente(controller.getConnectionDao().getConnection(), lezioneId, studentiCfEPresenza[u].get(0).toString(), studentiCfEPresenza[u].get(1).toString());
 							
 							u++;
 						}
 						
-						connectionDao.getLezioneDao().updateCheck(connectionDao.getConnection(), lezioneId);
+						controller.getConnectionDao().getLezioneDao().updateCheck(controller.getConnectionDao().getConnection(), lezioneId);
 						
 						int i = 0;
 						
@@ -477,15 +473,16 @@ public class GestisciPresenzeFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });

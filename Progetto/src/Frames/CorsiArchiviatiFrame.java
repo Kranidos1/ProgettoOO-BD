@@ -36,7 +36,6 @@ import javax.swing.table.*;
 
 public class CorsiArchiviatiFrame extends JFrame {
 
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private Controller controller;
@@ -56,8 +55,6 @@ public class CorsiArchiviatiFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		controller = new Controller();
 
@@ -119,7 +116,7 @@ public class CorsiArchiviatiFrame extends JFrame {
 		btnEsporta.setBounds(458, 447, 132, 29);
 		panel.add(btnEsporta);
 		//AGGIUNGO CORSI ARCHIVIATI ALLA LISTA
-		modelList.addAll(connectionDao.getCorsoDao().getNomeCorsiArchiviati(connectionDao.getConnection()));
+		modelList.addAll(controller.getConnectionDao().getCorsoDao().getNomeCorsiArchiviati(controller.getConnectionDao().getConnection()));
 		
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -135,8 +132,8 @@ public class CorsiArchiviatiFrame extends JFrame {
 				if(listCorsi.getSelectedValue() != null) {
 					
 					nomeCorso = listCorsi.getSelectedValue().toString();
-					int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
-					LinkedList[] studentiList = (LinkedList[]) connectionDao.getIscrizioneDao().getStudentiByCorsoId(connectionDao.getConnection(), corsoId);
+					int corsoId = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), nomeCorso);
+					LinkedList[] studentiList = (LinkedList[]) controller.getConnectionDao().getIscrizioneDao().getStudentiByCorsoId(controller.getConnectionDao().getConnection(), corsoId);
 					
 					vettoreStudenti = new Vector[Arrays.asList(studentiList).size()];
 					
@@ -151,7 +148,7 @@ public class CorsiArchiviatiFrame extends JFrame {
 						
 						String percentualePresenza;
 						String cfFormatted = studentiList[i].get(2).toString().substring(1, studentiList[i].get(2).toString().length()-1);
-						String promozione = connectionDao.getIscrizioneDao().getPromozioneStudente(connectionDao.getConnection(), cfFormatted, corsoId);
+						String promozione = controller.getConnectionDao().getIscrizioneDao().getPromozioneStudente(controller.getConnectionDao().getConnection(), cfFormatted, corsoId);
 						
 						if(promozione.equals("Promosso")) {
 							vettoreStudenti[i].add("Si");
@@ -159,11 +156,11 @@ public class CorsiArchiviatiFrame extends JFrame {
 							vettoreStudenti[i].add("No");
 						}
 						
-						int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoId);
+						int nLezioni = controller.getConnectionDao().getLezioneDao().countLezioni(controller.getConnectionDao().getConnection(), corsoId);
 						
 						String presenza;
 						
-						List<Integer> lezioniIdList = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),  corsoId);
+						List<Integer> lezioniIdList = controller.getConnectionDao().getLezioneDao().getLezioniByCorsoId(controller.getConnectionDao().getConnection(),  corsoId);
 						
 						int p = 0;
 						int count = 0;
@@ -171,7 +168,7 @@ public class CorsiArchiviatiFrame extends JFrame {
 						while(p < lezioniIdList.size()) {
 							
 
-							presenza = connectionDao.getPresenzaDao().checkPresenzaStudente(connectionDao.getConnection(), cfFormatted, lezioniIdList.get(p));
+							presenza = controller.getConnectionDao().getPresenzaDao().checkPresenzaStudente(controller.getConnectionDao().getConnection(), cfFormatted, lezioniIdList.get(p));
 							
 							if(presenza != null) {
 								
@@ -227,18 +224,20 @@ public class CorsiArchiviatiFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-            		connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
+		
 		setVisible(true);
 	}
 }

@@ -95,7 +95,6 @@ import javax.swing.JList;
 
 public class VisualizzaStatisticheStudentiFrame extends JFrame {
 	
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private Controller controller;
@@ -113,8 +112,6 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		controller = new Controller();
 		DefaultTableModel modelTable = new DefaultTableModel(new Object[][] {},new String[] {"Nome", "Cognome", "CF", "N.Lezioni", "%Presenze"}){
@@ -195,7 +192,7 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		panel.add(scrollPane);
 		
 
-		modelList.addAll(connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection()));
+		modelList.addAll(controller.getConnectionDao().getCorsoDao().getNomiCorsi(controller.getConnectionDao().getConnection()));
 		
 		buttonRicerca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -210,15 +207,16 @@ public class VisualizzaStatisticheStudentiFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });

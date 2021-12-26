@@ -29,7 +29,6 @@ import java.util.List;
 
 public class BocciaPromuoviFrame extends JFrame {
 	
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTable table;
@@ -58,9 +57,6 @@ public class BocciaPromuoviFrame extends JFrame {
 		getContentPane().add(panel);
 
 		pass = 0;
-		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		DefaultListModel modelListCorsi = new DefaultListModel();
 		JList listCorsi = new JList(modelListCorsi);
@@ -145,7 +141,7 @@ public class BocciaPromuoviFrame extends JFrame {
 		panel.add(buttonBoccia);
 
 		
-		LinkedList corsiFiniti = connectionDao.getCorsoDao().getNomeCorsiFiniti(connectionDao.getConnection());
+		LinkedList corsiFiniti = controller.getConnectionDao().getCorsoDao().getNomeCorsiFiniti(controller.getConnectionDao().getConnection());
 		int size = Arrays.asList(corsiFiniti).size();
 
 		modelListCorsi.addAll(corsiFiniti);
@@ -203,7 +199,7 @@ public class BocciaPromuoviFrame extends JFrame {
 								int i = 0;
 								while (i < numStudenti) {
 
-									connectionDao.getIscrizioneDao().updateStatoStudente(connectionDao.getConnection(),
+									controller.getConnectionDao().getIscrizioneDao().updateStatoStudente(controller.getConnectionDao().getConnection(),
 											studentiEPromozione[i].get(2).toString().substring(1,
 													// prendo semplicemente la stringa del cf e levo le quadre.
 													studentiEPromozione[i].get(2).toString().length() - 1),
@@ -212,8 +208,8 @@ public class BocciaPromuoviFrame extends JFrame {
 									i++;
 								}
 
-								int corsoI = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
-								connectionDao.getCorsoDao().updateCheckCorsoGestito(connectionDao.getConnection(), corsoI);
+								int corsoI = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), nomeCorso);
+								controller.getConnectionDao().getCorsoDao().updateCheckCorsoGestito(controller.getConnectionDao().getConnection(), corsoI);
 
 								JOptionPane.showMessageDialog(null,
 										"Gestiti tutti gli studenti del corso.Il corso,con un report,potrai vederlo nella sezione \"Corsi Archiviati\".",
@@ -241,7 +237,7 @@ public class BocciaPromuoviFrame extends JFrame {
 								int i = 0;
 								while (i < numStudenti) {
 
-									connectionDao.getIscrizioneDao().updateStatoStudente(connectionDao.getConnection(),
+									controller.getConnectionDao().getIscrizioneDao().updateStatoStudente(controller.getConnectionDao().getConnection(),
 											studentiEPromozione[i].get(2).toString().substring(1,
 													// prendo semplicemente la stringa del cf e levo le quadre.
 													studentiEPromozione[i].get(2).toString().length() - 1),
@@ -250,8 +246,8 @@ public class BocciaPromuoviFrame extends JFrame {
 									i++;
 								}
 
-								int corsoI = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
-								connectionDao.getCorsoDao().updateCheckCorsoGestito(connectionDao.getConnection(), corsoI);
+								int corsoI = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), nomeCorso);
+								controller.getConnectionDao().getCorsoDao().updateCheckCorsoGestito(controller.getConnectionDao().getConnection(), corsoI);
 
 								JOptionPane.showMessageDialog(null,
 										"Gestiti tutti gli studenti del corso.Il corso,con un report,potrai vederlo nella sezione \"Corsi Archiviati\".",
@@ -297,7 +293,7 @@ public class BocciaPromuoviFrame extends JFrame {
 							int i = 0;
 							while (i < numStudenti) {
 
-								connectionDao.getIscrizioneDao().updateStatoStudente(connectionDao.getConnection(),
+								controller.getConnectionDao().getIscrizioneDao().updateStatoStudente(controller.getConnectionDao().getConnection(),
 										studentiEPromozione[i].get(2).toString().substring(1,
 												// prendo semplicemente la stringa del cf e levo le quadre.
 												studentiEPromozione[i].get(2).toString().length() - 1),
@@ -306,8 +302,8 @@ public class BocciaPromuoviFrame extends JFrame {
 								i++;
 							}
 
-							int corsoI = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), nomeCorso);
-							connectionDao.getCorsoDao().updateCheckCorsoGestito(connectionDao.getConnection(), corsoI);
+							int corsoI = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), nomeCorso);
+							controller.getConnectionDao().getCorsoDao().updateCheckCorsoGestito(controller.getConnectionDao().getConnection(), corsoI);
 
 							JOptionPane.showMessageDialog(null,
 									"Gestiti tutti gli studenti del corso.Il corso,con un report,potrai vederlo nella sezione \"Corsi Archiviati\".",
@@ -326,18 +322,20 @@ public class BocciaPromuoviFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-            		connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
+		
 		setVisible(true);
 	}
 }

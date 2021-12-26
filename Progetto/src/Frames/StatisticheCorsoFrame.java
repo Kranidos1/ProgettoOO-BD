@@ -42,10 +42,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 public class StatisticheCorsoFrame extends JFrame {
 	
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanelGrande panel;
 	private JTable table;
@@ -54,8 +54,6 @@ public class StatisticheCorsoFrame extends JFrame {
 	private int checkCat = 0;
 	private int checkK = 0;
 	private Controller controller;
-
-	
 	
 	public StatisticheCorsoFrame() {
 		
@@ -68,8 +66,6 @@ public class StatisticheCorsoFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		panel = new GeneralPanelGrande();
 		controller = new Controller();
@@ -99,6 +95,43 @@ public class StatisticheCorsoFrame extends JFrame {
 		keyField.setBounds(77, 215, 224, 20);
 		panel.add(keyField);
 		keyField.setColumns(10);
+		
+		
+		keyField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == keyField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						keyField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		
 		JLabel keyLabel = new JLabel("Key");
 		keyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -137,7 +170,7 @@ public class StatisticheCorsoFrame extends JFrame {
 		panel.add(scrollPane);
 		
 		LinkedList<String> temi =  new LinkedList<String>();
-		temi = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
+		temi = controller.getConnectionDao().getAreaTematicaDao().getThemes(controller.getConnectionDao().getConnection());
 		model.addAll(temi);
 		
 		
@@ -180,9 +213,9 @@ public class StatisticheCorsoFrame extends JFrame {
 					String categoria = new String();
 					categoria = lista.getSelectedValue().toString();
 					//TROVA GLI ID TRAMITE TEMA
-					LinkedList<String> listaIdCorsi = connectionDao.getCorsoTemaDao().ricercaCorsoByTheme(connectionDao.getConnection() , categoria);
+					LinkedList<String> listaIdCorsi = controller.getConnectionDao().getCorsoTemaDao().ricercaCorsoByTheme(controller.getConnectionDao().getConnection() , categoria);
 					//TROVA CORSI TRAMITE ID
-					LinkedList<String> nomiCorsi = connectionDao.getCorsoDao().getNomiById(connectionDao.getConnection(), listaIdCorsi);
+					LinkedList<String> nomiCorsi = controller.getConnectionDao().getCorsoDao().getNomiById(controller.getConnectionDao().getConnection(), listaIdCorsi);
 					
 					//QUI AVVIENE AGGIUNTA ITERATIVA CON ANNESSI VALORI
 					
@@ -195,7 +228,7 @@ public class StatisticheCorsoFrame extends JFrame {
 					vettoreCorsi[i][0].add(nomiCorsi.get(i));
 					
 					Corso corsoCompleto = new Corso();
-					corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), nomiCorsi.get(i));		
+					corsoCompleto = controller.getConnectionDao().getCorsoDao().getCorso(controller.getConnectionDao().getConnection(), nomiCorsi.get(i));		
 					
 					vettoreCorsi[i][1] = new Vector();
 					vettoreCorsi[i][2] = new Vector();
@@ -204,12 +237,12 @@ public class StatisticheCorsoFrame extends JFrame {
 					vettoreCorsi[i][5] = new Vector();
 					vettoreCorsi[i][6] = new Vector();
 					
-					int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					int nLezioni = controller.getConnectionDao().getLezioneDao().countLezioni(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 					vettoreCorsi[i][1].add(nLezioni);
-					int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					int nStudenti = controller.getConnectionDao().getIscrizioneDao().countStudentiIscritti(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 					vettoreCorsi[i][2].add(nStudenti);
 					
-					List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+					List<Integer> listaIdLezioni = controller.getConnectionDao().getLezioneDao().getLezioniByCorsoId(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 					Integer max;
 					Integer min;
 					List<Integer> numPresenti = new LinkedList();
@@ -224,8 +257,8 @@ public class StatisticheCorsoFrame extends JFrame {
 							while(o < listaIdLezioni.size()) {
 								
 								
-								presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
-								numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
+								presenti += controller.getConnectionDao().getPresenzaDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o));
+								numPresenti.add(controller.getConnectionDao().getLezioneDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o)));
 								o++;
 							}
 							
@@ -241,6 +274,7 @@ public class StatisticheCorsoFrame extends JFrame {
 								float media = (presentiFloat / nStudentiFloat) / nLezioniFloat;
 								
 								vettoreCorsi[i][3].add(df.format(media));
+								System.out.println(vettoreCorsi[i][0]);
 								max = Collections.max(numPresenti);
 								min = Collections.min(numPresenti);
 								vettoreCorsi[i][4].add(min);
@@ -280,7 +314,7 @@ public class StatisticheCorsoFrame extends JFrame {
 				if(checkK == 1 && checkCat == 0) {
 					
 					//QUI AVVIENE AGGIUNTA ITERATIVA CON ANNESSI VALORI l'aggiunta avviene tramite vector,questo e' solo un esempio
-					LinkedList<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsiByKey(connectionDao.getConnection(), keyField.getText());
+					LinkedList<String> listaCorsi = controller.getConnectionDao().getCorsoDao().getNomiCorsiByKey(controller.getConnectionDao().getConnection(), keyField.getText());
 					if(listaCorsi != null) {
 						Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][7];
 						
@@ -292,7 +326,7 @@ public class StatisticheCorsoFrame extends JFrame {
 							vettoreCorsi[i][0].add(listaCorsi.get(i));
 							
 							Corso corsoCompleto = new Corso();
-							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));
+							corsoCompleto = controller.getConnectionDao().getCorsoDao().getCorso(controller.getConnectionDao().getConnection(), listaCorsi.get(i));
 							
 							vettoreCorsi[i][1] = new Vector();
 							vettoreCorsi[i][2] = new Vector();
@@ -301,14 +335,14 @@ public class StatisticheCorsoFrame extends JFrame {
 							vettoreCorsi[i][5] = new Vector();
 							vettoreCorsi[i][6] = new Vector();
 							
-							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							int nLezioni = controller.getConnectionDao().getLezioneDao().countLezioni(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 							vettoreCorsi[i][1].add(nLezioni);
-							int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							int nStudenti = controller.getConnectionDao().getIscrizioneDao().countStudentiIscritti(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 							vettoreCorsi[i][2].add(nStudenti);
 							
-							List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(),corsoCompleto.getCorsoId());
-							Integer max;
-							Integer min;
+							List<Integer> listaIdLezioni = controller.getConnectionDao().getLezioneDao().getLezioniByCorsoId(controller.getConnectionDao().getConnection(),corsoCompleto.getCorsoId());
+							Integer max = 0;
+							Integer min = 0;
 							List<Integer> numPresenti = null;
 							
 							if(nLezioni != 0) {
@@ -321,8 +355,11 @@ public class StatisticheCorsoFrame extends JFrame {
 									while(o < listaIdLezioni.size()) {
 										
 										
-										presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
-										numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
+										presenti += controller.getConnectionDao().getPresenzaDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o));
+										
+										if(numPresenti != null) {
+											numPresenti.add(controller.getConnectionDao().getLezioneDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o)));
+										}
 										o++;
 									}
 									
@@ -337,9 +374,15 @@ public class StatisticheCorsoFrame extends JFrame {
 										
 										float media = (presentiFloat / nStudentiFloat) / nLezioniFloat;
 										
-										vettoreCorsi[i][3].add(df.format(media));
-										max = Collections.max(numPresenti);
-										min = Collections.min(numPresenti);
+											
+											vettoreCorsi[i][3].add(df.format(media));
+											
+										
+										if(numPresenti != null) {
+											max = Collections.max(numPresenti);
+											min = Collections.min(numPresenti);
+										}
+										
 										vettoreCorsi[i][4].add(min);
 										vettoreCorsi[i][5].add(max);
 										
@@ -374,7 +417,7 @@ public class StatisticheCorsoFrame extends JFrame {
 				
 				if(checkK == 1 && checkCat == 1) {
 					
-					LinkedList<String> listaCorsi = connectionDao.getCorsoDao().getCorsiTramiteKeyETema(connectionDao.getConnection(), keyField.getText(), lista.getSelectedValue().toString());
+					LinkedList<String> listaCorsi = controller.getConnectionDao().getCorsoDao().getCorsiTramiteKeyETema(controller.getConnectionDao().getConnection(), keyField.getText(), lista.getSelectedValue().toString());
 					if(listaCorsi != null) {
 						Vector[][] vettoreCorsi = new Vector[listaCorsi.size()][7];
 						
@@ -387,7 +430,7 @@ public class StatisticheCorsoFrame extends JFrame {
 							
 							
 							Corso corsoCompleto = new Corso();
-							corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), listaCorsi.get(i));	
+							corsoCompleto = controller.getConnectionDao().getCorsoDao().getCorso(controller.getConnectionDao().getConnection(), listaCorsi.get(i));	
 							
 							vettoreCorsi[i][1] = new Vector();
 							vettoreCorsi[i][2] = new Vector();
@@ -396,12 +439,12 @@ public class StatisticheCorsoFrame extends JFrame {
 							vettoreCorsi[i][5] = new Vector();
 							vettoreCorsi[i][6] = new Vector();
 							
-							int nLezioni = connectionDao.getLezioneDao().countLezioni(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							int nLezioni = controller.getConnectionDao().getLezioneDao().countLezioni(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 							vettoreCorsi[i][1].add(nLezioni);
-							int nStudenti = connectionDao.getIscrizioneDao().countStudentiIscritti(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							int nStudenti = controller.getConnectionDao().getIscrizioneDao().countStudentiIscritti(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 							vettoreCorsi[i][2].add(nStudenti);
 							
-							List<Integer> listaIdLezioni = connectionDao.getLezioneDao().getLezioniByCorsoId(connectionDao.getConnection(), corsoCompleto.getCorsoId());
+							List<Integer> listaIdLezioni = controller.getConnectionDao().getLezioneDao().getLezioniByCorsoId(controller.getConnectionDao().getConnection(), corsoCompleto.getCorsoId());
 							Integer max;
 							Integer min;
 							List<Integer> numPresenti = null;
@@ -413,12 +456,16 @@ public class StatisticheCorsoFrame extends JFrame {
 									int o = 0;
 									
 									int presenti = 0;
+									numPresenti = new LinkedList();
 									while(o < listaIdLezioni.size()) {
 										
 										
-										presenti += connectionDao.getPresenzaDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o));
-										numPresenti.add(connectionDao.getLezioneDao().countPresenti(connectionDao.getConnection(), listaIdLezioni.get(o)));
-										o++;
+										presenti += controller.getConnectionDao().getPresenzaDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o));
+											
+											numPresenti.add(controller.getConnectionDao().getLezioneDao().countPresenti(controller.getConnectionDao().getConnection(), listaIdLezioni.get(o)));
+										
+										
+											o++;
 										
 									}
 									
@@ -440,23 +487,20 @@ public class StatisticheCorsoFrame extends JFrame {
 										vettoreCorsi[i][5].add(max);
 										
 									}else {
-										vettoreCorsi[i][3].add("X");
-										vettoreCorsi[i][3].add("X");
+
 										vettoreCorsi[i][3].add("X");
 										vettoreCorsi[i][4].add("X");
 										vettoreCorsi[i][5].add("X");
 									}
 									
 								}else {
-									vettoreCorsi[i][3].add("X");
-									vettoreCorsi[i][3].add("X");
+
 									vettoreCorsi[i][3].add("X");
 									vettoreCorsi[i][4].add("X");
 									vettoreCorsi[i][5].add("X");
 								}
 							}else {
-								vettoreCorsi[i][3].add("X");
-								vettoreCorsi[i][3].add("X");
+
 								vettoreCorsi[i][3].add("X");
 								vettoreCorsi[i][4].add("X");
 								vettoreCorsi[i][5].add("X");
@@ -480,18 +524,21 @@ public class StatisticheCorsoFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
 		
 }
+	
+	
 }

@@ -37,9 +37,7 @@ public class GestisciLezioniFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
+
 		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
@@ -101,20 +99,6 @@ public class GestisciLezioniFrame extends JFrame {
 			}
 		});
 		
-		addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-            	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
-            	
-            }
-        });
 		setVisible(true);
 	}
 }

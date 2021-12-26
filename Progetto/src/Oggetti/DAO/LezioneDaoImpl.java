@@ -36,7 +36,6 @@ public class LezioneDaoImpl {
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -333,7 +332,11 @@ public class LezioneDaoImpl {
 			Statement statementLezioniFalse = connection.createStatement();
 			ResultSet result = statementLezioniFalse.executeQuery(countFalse);
 			
+			
 			if(result.next()) {
+				
+				
+				int risultato = Integer.parseInt(result.getString(1));
 				
 				if(statementLezioniFalse != null) {
 					statementLezioniFalse.close();
@@ -341,7 +344,7 @@ public class LezioneDaoImpl {
 				if(result != null) {
 					result.close();
 				}
-				return Integer.parseInt(result.getString(1));
+				return risultato;
 				
 			}
 			

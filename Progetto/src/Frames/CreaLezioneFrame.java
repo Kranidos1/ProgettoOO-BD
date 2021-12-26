@@ -37,6 +37,8 @@ import java.awt.TextArea;
 import javax.swing.JTextPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
@@ -44,7 +46,6 @@ import javax.swing.JScrollPane;
 
 public class CreaLezioneFrame extends JFrame {
 
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField titoloField;
@@ -64,8 +65,6 @@ public class CreaLezioneFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		panel = new GeneralPanel();
 		panel.setLocation(0, 0);
@@ -80,6 +79,42 @@ public class CreaLezioneFrame extends JFrame {
 		
 		titoloField = new JTextField();
 		titoloField.setBounds(76, 208, 181, 21);
+		
+		titoloField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == titoloField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						titoloField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(titoloField);
 		titoloField.setColumns(10);
 		
@@ -155,6 +190,42 @@ public class CreaLezioneFrame extends JFrame {
 		JTextPane textAreaDescrizione = new JTextPane();
 		textAreaDescrizione.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black), "Descrizione"));
 		textAreaDescrizione.setBounds(10, 336, 481, 126);
+		
+		textAreaDescrizione.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == textAreaDescrizione){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						textAreaDescrizione.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(textAreaDescrizione);
 		
 		JButton buttonSave = new JButton("Save");
@@ -171,7 +242,7 @@ public class CreaLezioneFrame extends JFrame {
 		panel.add(scrollPaneCorsi);
 		
 
-		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
+		List<String> listaCorsi = controller.getConnectionDao().getCorsoDao().getNomiCorsi(controller.getConnectionDao().getConnection());
 		modelList.addAll(listaCorsi);
 		
 		JLabel corsoLabel = new JLabel("Corsi");
@@ -197,15 +268,16 @@ public class CreaLezioneFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });

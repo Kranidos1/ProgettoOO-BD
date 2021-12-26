@@ -29,7 +29,6 @@ public class FrameDiScelta extends JFrame{
 	private GeneralPanel panel;
 	private boolean control;
 	private int flag = 0;
-	private Controller controller;
 	private GestioneCorsiFrame gestioneCorsi;
 	
 	public FrameDiScelta(){
@@ -48,7 +47,6 @@ public class FrameDiScelta extends JFrame{
 		
 		setVisible(true);
 		//stop frame generico
-		controller = new Controller();
 		
 		JButton buttonGestioneCorsi = new JButton("Gestione Corsi");
 		buttonGestioneCorsi.setFont(new Font("Kimberley Bl", Font.PLAIN, 13));

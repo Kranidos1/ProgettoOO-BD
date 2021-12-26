@@ -16,6 +16,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -39,7 +41,6 @@ import javax.swing.SpinnerListModel;
 import javax.swing.JScrollPane;
 public class IscriviStudenteFrame extends JFrame {
 	
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField nomeTextField;
@@ -60,24 +61,131 @@ public class IscriviStudenteFrame extends JFrame {
 		panel.setBounds(0, 0, 501, 516);
 		getContentPane().add(panel);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
+
 		
 		controller = new Controller();
-		connectionDao = new ConnectionDao();
+	
 		nomeTextField = new JTextField();
 		nomeTextField.setColumns(50);
 		nomeTextField.setBounds(160, 200, 150, 20);
+		
+		nomeTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == nomeTextField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						nomeTextField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(nomeTextField);
 		
 		cognomeTextField = new JTextField();
 		cognomeTextField.setColumns(50);
 		cognomeTextField.setBounds(160, 253, 150, 20);
+		
+		cognomeTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == cognomeTextField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						cognomeTextField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(cognomeTextField);
 		
 		cfTextField = new JTextField();
 		cfTextField.setColumns(50);
 		cfTextField.setBounds(160, 360, 150, 20);
+		
+		cfTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == cfTextField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						cfTextField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panel.add(cfTextField);
 		
 		JLabel corsoLabel = new JLabel("Corso");
@@ -112,7 +220,7 @@ public class IscriviStudenteFrame extends JFrame {
 		
 		panel.add(scrollPane);
 	
-		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
+		List<String> listaCorsi = controller.getConnectionDao().getCorsoDao().getNomiCorsi(controller.getConnectionDao().getConnection());
 		model.addAll(listaCorsi);
 		
 		JDateChooser dateChooser = new JDateChooser();
@@ -175,15 +283,16 @@ public class IscriviStudenteFrame extends JFrame {
 		
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });

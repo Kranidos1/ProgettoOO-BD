@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -49,7 +51,6 @@ import javax.swing.JScrollPane;
 
 public class CreaCorsoFrame extends JFrame{
 
-	private ConnectionDao connectionDao;
 	private JPanel contentPane;
 	private GeneralPanel panel;
 	private JTextField textFieldName;
@@ -75,8 +76,6 @@ public class CreaCorsoFrame extends JFrame{
 		
 		fram = (JFrame) SwingUtilities.getRoot(panel);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		panel = new GeneralPanel();
 		getContentPane().add(panel);
@@ -291,7 +290,196 @@ public class CreaCorsoFrame extends JFrame{
 			}
 		});
 		
-		List<String> lista = connectionDao.getAreaTematicaDao().getThemes(connectionDao.getConnection());
+		textFieldName.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == textFieldName) {
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						textFieldName.setText("");
+						
+					}	
+					
+				}
+				
+				
+			}
+			
+		
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		textFieldMin.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				if(e.getSource() == textFieldMin) {
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						textFieldMin.setText("");
+						
+					}	
+					
+				}
+				
+				
+			}
+			
+		
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		textFieldMax.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == textFieldMax) {
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p ) == 1) {
+						
+						textFieldMax.setText("");
+						
+					}	
+					
+				}
+
+				
+			}
+			
+		
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		textFieldTheme.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				if(e.getSource() == textFieldTheme) {
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p ) == 1) {
+						
+						textFieldTheme.setText("");
+						
+					}	
+					
+				}
+				
+
+				
+			}
+			
+		
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		
+		textAreaDescrizione.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				if(e.getSource() == textAreaDescrizione) {
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						textAreaDescrizione.setText("");
+						
+					}	
+					
+				}
+				
+			}
+			
+		
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		List<String> lista = controller.getConnectionDao().getAreaTematicaDao().getThemes(controller.getConnectionDao().getConnection());
 		Iterator<String> listIt = lista.listIterator();
 		
 		while(listIt.hasNext()) {
@@ -300,18 +488,20 @@ public class CreaCorsoFrame extends JFrame{
 
 		addWindowListener(new WindowAdapter() {
             @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
             public void windowClosing(WindowEvent e) {
             	
-            	try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            	
+            	controller.closeConnection();
             	
             }
         });
+		
 		setVisible(true);
 	}
 }

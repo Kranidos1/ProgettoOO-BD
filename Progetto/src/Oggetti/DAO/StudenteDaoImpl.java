@@ -33,10 +33,7 @@ public int inserimento(Connection connection ,Studente studente) {
 		inserimento.execute(statement);
 		
 	} catch (SQLException e) {
-//		e.printStackTrace();
-		JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
-		
-		return 0 ;
+//		e.printStackTrace();		
 	}finally {
 		
 		if(inserimento != null) {

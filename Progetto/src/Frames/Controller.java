@@ -61,8 +61,240 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		
 	private static final char[] corsoFormattato = null;
 	private int j = 0;
-	private ConnectionDao connectionDao = new ConnectionDao();
+	private ConnectionDao connectionDao;
 		
+	
+	public Controller() {
+		
+		connectionDao = new ConnectionDao();
+		connectionDao.setConnection(connectionDao.createConnection());
+		
+	}
+	
+	public ConnectionDao getConnectionDao() {
+		return connectionDao;
+	}
+	
+	public void setConnectionDao(ConnectionDao connectionDao) {
+		this.connectionDao = connectionDao;
+	}
+	
+	public void closeConnection() {
+		try {
+			if(getConnectionDao().getConnection() != null) {
+				
+				getConnectionDao().getConnection().close();				
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public int controlloField(char h) {
+
+		
+		if(h == '`') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '~') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '!') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '@') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '#') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '$') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '%') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '^') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '&') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '(') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == ')') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '-') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '=') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '{') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '}') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '[') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == ']') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '\\') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == '|') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == ':') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+			
+		}
+		
+		if(h == ';') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '"') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '\'') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '<') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '>') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == ',') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '?') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		
+		if(h == '/') {
+			
+			JOptionPane.showMessageDialog(null, "Non sono ammessi caratteri speciali come : \n \"\\\\\" ,\"^\" ,\"$\" ,\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\".\",\"*\",\"+\",\"?\",\"|\",\"<\",\">\",\"-\",\"&\",\"%\".\",\"'\"", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+			return 1;
+						
+		}
+		return 0;
+		
+		
+	}
+	
 	public boolean isWhatYouWant(String input, int flag) {
 		// TODO Auto-generated method stub
 		// FLAG 0 STRINGHE 1 INT
@@ -103,12 +335,31 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 	public void newTheme(JLabel label) {
 		String theme = JOptionPane.showInputDialog("New Theme");
+		
+		int i = 0;
+		
 		//TODO Funzione add theme nel db
 		//CONTROLLO SE LA PAGINA E' CHIUSA O SE VIENE DATO UN INPUT VUOTO
 		boolean control;
 		int flag = 0;
 		JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(label);
 		if(theme != null) {
+			
+			int value = 0;
+			
+			while(i < theme.length()) {
+				
+				value = controlloField(theme.charAt(i));
+				
+				if(value == 1) {
+					
+					return;
+					
+				}
+				
+				i++;
+			}
+			System.out.println("ciao");
 			if(theme.length() != 0) {
 				
 				control = isWhatYouWant(theme,0);
@@ -133,14 +384,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 					AreaTematica tema = new AreaTematica();
 					tema.setNome(theme);
 					//TODO INSERIMENTO EFFETTIVO NEL DB
-					connectionDao.setConnection(connectionDao.createConnection());
+
 					connectionDao.getAreaTematicaDao().inserimento(tema ,connectionDao.getConnection());
-					try {
-						connectionDao.getConnection().close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					
 				}else {
 					//GESTISCE CHIUSURA NELL'ERRORE
@@ -158,6 +403,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	}
 	
 	
+
 	public void jpanelManagementCreaCorsoFrame(JFrame fram ,JTextArea inputArea ,JTextField inputField ,int flag) {
 		
 		//SI RIFERISCE A FLAG 0 = a, 1 = b , 2 = c , 3 = d , dal 4 in poi per iscrivistudenteframe
@@ -252,7 +498,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	//0 per insert // 1 update
 	public void insertCorsoDb(JFrame fram ,JTextField nome ,JTextField max ,JTextField min ,JTextArea areaDescrizione ,DefaultListModel<String> model ,int flag ,String corsoId) {
 		
-		connectionDao.setConnection(connectionDao.createConnection());
 
 		//FLAG 0 PER INSERIMENTO DA 0 1 PER UPDATE
 		String name,maxString,minString;
@@ -335,12 +580,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 							}
 							
 							fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
-							try {
-								connectionDao.getConnection().close();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 							
 							fram.setVisible(false);
 							
@@ -354,12 +593,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 								fram = (JFrame)SwingUtilities.getRoot(areaDescrizione);
 								
 								JOptionPane.showMessageDialog(fram, "Updated!", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
-								try {
-									connectionDao.getConnection().close();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+								
 								fram.setVisible(false);
 								new FrameDiScelta();
 							}
@@ -382,7 +616,7 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 	public void insertNewThemeFromField(JFrame fram ,JTextField field ,DefaultListModel<String> model) {
 		
-		connectionDao.setConnection(connectionDao.createConnection());
+	
 		
 		String theme = field.getText();
 		boolean control , onlychar;
@@ -390,13 +624,6 @@ public class Controller implements ControlloEOperazioniSuFrame {
 		control = theme.isEmpty();
 		
 		if(control == true) {
-			
-			try {
-				connectionDao.getConnection().close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			
 			JOptionPane.showMessageDialog(fram, "Empty Description,write something.", "Invalid input", JOptionPane.INFORMATION_MESSAGE);
 			
@@ -414,22 +641,8 @@ public class Controller implements ControlloEOperazioniSuFrame {
 
 				
 				connectionDao.getAreaTematicaDao().inserimento(tema ,connectionDao.getConnection());
-				
-				try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+							
 			}else {
-				
-				try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				
 				JOptionPane.showMessageDialog(fram, "Invalid input,only char admitted.", "Invalid input", JOptionPane.ERROR_MESSAGE);
 				field.setText("");
@@ -547,105 +760,88 @@ public class Controller implements ControlloEOperazioniSuFrame {
 	@Override
 	public void controlloInserimentoStudente(JTextField nomeField , JTextField cognomeField ,JList list ,JDateChooser dateChooser ,JLabel cfLab ,JTextField cfField){
 		
-		connectionDao.setConnection(connectionDao.createConnection());
-		
 		String tmpNome = nomeField.getText();
 		String tmpCognome = cognomeField.getText();
 
-if(list.getSelectedValue()!= null) {
-		
-		String tmpCorso = list.getSelectedValue().toString();
-		
-			if(!tmpNome.isEmpty()) {
-				if(isWhatYouWant(tmpNome, 0)) {
-					
-					if(tmpNome.length() > 40) {
-						JOptionPane.showMessageDialog(null, "Nome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-					
-					if(!tmpCognome.isEmpty()) {
-						if(isWhatYouWant(tmpCognome, 0)) {
-							
-							if(tmpCognome.length() > 40) {
-								JOptionPane.showMessageDialog(null, "Cognome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
-							}
-							
-							Date date;
-							String dbDate;
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-							date = dateChooser.getDate();
-//							dbDate = sdf.format(date);
-									//controllo data ma prima cf
-									if(controlloCF(cfField, cfLab) == 1) {
-										//PRENDI ANCHE DATA ATTUALE
-										Date dataAttuale = new Date();
-										String AttualeData = sdf.format(date).toString();
-										//TODO 
-										//Inserimento
-										/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
-										
-										Studente studente = new Studente();
-
-										
-										int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), tmpCorso);
-										
-										studente.setCF(cfField.getText().toString().toUpperCase());
-										studente.setNome(tmpNome.toUpperCase());
-
-										studente.setCognome(tmpCognome.toUpperCase());
-										studente.setData(sdf.format(date));
-										studente.setDataIscrizione(sdf.format(dataAttuale));
-										
-										int process = connectionDao.getStudenteDao().inserimento(connectionDao.getConnection(), studente);
-										
-										if(process == 1) {
+	if(list.getSelectedValue()!= null) {
+			
+			String tmpCorso = list.getSelectedValue().toString();
+			
+				if(!tmpNome.isEmpty()) {
+					if(isWhatYouWant(tmpNome, 0)) {
+						
+						if(tmpNome.length() > 40) {
+							JOptionPane.showMessageDialog(null, "Nome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+						
+						if(!tmpCognome.isEmpty()) {
+							if(isWhatYouWant(tmpCognome, 0)) {
+								
+								if(tmpCognome.length() > 40) {
+									JOptionPane.showMessageDialog(null, "Cognome troppo lungo", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
+								}
+								
+								Date date;
+								String dbDate;
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+								date = dateChooser.getDate();
+	//							dbDate = sdf.format(date);
+										//controllo data ma prima cf
+										if(controlloCF(cfField, cfLab) == 1) {
+											//PRENDI ANCHE DATA ATTUALE
+											Date dataAttuale = new Date();
+											String AttualeData = sdf.format(date).toString();
+											//TODO 
+											//Inserimento
+											/////INSERIMENTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO dbDate
 											
+											Studente studente = new Studente();
+	
 											
-											int procedere = connectionDao.getIscrizioneDao().controlloDuplicati(connectionDao.getConnection(), studente.getCF(), corsoId);
+											int corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), tmpCorso);
 											
-											if(procedere == 1) {
+											studente.setCF(cfField.getText().toString().toUpperCase());
+											studente.setNome(tmpNome.toUpperCase());
+	
+											studente.setCognome(tmpCognome.toUpperCase());
+											studente.setData(sdf.format(date));
+											studente.setDataIscrizione(sdf.format(dataAttuale));
+											
+											int process = connectionDao.getStudenteDao().inserimento(connectionDao.getConnection(), studente);
+											
+											if(process == 1) {
 												
-												connectionDao.getIscrizioneDao().inserimento(connectionDao.getConnection(), corsoId, studente.getCF() ,studente.getDataIscrizione());
 												
-												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
-												nomeField.setText("");
-												cognomeField.setText("");
-												cfField.setText("");
-												try {
-													connectionDao.getConnection().close();
-												} catch (SQLException e) {
-													// TODO Auto-generated catch block
-													e.printStackTrace();
-												}
+												int procedere = connectionDao.getIscrizioneDao().controlloDuplicati(connectionDao.getConnection(), studente.getCF(), corsoId);
 												
-											}else
-												try {
-													connectionDao.getConnection().close();
-												} catch (SQLException e) {
-													// TODO Auto-generated catch block
-													e.printStackTrace();
-												}
-												JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+												if(procedere == 1) {
+													
+													connectionDao.getIscrizioneDao().inserimento(connectionDao.getConnection(), corsoId, studente.getCF() ,studente.getDataIscrizione());
+													
+													JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Inserito lo studente " + studente.getCF() + ".", "Ok!", JOptionPane.INFORMATION_MESSAGE);
+													nomeField.setText("");
+													cognomeField.setText("");
+													cfField.setText("");
+													
+												}else
+													
+													JOptionPane.showMessageDialog((JFrame) SwingUtilities.getRoot(cfLab) ,"Studente gia' presente nei database per questo corso.", "PSQL ERROR", JOptionPane.ERROR_MESSAGE);
+												
+											}
 											
-										}
-										
-
-										
-									}else
-										jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
-							
+											
+										}else
+											jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cfField, 6);
+							}else
+								jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
 						}else
-							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, cognomeField, 4);
+							jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);			
 					}else
-						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);			
+						jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, nomeField, 0);
 				}else
-					jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, nomeField, 0);
+					jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
 			}else
 				jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
-	
-}else
-			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(cfLab), null, null, 7);
-		
 
 	}
 	
@@ -703,7 +899,6 @@ if(list.getSelectedValue()!= null) {
 	
 	public void ricercaStudente(JTextField nome ,JTextField cognome ,JTextField cf ,JDateChooser dataDateChooser ,JTable table ,int flagNome ,int flagCognome ,int flagCf ,int flagDate ,JLabel label ,DefaultTableModel model) {
 		
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String tmpNome = nome.getText();
@@ -2036,19 +2231,12 @@ if(list.getSelectedValue()!= null) {
 				
 		}
 		
-		try {
-		connectionDao.getConnection().close();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
 		
 	}
 	
 	//TODOx
 	public int ricercaStudenti(JList corso ,JLabel labelCorso ,DefaultTableModel model ,JTable table) {
 		
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		if(corso.getSelectedValue() != null) {
 			//effettua ricerca
@@ -2142,31 +2330,16 @@ if(list.getSelectedValue()!= null) {
 
 			}
 			
-			try {
-			connectionDao.getConnection().close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
 			return i;
 			
 		}else {
 			jpanelManagementCreaCorsoFrame((JFrame) SwingUtilities.getRoot(labelCorso), null, null, 7);
-		try {
-		connectionDao.getConnection().close();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
 		
-		return 0;
+			return 0;
 		}
 	}
 	
 	public int inserisciLezione(String corso ,JTextField title ,JDateChooser dateChooser ,JSpinner spinnerIn ,JSpinner spinnerDur ,JTextPane area ,SimpleDateFormat hourForm ,int lezioneIdUpd ,int flag) {
-		
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		Corso corsoCompleto = connectionDao.getCorsoDao().getCorso(connectionDao.getConnection(), corso);
 		
@@ -2212,24 +2385,13 @@ if(list.getSelectedValue()!= null) {
 							if(Integer.parseInt(orarioInizioLezione.substring(0,2)) < 8) {
 								
 								JOptionPane.showMessageDialog(area, "Troppo presto per una lezione!.");
-								try {
-									connectionDao.getConnection().close();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
 								return 0;
 								
 							}else {
 								
 								JOptionPane.showMessageDialog(area, "Troppo tardi per una lezione!.");
-							try {
-								connectionDao.getConnection().close();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 								return 0;
+								
 							}
 								
 						}else {
@@ -2237,24 +2399,12 @@ if(list.getSelectedValue()!= null) {
 							if(oreMinuti > 299) {
 								
 								JOptionPane.showMessageDialog(area, "Durata maggiore alle 4 ore e 59 minuti.Impossibile aggiungere.");
-								try {
-									connectionDao.getConnection().close();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
 								return 0;
 								
 							}else
 							if(oreMinuti < 45) {
 								
 								JOptionPane.showMessageDialog(area, "Durata minore ai 45 minuti.Impossibile aggiungere.");
-								try {
-									connectionDao.getConnection().close();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
 								return 0;
 								
 							}else{
@@ -2278,22 +2428,10 @@ if(list.getSelectedValue()!= null) {
 										connectionDao.getLezioneDao().inserimentoLezione(connectionDao.getConnection(), lezione);
 										
 										JFrame tmpFrame = (JFrame) SwingUtilities.getRoot(dateChooser);
-										try {
-											connectionDao.getConnection().close();
-										} catch (SQLException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 										tmpFrame.setVisible(false);
 										new FrameDiScelta();
 										
 									}else {
-										try {
-											connectionDao.getConnection().close();
-										} catch (SQLException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 									}
 									
@@ -2304,21 +2442,10 @@ if(list.getSelectedValue()!= null) {
 										
 									     	connectionDao.getLezioneDao().updateLezione(connectionDao.getConnection(),lezione, lezioneIdUpd);
 											JOptionPane.showMessageDialog(null, "Updated!", "Ok!", JOptionPane.INFORMATION_MESSAGE);
-											try {
-												connectionDao.getConnection().close();
-											} catch (SQLException e) {
-												// TODO Auto-generated catch block
-												e.printStackTrace();
-											}
+
 											return 1;
 
 									}else {
-										try {
-											connectionDao.getConnection().close();
-										} catch (SQLException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 										JOptionPane.showMessageDialog(null, "Lezione già presente per questo giorno", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 									}
 								}
@@ -2329,62 +2456,26 @@ if(list.getSelectedValue()!= null) {
 						
 					}else {
 						jpanelManagementCreaCorsoFrame(null, null, title, 7);
-					try {
-						connectionDao.getConnection().close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					return 0;
 					}
 				}else {
 					jpanelManagementCreaCorsoFrame(null, null, title, 7);
-				try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 					return 0;
 				}
 			}else {
 				jpanelManagementCreaCorsoFrame(null, null, title, 7);
-			try {
-				connectionDao.getConnection().close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			return 0;
 			}
 			}else {
-				try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				JOptionPane.showMessageDialog(null, "Titolo troppo lungo!", "Lezione_ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 				
 		}else{
-		try {
-		connectionDao.getConnection().close();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
 			return 0;
 		}
 			
 		}else {
 			JOptionPane.showMessageDialog(null, "Pochi iscritti,non puoi creare lezioni.", "ERROR", JOptionPane.ERROR_MESSAGE);
-		try {
-		connectionDao.getConnection().close();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
 		return 0;
 		}
 		return 0;

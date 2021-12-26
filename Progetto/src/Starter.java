@@ -34,10 +34,6 @@ public class Starter {
 //
 		new FirstFrame();
 		
-
-	
-
-
 	}
 
 }

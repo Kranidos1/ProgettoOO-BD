@@ -24,6 +24,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -42,7 +44,7 @@ import javax.swing.SpinnerNumberModel;
 
 public class VisualizzaLezioniFrame extends JFrame {
 
-	private ConnectionDao connectionDao;
+
 	private JPanel contentPane;
 	private Controller controller;
 	private String tmpCorso;
@@ -63,8 +65,6 @@ public class VisualizzaLezioniFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		connectionDao = new ConnectionDao();
-		connectionDao.setConnection(connectionDao.createConnection());
 		
 		controller = new Controller();
 
@@ -119,6 +119,42 @@ public class VisualizzaLezioniFrame extends JFrame {
 		titoloField.setEnabled(false);
 		titoloField.setBounds(112, 29, 191, 20);
 		panelModificaCorso.add(titoloField);
+		
+		titoloField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == titoloField){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						titoloField.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		titoloField.setColumns(10);
 
 		JLabel titoloLabel = new JLabel("Titolo");
@@ -174,6 +210,42 @@ public class VisualizzaLezioniFrame extends JFrame {
 		textAreaDescrizione.setBorder(BorderFactory
 				.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black), "Descrizione"));
 		textAreaDescrizione.setBounds(10, 164, 374, 126);
+		
+		textAreaDescrizione.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(e.getSource() == textAreaDescrizione){
+					
+					char p = e.getKeyChar();
+					
+					if(controller.controlloField(p) == 1) {
+						
+						textAreaDescrizione.setText("");
+						
+					}	
+	
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		panelModificaCorso.add(textAreaDescrizione);
 
 		JButton updateButton = new JButton("Save");
@@ -185,7 +257,7 @@ public class VisualizzaLezioniFrame extends JFrame {
 		updateButton.setBounds(138, 548, 109, 22);
 		generalPanelGrande.add(updateButton);
 
-		List<String> listaCorsi = connectionDao.getCorsoDao().getNomiCorsi(connectionDao.getConnection());
+		List<String> listaCorsi = controller.getConnectionDao().getCorsoDao().getNomiCorsi(controller.getConnectionDao().getConnection());
 		modelList.addAll(listaCorsi);
 
 		visualizzaLezioniButton.addActionListener(new ActionListener() {
@@ -195,10 +267,10 @@ public class VisualizzaLezioniFrame extends JFrame {
 
 					tmpCorso = listCorsi.getSelectedValue().toString();
 					visualizzaLezioniButton.setEnabled(false);
-					corsoId = connectionDao.getCorsoDao().trovaCorsoId(connectionDao.getConnection(), tmpCorso);
+					corsoId = controller.getConnectionDao().getCorsoDao().trovaCorsoId(controller.getConnectionDao().getConnection(), tmpCorso);
 
-					listaDateLezioni = connectionDao.getLezioneDao()
-							.getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
+					listaDateLezioni = controller.getConnectionDao().getLezioneDao()
+							.getDateLezioniDaGestireELezione(controller.getConnectionDao().getConnection(), corsoId);
 //					modelLezioni.addAll(listaDateLezioni);
 					int i = 0;
 
@@ -295,8 +367,8 @@ public class VisualizzaLezioniFrame extends JFrame {
 				spinnerDurata.setValue(1);
 				textAreaDescrizione.setText("");
 
-				listaDateLezioni = connectionDao.getLezioneDao()
-						.getDateLezioniDaGestireELezione(connectionDao.getConnection(), corsoId);
+				listaDateLezioni = controller.getConnectionDao().getLezioneDao()
+						.getDateLezioniDaGestireELezione(controller.getConnectionDao().getConnection(), corsoId);
 //				modelLezioni.addAll(listaDateLezioni);
 				int i = 0;
 
@@ -312,18 +384,20 @@ public class VisualizzaLezioniFrame extends JFrame {
 		});
 		
 		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
+            @Override
+            public void windowDeactivated(WindowEvent e) {
 
-				try {
-					connectionDao.getConnection().close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-		});
+            	controller.closeConnection();
+            	
+            }
+            
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	controller.closeConnection();
+            	
+            }
+        });
 		
 		setVisible(true);
 	}
